@@ -1,0 +1,76 @@
+package com.example.demo.service;
+
+import com.example.demo.dto.request.CreateProjectRequest;
+import com.example.demo.entity.*;
+import com.example.demo.enums.RequestStatus;
+import com.example.demo.repository.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
+
+@Service
+public class ProjectService {
+    private final ProjectRepository projectRepository;
+    private final StudentRepository studentRepository;
+    private final AdvisorRepository advisorRepository;
+    private final AdvisorRequestRepository advisorRequestRepository;
+    private final ProjectCategoryRepository categoryRepository;
+    private final NotificationService notificationService;
+
+    public ProjectService(ProjectRepository projectRepository, StudentRepository studentRepository,
+                          AdvisorRepository advisorRepository, AdvisorRequestRepository advisorRequestRepository,
+                          ProjectCategoryRepository categoryRepository, NotificationService notificationService) {
+        this.projectRepository = projectRepository;
+        this.studentRepository = studentRepository;
+        this.advisorRepository = advisorRepository;
+        this.advisorRequestRepository = advisorRequestRepository;
+        this.categoryRepository = categoryRepository;
+        this.notificationService = notificationService;
+    }
+
+    @Transactional
+    public Project createProject(Long userId, CreateProjectRequest req) {
+        Student student = studentRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+        ProjectCategory category = null;
+        if (req.getCategoryId() != null)
+            category = categoryRepository.findById(req.getCategoryId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı."));
+        Project project = Project.builder().student(student).title(req.getTitle())
+                .description(req.getDescription()).requiredSkills(req.getRequiredSkills())
+                .teamSize(req.getTeamSize()).rolesNeeded(req.getRolesNeeded()).category(category).build();
+        return projectRepository.save(project);
+    }
+
+    public List<Project> getMyProjects(Long userId) {
+        Student student = studentRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+        return projectRepository.findByStudentAndIsDeletedFalse(student);
+    }
+
+    @Transactional
+    public AdvisorRequest requestAdvisor(Long userId, Long projectId, Long advisorId) {
+        Student student = studentRepository.findByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proje bulunamadı."));
+        if (!project.getStudent().getUserId().equals(student.getUserId()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu proje size ait değil.");
+        Advisor advisor = advisorRepository.findById(advisorId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Danışman bulunamadı."));
+        if (advisor.getCurrentQuota() >= advisor.getMaxQuota())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışmanın kotası dolmuştur.");
+        advisorRequestRepository.findByProjectAndAdvisor(project, advisor).ifPresent(r -> {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu danışmana zaten istek gönderdiniz.");
+        });
+        AdvisorRequest request = AdvisorRequest.builder()
+                .project(project).advisor(advisor).status(RequestStatus.PENDING).build();
+        return advisorRequestRepository.save(request);
+    }
+
+    public List<Project> getAllProjects() {
+        return projectRepository.findByIsDeletedFalse();
+    }
+}
