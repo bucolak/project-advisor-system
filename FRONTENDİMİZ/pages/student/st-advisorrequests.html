@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advisor Requests</title>
+
+    <!-- Kendi ana CSS dosyan -->
+    <link rel="stylesheet" href="../../css/style.css" />
+
+    <!-- İkonlar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+    <div class="advisor-page">
+        <aside class="advisor-sidebar">
+            <div class="sidebar-icon">
+                <i class="fa-solid fa-up-down-left-right"></i>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-briefcase"></i><span>My Projects</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-square-plus"></i><span>Create Project</span></a></li>
+                <li><a href="#" class="active"><i class="fa-regular fa-rectangle-list"></i><span>Advisor
+                            Requests</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="advisor-content">
+            <div class="advisor-topbar">
+                <div class="student-box">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="student-info">
+                        <span class="student-name">Sude Torun</span>
+                        <span class="student-role">Student</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <h1 class="advisor-title">Advisor Requests</h1>
+
+            <div class="advisor-table-wrapper">
+                <table class="advisor-table">
+                    <thead>
+                        <tr>
+                            <th>Advisor</th>
+                            <th>Project</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="table-flex">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <span>İrem Taş</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-flex">
+                                    <i class="fa-regular fa-rectangle-list"></i>
+                                    <span>Fitness App</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="status-area">
+                                    <span class="status-badge pending">
+                                        <i class="fa-solid fa-rotate-right"></i>
+                                        Pending
+                                    </span>
+                                    <button class="withdraw-btn">Withdraw</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="table-flex">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <span>Nur Çelik</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-flex">
+                                    <i class="fa-regular fa-rectangle-list"></i>
+                                    <span>React Web App</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="status-area">
+                                    <span class="status-badge accepted">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        Accepted
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="table-flex">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <span>Mehmet Kara</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="table-flex">
+                                    <i class="fa-regular fa-rectangle-list"></i>
+                                    <span>Web Platform</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="status-area">
+                                    <span class="status-badge rejected">
+                                        <i class="fa-solid fa-xmark"></i>
+                                        Rejected
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

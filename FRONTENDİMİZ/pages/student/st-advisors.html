@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advisors</title>
+
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="advisors-page">
+        <aside class="advisors-sidebar">
+            <div class="advisors-sidebar-icon">
+                <i class="fa-solid fa-up-down-left-right"></i>
+            </div>
+
+            <ul class="advisors-sidebar-menu">
+                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-briefcase"></i><span>My Projects</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-square-plus"></i><span>Create Project</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-rectangle-list"></i><span>Applications</span></a></li>
+                <li><a href="#" class="active"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="advisors-content">
+            <div class="advisors-topbar">
+                <div class="advisors-student-box">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="advisors-student-info">
+                        <span class="advisors-student-name">Sude Torun</span>
+                        <span class="advisors-student-role">Student</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <h1 class="advisors-title">Advisors</h1>
+            <p class="advisors-subtitle">Browse and request advisors for your projects.</p>
+
+            <div class="advisors-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search advisors by department, expertise or advising status" />
+            </div>
+
+            <div class="advisors-table-wrapper">
+                <table class="advisors-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Expertise</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="advisor-name-cell">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <div class="advisor-name-text">
+                                        <span>Dr. Ahmet</span>
+                                        <span>Yılmaz</span>
+                                    </div>
+                                    <span class="advisor-dot green"></span>
+                                </div>
+                            </td>
+                            <td>Computer Engineering</td>
+                            <td>
+                                <div class="expertise-tags">
+                                    <span class="expertise-tag">Cyber Security</span>
+                                    <span class="expertise-tag">IoT</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="advisor-request-btn">Request</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="advisor-name-cell">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <div class="advisor-name-text">
+                                        <span>Dr. Emine</span>
+                                        <span>Kaya</span>
+                                    </div>
+                                    <span class="advisor-dot red"></span>
+                                </div>
+                            </td>
+                            <td>Electrical Engineering</td>
+                            <td>
+                                <div class="expertise-tags">
+                                    <span class="expertise-tag">NLP</span>
+                                    <span class="expertise-tag">Embedded systems</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="advisor-disabled-text">You cannot request!</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="advisor-name-cell">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <div class="advisor-name-text">
+                                        <span>Dr. Mehmet</span>
+                                        <span>Demir</span>
+                                    </div>
+                                    <span class="advisor-dot green"></span>
+                                </div>
+                            </td>
+                            <td>Mechanical Engineering</td>
+                            <td>
+                                <div class="expertise-tags">
+                                    <span class="expertise-tag">Robotics</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="advisor-request-btn">Request</button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="advisor-name-cell">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <div class="advisor-name-text">
+                                        <span>Dr. Selin</span>
+                                        <span>Yıldız</span>
+                                    </div>
+                                    <span class="advisor-dot red"></span>
+                                </div>
+                            </td>
+                            <td>Software Engineering</td>
+                            <td>
+                                <div class="expertise-tags">
+                                    <span class="expertise-tag">Web Development</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="advisor-disabled-text">You cannot request!</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="advisor-name-cell">
+                                    <i class="fa-regular fa-circle-user"></i>
+                                    <div class="advisor-name-text">
+                                        <span>Dr. Hasan</span>
+                                        <span>Caner</span>
+                                    </div>
+                                    <span class="advisor-dot green"></span>
+                                </div>
+                            </td>
+                            <td>Electrical Engineering</td>
+                            <td>
+                                <div class="expertise-tags">
+                                    <span class="expertise-tag">Signal processing</span>
+                                    <span class="expertise-tag">Control</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="advisor-request-btn">Request</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications</title>
+
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="notifications-page">
+        <aside class="notifications-sidebar">
+            <div class="notifications-sidebar-icon">
+                <i class="fa-solid fa-up-down-left-right"></i>
+            </div>
+
+            <ul class="notifications-sidebar-menu">
+                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-briefcase"></i><span>My Projects</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-square-plus"></i><span>Create Project</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-rectangle-list"></i><span>Advisor Requests</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
+                <li><a href="#" class="active"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="notifications-content">
+            <div class="notifications-topbar">
+                <div class="notifications-student-box">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="notifications-student-info">
+                        <span class="notifications-student-name">Sude Torun</span>
+                        <span class="notifications-student-role">Student</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="notifications-header">
+                <h1 class="notifications-title">Notifications</h1>
+                <span class="notifications-new-count">1 New</span>
+            </div>
+
+            <div class="notification-item">
+                <i class="fa-regular fa-bell notification-icon warning"></i>
+                <span>Last day to submit advisor requests: May 25.</span>
+            </div>
+
+            <div class="notification-item">
+                <i class="fa-solid fa-circle-check notification-icon success"></i>
+                <span>Your application to AI Chatbot has been accepted.</span>
+            </div>
+
+            <div class="notification-item">
+                <i class="fa-regular fa-bell notification-icon warning"></i>
+                <span>Project evaluation results will be announced on June 5.</span>
+            </div>
+
+            <div class="notification-item">
+                <i class="fa-solid fa-xmark notification-icon danger"></i>
+                <span>Your request to join Web Platform was declined.</span>
+            </div>
+
+            <div class="student-request-card">
+                <div class="student-request-left">
+                    <i class="fa-regular fa-circle-user"></i>
+                </div>
+
+                <div class="student-request-middle">
+                    <p>
+                        <strong>Emre Şahin</strong> wants to join your project Cyber Security Monitoring Tool
+                    </p>
+
+                    <div class="student-request-actions">
+                        <button class="accept-btn">Accept</button>
+                        <button class="reject-btn">Reject</button>
+                    </div>
+                </div>
+
+                <div class="student-request-right">
+                    <button class="view-profile-btn">view student profile</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
