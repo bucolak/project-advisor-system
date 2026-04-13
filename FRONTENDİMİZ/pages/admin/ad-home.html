@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Home</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="admin-home-page">
+        <aside class="admin-home-sidebar">
+            <div class="admin-home-sidebar-icon">
+                <i class="fa-solid fa-up-down-left-right"></i>
+            </div>
+
+            <ul class="admin-home-menu">
+                <li><a href="#" class="active"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-folder-open"></i><span>Project Categories</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-flag"></i><span>Announcements<br>& Dates</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-user"></i><span>User Management</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-home-content">
+            <div class="admin-home-topbar">
+                <div class="admin-home-userbox">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="admin-home-userinfo">
+                        <span>Ali Yılmaz</span>
+                        <small>Admin</small>
+                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="admin-home-upper">
+                <div class="admin-home-welcome-card">
+                    <h2>Welcome, Ali Yılmaz 👋</h2>
+                    <p><strong>Role:</strong> Admin</p>
+                    <p><strong>System Access:</strong> Full Control</p>
+                    <p class="admin-home-welcome-text">You can manage categories, users and announcements.</p>
+                </div>
+            </div>
+
+            <div class="admin-home-middle">
+                <div class="admin-home-announcements-card">
+                    <h3>Announcements</h3>
+                    <div class="admin-home-divider"></div>
+
+                    <div class="admin-home-ann-item">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>TÜBİTAK Deadline: May 20</span>
+                    </div>
+
+                    <div class="admin-home-ann-divider"></div>
+
+                    <div class="admin-home-ann-item">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>Teknofest Evaluation: June 5</span>
+                    </div>
+                </div>
+
+                <div class="admin-home-overview-card">
+                    <h3>User Overview</h3>
+                    <div class="admin-home-divider"></div>
+
+                    <div class="admin-home-overview-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Total Users: 24</span>
+                    </div>
+
+                    <div class="admin-home-overview-item">
+                        <i class="fa-regular fa-circle-check green"></i>
+                        <span>Active: 20</span>
+                    </div>
+
+                    <div class="admin-home-overview-item">
+                        <i class="fa-regular fa-square-xmark red"></i>
+                        <span>Deactivated: 4</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-home-lower">
+                <h3 class="admin-home-section-title">Project Categories</h3>
+
+                <div class="admin-home-categories-wrapper">
+                    <div class="admin-home-category-card">
+                        <div class="admin-home-category-body">
+                            <h4>TÜBİTAK Projects</h4>
+                            <p>Student research projects</p>
+                            <div class="admin-home-line"></div>
+                            <p><strong>Active Projects:</strong> 7</p>
+                            <div class="admin-home-line"></div>
+                            <p><strong>Deadlines:</strong> 3</p>
+                        </div>
+
+                        <div class="admin-home-category-footer">
+                            <span class="admin-home-badge tubitak">TÜBİTAK</span>
+                            <button>View</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-home-category-card">
+                        <div class="admin-home-category-body">
+                            <h4>Course Projects</h4>
+                            <p>University Course projects</p>
+                            <div class="admin-home-line"></div>
+                            <p><strong>Active Projects:</strong> 9</p>
+                            <div class="admin-home-line"></div>
+                            <p><strong>Deadlines:</strong> 5</p>
+                        </div>
+
+                        <div class="admin-home-category-footer">
+                            <span class="admin-home-badge course">COURSE</span>
+                            <button>View</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-home-category-card">
+                        <div class="admin-home-category-body">
+                            <h4>Teknofest Projects</h4>
+                            <p>Student Competition projects</p>
+                            <div class="admin-home-line"></div>
+                            <p><strong>Active Projects:</strong> 10</p>
+                            <div class="admin-home-line"></div>
+                            <p><strong>Deadlines:</strong> 4</p>
+                        </div>
+
+                        <div class="admin-home-category-footer">
+                            <span class="admin-home-badge teknofest">TEKNOFEST</span>
+                            <button>View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

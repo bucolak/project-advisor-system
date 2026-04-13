@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Categories</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="admin-categories-page">
+        <aside class="admin-categories-sidebar">
+            <div class="admin-categories-sidebar-icon">
+                <i class="fa-solid fa-up-down-left-right"></i>
+            </div>
+
+            <ul class="admin-categories-menu">
+                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#" class="active"><i class="fa-regular fa-folder-open"></i><span>Project
+                            Categories</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-flag"></i><span>Announcements<br>& Dates</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-user"></i><span>User Management</span></a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-categories-content">
+            <div class="admin-categories-topbar">
+                <div class="admin-categories-userbox">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="admin-categories-userinfo">
+                        <span>Ali Yılmaz</span>
+                        <small>Admin</small>
+                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="admin-categories-header">
+                <h1>Project Categories</h1>
+                <button class="admin-categories-add-btn">+ Add New Category</button>
+            </div>
+
+            <div class="admin-categories-table-wrap">
+                <table class="admin-categories-table">
+                    <thead>
+                        <tr>
+                            <th>Category Name</th>
+                            <th>Description</th>
+                            <th>Active<br />Projects</th>
+                            <th>Deadlines</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>TÜBİTAK<br />Projects</td>
+                            <td>Student research<br />projects</td>
+                            <td>12</td>
+                            <td>3</td>
+                            <td>
+                                <div class="admin-categories-actions">
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Course<br />Projects</td>
+                            <td>University course<br />projects</td>
+                            <td>12</td>
+                            <td>2</td>
+                            <td>
+                                <div class="admin-categories-actions">
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Teknofest<br />Projects</td>
+                            <td>Student competition<br />projects</td>
+                            <td>10</td>
+                            <td>4</td>
+                            <td>
+                                <div class="admin-categories-actions">
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
