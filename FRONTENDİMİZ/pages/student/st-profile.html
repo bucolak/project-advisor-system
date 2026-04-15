@@ -17,77 +17,26 @@
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
 
-        <ul class="profile-sidebar-menu">
-            <li>
-                <a href="st-home.html">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-projects.html">
-                    <i class="fa-solid fa-briefcase"></i>
-                    <span>My Projects</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-createprojects.html">
-                    <i class="fa-regular fa-square-plus"></i>
-                    <span>Create Project</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisorrequests.html">
-                    <i class="fa-regular fa-rectangle-list"></i>
-                    <span>Advisor Requests</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisors.html">
-                    <i class="fa-regular fa-user"></i>
-                    <span>Advisors</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-notifications.html">
-                    <i class="fa-regular fa-bell"></i>
-                    <span>Notifications</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-profile.html" class="active">
-                    <i class="fa-regular fa-circle-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-        </ul>
+            <ul class="profile-sidebar-menu">
+                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-briefcase"></i><span>My Projects</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-square-plus"></i><span>Create Project</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-rectangle-list"></i><span>Applications</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="#" class="active"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
+            </ul>
         </aside>
 
         <main class="profile-content">
-            <div class="student-profile-topbar">
-                <div class="student-profile-user-dropdown">
-                    <div class="student-profile-userbox" onclick="toggleStudentProfileMenu()">
-                        <i class="fa-regular fa-circle-user"></i>
-
-                        <div class="student-profile-userinfo">
-                            <span>Sude Torun</span>
-                            <small>Student</small>
-                        </div>
-
-                        <i class="fa-solid fa-chevron-down"></i>
+            <div class="profile-topbar">
+                <div class="profile-student-box">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="profile-student-info">
+                        <span class="profile-student-name">Sude Torun</span>
+                        <span class="profile-student-role">Student</span>
                     </div>
-
-                    <div class="student-profile-dropdown-menu" id="studentProfileDropdown">
-                        <a href="../../index.html" class="student-profile-logout-btn">
-                            Log Out
-                        </a>
-                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
                 </div>
             </div>
 
@@ -113,10 +62,10 @@
                         </div>
                     </div>
 
-                    <a href="student-profile-edit.html" class="student-profile-edit-btn">
+                    <button class="edit-profile-btn">
                         <i class="fa-regular fa-pen-to-square"></i>
                         Edit Profile
-                    </a>
+                    </button>
                 </div>
 
                 <div class="profile-contact-info">
@@ -164,23 +113,6 @@
             </div>
         </main>
     </div>
-
-    <script>
-        function toggleStudentProfileMenu() {
-            document
-                .getElementById("studentProfileDropdown")
-                .classList.toggle("show");
-        }
-
-        window.addEventListener("click", function (e) {
-            const dropdown = document.getElementById("studentProfileDropdown");
-            const box = document.querySelector(".student-profile-userbox");
-
-            if (box && !box.contains(e.target)) {
-                dropdown.classList.remove("show");
-            }
-        });
-    </script>
 </body>
 
 </html>

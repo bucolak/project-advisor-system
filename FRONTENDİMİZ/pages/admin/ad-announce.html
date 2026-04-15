@@ -17,11 +17,33 @@
             </div>
 
             <ul class="admin-ann-menu">
-                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-folder-open"></i><span>Project Categories</span></a></li>
-                <li><a href="#" class="active"><i class="fa-regular fa-flag"></i><span>Announcements<br>&
-                            Dates</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-user"></i><span>User Management</span></a></li>
+                <li>
+                    <a href="ad-home.html">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="ad-projectcat.html">
+                        <i class="fa-regular fa-folder-open"></i>
+                        <span>Project Categories</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="ad-announce.html" class="active">
+                        <i class="fa-regular fa-flag"></i>
+                        <span>Announcements<br>& Dates</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="ad-user.html">
+                        <i class="fa-regular fa-user"></i>
+                        <span>User Management</span>
+                    </a>
+                </li>
             </ul>
         </aside>
 
@@ -39,11 +61,11 @@
 
             <div class="admin-ann-header">
                 <h1>Announcements &amp; Dates</h1>
-                <button class="admin-ann-add-btn">+ Add New Announcement</button>
+                <a href="ad-addannouncement.html" class="admin-ann-add-btn">+ Add New Announcement</a>
             </div>
 
             <div class="admin-ann-list">
-                <div class="admin-ann-card">
+                <div class="admin-ann-card ann-row">
                     <div class="admin-ann-left">
                         <i class="fa-regular fa-calendar admin-ann-calendar blue"></i>
                         <div class="admin-ann-text">
@@ -57,14 +79,14 @@
                     </div>
 
                     <div class="admin-ann-actions">
-                        <button class="admin-ann-edit-btn">Edit</button>
+                        <a href="ad-editannouncement-tubitak.html" class="admin-ann-edit-btn">Edit</a>
                         <button class="admin-ann-delete-btn">
                             <i class="fa-regular fa-trash-can"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="admin-ann-card">
+                <div class="admin-ann-card ann-row">
                     <div class="admin-ann-left">
                         <i class="fa-regular fa-calendar admin-ann-calendar orange"></i>
                         <div class="admin-ann-text">
@@ -77,28 +99,28 @@
                     </div>
 
                     <div class="admin-ann-actions">
-                        <button class="admin-ann-edit-btn">Edit</button>
+                        <a href="ad-editannouncement-teknofest.html" class="admin-ann-edit-btn">Edit</a>
                         <button class="admin-ann-delete-btn">
                             <i class="fa-regular fa-trash-can"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="admin-ann-card">
+                <div class="admin-ann-card ann-row">
                     <div class="admin-ann-left">
                         <i class="fa-regular fa-calendar admin-ann-calendar blue"></i>
                         <div class="admin-ann-text">
                             <h3>TÜBİTAK Deadline Extended</h3>
                             <div class="admin-ann-inline">
                                 <span class="admin-ann-badge tubitak">TÜBİTAK</span>
-                                <span class="admin-ann-date">Changed to: May 25,2024</span>
+                                <span class="admin-ann-date">Changed to: May 25, 2024</span>
                             </div>
                             <div class="admin-ann-note normal">Announcement: Deadline Extended</div>
                         </div>
                     </div>
 
                     <div class="admin-ann-actions">
-                        <button class="admin-ann-edit-btn">Edit</button>
+                        <a href="ad-editannouncement-extended.html" class="admin-ann-edit-btn">Edit</a>
                         <button class="admin-ann-delete-btn">
                             <i class="fa-regular fa-trash-can"></i>
                         </button>
@@ -107,6 +129,20 @@
             </div>
         </main>
     </div>
+
+    <script>
+        const deleteAnnouncementButtons = document.querySelectorAll(".admin-ann-delete-btn");
+
+        deleteAnnouncementButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                const card = this.closest(".ann-row");
+
+                if (confirm("Are you sure you want to delete this announcement?")) {
+                    card.remove();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

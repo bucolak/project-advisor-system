@@ -2,265 +2,96 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advisor Request</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advisor Request</title>
 
-  <link rel="stylesheet" href="../../css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
-  <div class="advisor-request-page">
-    <aside class="advisor-request-sidebar">
-      <div class="advisor-request-sidebar-icon">
-        <i class="fa-solid fa-up-down-left-right"></i>
-      </div>
-<ul class="advisor-request-menu">
-  <li>
-    <a href="ins-home.html">
-      <i class="fa-solid fa-house"></i>
-      <span>Home</span>
-    </a>
-  </li>
-
-  <li>
-    <a href="ins.request.html" class="active">
-      <i class="fa-regular fa-user"></i>
-      <span>Requests</span>
-    </a>
-  </li>
-
-  <li>
-    <a href="ins-notification.html">
-      <i class="fa-regular fa-bell"></i>
-      <span>Notifications</span>
-    </a>
-  </li>
-
-  <li>
-    <a href="ins-profile.html">
-      <i class="fa-regular fa-circle-user"></i>
-      <span>Profile</span>
-    </a>
-  </li>
-</ul>
-    </aside>
-
-    <main class="advisor-request-content">
-      <div class="advisor-request-topbar">
-        <div class="advisor-user-dropdown">
-          <div class="advisor-user-box" onclick="toggleProfileMenu()">
-            <i class="fa-regular fa-circle-user"></i>
-            <div>
-              <div>Dr. Zeynep Pınarlı</div>
-              <small>Advisor</small>
+    <div class="advisor-request-page">
+        <aside class="advisor-request-sidebar">
+            <div class="advisor-request-sidebar-icon">
+                <i class="fa-solid fa-up-down-left-right"></i>
             </div>
-            <i class="fa-solid fa-chevron-down"></i>
-          </div>
 
-          <div class="advisor-dropdown-menu" id="profileDropdown">
-            <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
-          </div>
-        </div>
-      </div>
+            <ul class="advisor-request-menu">
+                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#" class="active"><i class="fa-regular fa-user"></i><span>Requests</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-user-graduate"></i><span>My Students</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
+            </ul>
+        </aside>
 
-      <div class="advisor-request-header">
-        <h1>Advisor Request</h1>
-        <div class="advisor-request-pending">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          <span>2 Pending Requests</span>
-        </div>
-      </div>
+        <main class="advisor-request-content">
+            <div class="advisor-request-topbar">
+                <div class="advisor-request-userbox">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="advisor-request-userinfo">
+                        <span>Dr. Zeynep Pınarlı</span>
+                        <small>Advisor</small>
+                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
 
-      <!-- REQUEST CARD 1 -->
-      <div class="request-card" id="request1">
-        <div class="request-card-left">
-          <div class="request-project-title-row">
-            <div class="request-project-title">Cyber Security Monitoring Tool</div>
-            <span class="request-tag tubitak">TÜBİTAK</span>
-          </div>
+            <div class="advisor-request-header">
+                <h1>Advisor Request</h1>
+                <div class="advisor-request-pending">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>2 Pending Requests</span>
+                </div>
+            </div>
 
-          <div class="request-info-line"><strong>Student:</strong> Emre Şahin</div>
-          <div class="request-info-line"><strong>Department:</strong> Computer Engineering</div>
-          <div class="request-info-line"><strong>Skill:</strong> Python, Network Security</div>
+            <div class="request-card">
+                <div class="request-card-left">
+                    <div
 
-          <button class="view-profile-btn" onclick="openStudentModal()">
-            view student profile
-          </button>
-        </div>
+                    <div class="request-card">
+  <div class="request-card-left">
+    <div class="request-project-title-row">
+      <div class="request-project-title">Cyber Security Monitoring Tool</div>
+      <span class="request-tag tubitak">TÜBİTAK</span>
+    </div>
 
-        <div class="request-card-right">
-          <div class="request-actions" id="request1-actions">
-            <button class="accept-btn" onclick="setRequestStatus('request1', 'accepted')">Accept</button>
-            <button class="reject-btn" onclick="setRequestStatus('request1', 'rejected')">Reject</button>
-          </div>
-        </div>
-      </div>
+    <div class="request-info-line"><strong>Student:</strong> Emre Şahin</div>
+    <div class="request-info-line"><strong>Department:</strong> Computer Engineering</div>
+    <div class="request-info-line"><strong>Skill:</strong> Python, Network Security</div>
 
-      <!-- REQUEST CARD 2 -->
-      <div class="request-card" id="request2">
-        <div class="request-card-left">
-          <div class="request-project-title-row">
-            <div class="request-project-title">Smart Home Automation</div>
-            <span class="request-tag teknofest">TEKNOFEST</span>
-          </div>
-
-          <div class="request-info-line"><strong>Student:</strong> Can Özkan</div>
-          <div class="request-info-line"><strong>Department:</strong> Electrical Engineering</div>
-          <div class="request-info-line"><strong>Skill:</strong> Arduino, IoT</div>
-
-          <button class="view-profile-btn" onclick="openStudentModal()">
-            view student profile
-          </button>
-        </div>
-
-        <div class="request-card-right">
-          <div class="request-actions" id="request2-actions">
-            <button class="accept-btn" onclick="setRequestStatus('request2', 'accepted')">Accept</button>
-            <button class="reject-btn" onclick="setRequestStatus('request2', 'rejected')">Reject</button>
-          </div>
-        </div>
-      </div>
-    </main>
+    <button class="view-profile-btn">view student profile</button>
   </div>
 
-  <!-- MODAL -->
-  <div class="student-modal-overlay" id="studentModal">
-    <div class="student-modal">
-
-      <div class="modal-top">
-        <h2>Student Profile</h2>
-        <div class="modal-tag">TÜBİTAK</div>
-      </div>
-
-      <div class="modal-content">
-        <div class="modal-left">
-          <div class="student-basic">
-            <i class="fa-regular fa-circle-user"></i>
-            <div>
-              <h3>Emre Şahin</h3>
-              <p>Computer Engineering</p>
-            </div>
-          </div>
-
-          <div class="student-detail-section">
-            <h4>Relevant Courses:</h4>
-            <ul>
-              <li>Network Security</li>
-              <li>Computer Networks</li>
-              <li>Operating Systems</li>
-              <li>Cyber Security Fundamentals</li>
-            </ul>
-          </div>
-
-          <div class="student-detail-section">
-            <h4>Research Interests:</h4>
-            <ul>
-              <li>Network Security</li>
-              <li>Intrusion Detection Systems</li>
-              <li>Ethical Hacking</li>
-              <li>Threat Analysis</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="modal-right">
-          <h3>Other Project</h3>
-
-          <div class="other-project-card">
-            <div class="project-mini-tag">TÜBİTAK</div>
-            <h4>IoT Smart Lock</h4>
-            <p><strong>Project:</strong> Backend Developer</p>
-            <p><strong>Skills:</strong> Python, Raspberry Pi</p>
-          </div>
-
-          <div class="other-project-card">
-            <div class="project-mini-tag orange">TEKNOFEST</div>
-            <h4>Distributed File System</h4>
-            <p><strong>Project:</strong> Backend Developer</p>
-            <p><strong>Skills:</strong> Python, C++</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-buttons">
-        <button class="accept-btn">Accept</button>
-        <button class="reject-btn">Reject</button>
-        <button class="close-btn" onclick="closeStudentModal()">Close</button>
-      </div>
+  <div class="request-card-right">
+    <div></div>
+    <div class="request-actions">
+      <button class="accept-btn">Accept</button>
+      <button class="reject-btn">Reject</button>
     </div>
   </div>
+</div>
 
-  <script>
-    function openStudentModal() {
-      document.getElementById("studentModal").classList.add("active");
-    }
+<div class="request-card">
+  <div class="request-card-left">
+    <div class="request-project-title-row">
+      <div class="request-project-title">Smart Home Automation</div>
+      <span class="request-tag teknofest">TEKNOFEST</span>
+    </div>
 
-    function closeStudentModal() {
-      document.getElementById("studentModal").classList.remove("active");
-    }
+    <div class="request-info-line"><strong>Student:</strong> Can Özkan</div>
+    <div class="request-info-line"><strong>Department:</strong> Electrical Engineering</div>
+    <div class="request-info-line"><strong>Skill:</strong> Arduino, IoT</div>
 
-    function setRequestStatus(requestId, status) {
-      const actions = document.getElementById(requestId + "-actions");
+    <button class="view-profile-btn">view student profile</button>
+  </div>
 
-      if (status === "accepted") {
-        actions.innerHTML = `
-          <div class="request-final-status accepted-status">
-            Accepted
-          </div>
-        `;
-      } else {
-        actions.innerHTML = `
-          <div class="request-final-status rejected-status">
-            Rejected
-          </div>
-        `;
-      }
-    }
-
-    function toggleProfileMenu() {
-      document.getElementById("profileDropdown").classList.toggle("show");
-    }
-
-    window.addEventListener("click", function (e) {
-      const modal = document.getElementById("studentModal");
-      if (e.target === modal) {
-        closeStudentModal();
-      }
-
-      const dropdown = document.querySelector(".advisor-user-dropdown");
-      const profileMenu = document.getElementById("profileDropdown");
-
-      if (dropdown && !dropdown.contains(e.target)) {
-        profileMenu.classList.remove("show");
-      }
-    });
-
-    window.addEventListener("DOMContentLoaded", function () {
-      const params = new URLSearchParams(window.location.search);
-      const targetId = params.get("target");
-
-      if (targetId) {
-        const targetCard = document.getElementById(targetId);
-
-        if (targetCard) {
-          setTimeout(() => {
-            targetCard.scrollIntoView({
-              behavior: "smooth",
-              block: "center"
-            });
-
-            targetCard.classList.add("request-card-highlight");
-
-            setTimeout(() => {
-              targetCard.classList.remove("request-card-highlight");
-            }, 3000);
-          }, 150);
-        }
-      }
-    });
-  </script>
-</body>
-
-</html>
+  <div class="request-card-right">
+    <div></div>
+    <div class="request-actions">
+      <button class="accept-btn">Accept</button>
+      <button class="reject-btn">Reject</button>
+    </div>
+  </div>
+</div>

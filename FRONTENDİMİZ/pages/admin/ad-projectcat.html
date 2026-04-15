@@ -39,7 +39,9 @@
 
             <div class="admin-categories-header">
                 <h1>Project Categories</h1>
-                <button class="admin-categories-add-btn">+ Add New Category</button>
+  <button class="admin-categories-add-btn" onclick="window.location.href='./ad-addcategory.html'">
+    + Add New Category
+  </button>
             </div>
 
             <div class="admin-categories-table-wrap">
@@ -56,13 +58,14 @@
 
                     <tbody>
                         <tr>
+                            <tr class="category-row"></tr>
                             <td>TÜBİTAK<br />Projects</td>
                             <td>Student research<br />projects</td>
                             <td>12</td>
                             <td>3</td>
                             <td>
                                 <div class="admin-categories-actions">
-                                    <button class="edit-btn">Edit</button>
+                                    <a href="ad-editcategory.html" class="edit-btn">Edit</a>
                                     <button class="delete-btn">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>
@@ -71,13 +74,14 @@
                         </tr>
 
                         <tr>
+                            <tr class="category-row"></tr>
                             <td>Course<br />Projects</td>
                             <td>University course<br />projects</td>
                             <td>12</td>
                             <td>2</td>
                             <td>
                                 <div class="admin-categories-actions">
-                                    <button class="edit-btn">Edit</button>
+                                    <a href="ad-editcategory-course.html" class="edit-btn">Edit</a>
                                     <button class="delete-btn">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>
@@ -86,13 +90,14 @@
                         </tr>
 
                         <tr>
+                            <tr class="category-row"></tr>
                             <td>Teknofest<br />Projects</td>
                             <td>Student competition<br />projects</td>
                             <td>10</td>
                             <td>4</td>
                             <td>
                                 <div class="admin-categories-actions">
-                                    <button class="edit-btn">Edit</button>
+                                    <a href="ad-editcategory-teknofest.html" class="edit-btn">Edit</a>
                                     <button class="delete-btn">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </button>
@@ -104,6 +109,22 @@
             </div>
         </main>
     </div>
+    <script>
+  const deleteButtons = document.querySelectorAll(".delete-btn");
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+
+      const row = this.closest(".category-row");
+
+      const result = confirm("Are you sure you want to delete this category?");
+
+      if (result) {
+        row.remove();
+      }
+    });
+  });
+</script>
 </body>
 
 </html>

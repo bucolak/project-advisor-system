@@ -17,61 +17,31 @@
             </div>
 
             <ul class="advisor-profile-menu">
-                <li>
-                    <a href="ins-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-            
-                <li>
-                    <a href="ins.request.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Requests</span>
-                    </a>
-                </li>
-            
-                <li>
-                    <a href="ins-notification.html">
-                        <i class="fa-regular fa-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-            
-                <li>
-                    <a href="ins-profile.html" class="active">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
+                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-user"></i><span>Requests</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="#" class="active"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
             </ul>
         </aside>
 
         <main class="advisor-profile-content">
             <div class="advisor-profile-topbar">
-                <div class="advisor-user-dropdown">
-                    <div class="advisor-user-box" onclick="toggleProfileMenu()">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <div>
-                            <div>Dr. Zeynep Pınarlı</div>
-                            <small>Advisor</small>
-                        </div>
-                        <i class="fa-solid fa-chevron-down"></i>
+                <div class="advisor-profile-userbox">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <div class="advisor-profile-userinfo">
+                        <span>Dr. Zeynep Pınarlı</span>
+                        <small>Advisor</small>
                     </div>
-
-                    <div class="advisor-dropdown-menu" id="profileDropdown">
-                        <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
-                    </div>
+                    <i class="fa-solid fa-chevron-down"></i>
                 </div>
             </div>
 
             <div class="advisor-profile-header-row">
                 <h1>My Profile</h1>
-
-                <a href="ins-profile-edit.html" class="advisor-profile-edit-btn">
+                <button class="advisor-profile-edit-btn">
                     <i class="fa-regular fa-pen-to-square"></i>
                     Edit Profile
-                </a>
+                </button>
             </div>
 
             <div class="advisor-profile-main-card">
@@ -146,21 +116,6 @@
             </div>
         </main>
     </div>
-
-    <script>
-        function toggleProfileMenu() {
-            document.getElementById("profileDropdown").classList.toggle("show");
-        }
-
-        window.addEventListener("click", function (e) {
-            const dropdown = document.querySelector(".advisor-user-dropdown");
-            const profileMenu = document.getElementById("profileDropdown");
-
-            if (dropdown && !dropdown.contains(e.target)) {
-                profileMenu.classList.remove("show");
-            }
-        });
-    </script>
 </body>
 
 </html>
