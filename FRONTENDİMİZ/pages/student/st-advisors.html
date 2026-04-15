@@ -17,26 +17,75 @@
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
 
-            <ul class="advisors-sidebar-menu">
-                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-                <li><a href="#"><i class="fa-solid fa-briefcase"></i><span>My Projects</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-square-plus"></i><span>Create Project</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-rectangle-list"></i><span>Applications</span></a></li>
-                <li><a href="#" class="active"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
-            </ul>
+        <ul class="advisors-sidebar-menu">
+            <li>
+                <a href="st-home.html">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="st-projects.html">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>My Projects</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="st-createprojects.html">
+                    <i class="fa-regular fa-square-plus"></i>
+                    <span>Create Project</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="st-advisorrequests.html">
+                    <i class="fa-regular fa-rectangle-list"></i>
+                    <span>Advisors Requests</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="st-advisors.html" class="active">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Advisors</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="st-notifications.html">
+                    <i class="fa-regular fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="st-profile.html">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+        </ul>
         </aside>
 
         <main class="advisors-content">
             <div class="advisors-topbar">
-                <div class="advisors-student-box">
-                    <i class="fa-regular fa-circle-user"></i>
-                    <div class="advisors-student-info">
-                        <span class="advisors-student-name">Sude Torun</span>
-                        <span class="advisors-student-role">Student</span>
+                <div class="advisors-user-dropdown">
+                    <div class="advisors-student-box" onclick="toggleAdvisorProfileMenu()">
+                        <i class="fa-regular fa-circle-user"></i>
+            
+                        <div class="advisors-student-info">
+                            <span class="advisors-student-name">Sude Torun</span>
+                            <span class="advisors-student-role">Student</span>
+                        </div>
+            
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
-                    <i class="fa-solid fa-chevron-down"></i>
+            
+                    <div class="advisors-dropdown-menu" id="advisorProfileDropdown">
+                        <a href="../../index.html" class="advisors-logout-btn">Log Out</a>
+                    </div>
                 </div>
             </div>
 
@@ -45,10 +94,18 @@
 
             <div class="advisors-search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search advisors by department, expertise or advising status" />
+                <input type="text" id="advisorSearch"
+                    placeholder="Search by department, expertise or status: (active / inactive)"
+                    onkeyup="filterAdvisors()" />
             </div>
 
-            <div class="advisors-table-wrapper">
+            
+
+            <p id="noAdvisorMessage" class="no-advisor-message" style="display: none;">
+                No advisor found.
+            </p>
+
+            <div class="advisors-table-wrapper" id="advisorsTableWrapper">
                 <table class="advisors-table">
                     <thead>
                         <tr>
@@ -60,7 +117,7 @@
                     </thead>
 
                     <tbody>
-                        <tr>
+                        <tr class="advisor-row" data-status="active">
                             <td>
                                 <div class="advisor-name-cell">
                                     <i class="fa-regular fa-circle-user"></i>
@@ -78,12 +135,12 @@
                                     <span class="expertise-tag">IoT</span>
                                 </div>
                             </td>
-                            <td>
-                                <button class="advisor-request-btn">Request</button>
+                            <td id="action-ahmet">
+                                <button class="advisor-request-btn" onclick="openRequestModal('ahmet')">Request</button>
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="advisor-row" data-status="inactive">
                             <td>
                                 <div class="advisor-name-cell">
                                     <i class="fa-regular fa-circle-user"></i>
@@ -106,7 +163,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="advisor-row" data-status="active">
                             <td>
                                 <div class="advisor-name-cell">
                                     <i class="fa-regular fa-circle-user"></i>
@@ -123,12 +180,13 @@
                                     <span class="expertise-tag">Robotics</span>
                                 </div>
                             </td>
-                            <td>
-                                <button class="advisor-request-btn">Request</button>
+                            <td id="action-mehmet">
+                                <button class="advisor-request-btn"
+                                    onclick="openRequestModal('mehmet')">Request</button>
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="advisor-row" data-status="inactive">
                             <td>
                                 <div class="advisor-name-cell">
                                     <i class="fa-regular fa-circle-user"></i>
@@ -150,7 +208,7 @@
                             </td>
                         </tr>
 
-                        <tr>
+                        <tr class="advisor-row" data-status="active">
                             <td>
                                 <div class="advisor-name-cell">
                                     <i class="fa-regular fa-circle-user"></i>
@@ -168,8 +226,8 @@
                                     <span class="expertise-tag">Control</span>
                                 </div>
                             </td>
-                            <td>
-                                <button class="advisor-request-btn">Request</button>
+                            <td id="action-hasan">
+                                <button class="advisor-request-btn" onclick="openRequestModal('hasan')">Request</button>
                             </td>
                         </tr>
                     </tbody>
@@ -177,6 +235,130 @@
             </div>
         </main>
     </div>
+
+    <!-- REQUEST MODAL -->
+    <div class="request-modal-overlay" id="requestModal">
+        <div class="request-modal">
+            <div class="request-modal-header">
+                <h2>Request Advisor</h2>
+                <button class="request-modal-close" onclick="closeRequestModal()">×</button>
+            </div>
+
+            <div class="request-modal-body">
+                <label for="projectSelect">Project:</label>
+                <select id="projectSelect" class="request-project-select">
+                    <option value="">Select a project</option>
+                    <option value="AI Chatbot">AI Chatbot</option>
+                    <option value="Blockchain Voting">Blockchain Voting</option>
+                    <option value="Food Delivery App">Food Delivery App</option>
+                </select>
+            </div>
+
+            <div class="request-modal-footer">
+                <button class="request-cancel-btn" onclick="closeRequestModal()">Cancel</button>
+                <button class="request-send-btn" onclick="sendAdvisorRequest()">Send Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAdvisorId = null;
+
+        function filterAdvisors() {
+            const input = document.getElementById("advisorSearch").value.toLowerCase().trim();
+            const rows = document.querySelectorAll(".advisor-row");
+            const noAdvisorMessage = document.getElementById("noAdvisorMessage");
+            const tableWrapper = document.getElementById("advisorsTableWrapper");
+
+            let found = false;
+
+            rows.forEach((row) => {
+                const rowText = row.textContent.toLowerCase();
+                const status = row.dataset.status.toLowerCase();
+
+                let matches = false;
+
+                if (input === "") {
+                    matches = true;
+                } else if (
+                    "active".startsWith(input) ||
+                    "inactive".startsWith(input)
+                ) {
+                    matches = status.startsWith(input);
+                } else {
+                    matches = rowText.includes(input);
+                }
+
+                row.style.display = matches ? "" : "none";
+
+                if (matches) {
+                    found = true;
+                }
+            });
+
+            if (input === "" || found) {
+                tableWrapper.style.display = "block";
+                noAdvisorMessage.style.display = "none";
+            } else {
+                tableWrapper.style.display = "none";
+                noAdvisorMessage.style.display = "block";
+            }
+        }
+
+        function openRequestModal(advisorId) {
+            currentAdvisorId = advisorId;
+            document.getElementById("requestModal").classList.add("show");
+            document.getElementById("projectSelect").value = "";
+        }
+
+        function closeRequestModal() {
+            document.getElementById("requestModal").classList.remove("show");
+            currentAdvisorId = null;
+        }
+
+        function sendAdvisorRequest() {
+            const projectSelect = document.getElementById("projectSelect");
+            const selectedProject = projectSelect.value;
+
+            if (!selectedProject || !currentAdvisorId) {
+                return;
+            }
+
+            const actionCell = document.getElementById("action-" + currentAdvisorId);
+
+            actionCell.innerHTML = `
+                <div class="requested-wrapper">
+                    <div class="requested-badge">Requested</div>
+                    <div class="requested-project-name">${selectedProject}</div>
+                </div>
+            `;
+
+            closeRequestModal();
+        }
+
+        window.addEventListener("click", function (e) {
+            const modal = document.getElementById("requestModal");
+            if (e.target === modal) {
+                closeRequestModal();
+            }
+        });
+    </script>
+    <script>
+        function toggleAdvisorProfileMenu() {
+            document
+                .getElementById("advisorProfileDropdown")
+                .classList.toggle("show");
+        }
+
+        window.addEventListener("click", function (e) {
+            const dropdown = document.getElementById("advisorProfileDropdown");
+            const box = document.querySelector(".advisors-student-box");
+
+            if (!box.contains(e.target)) {
+                dropdown.classList.remove("show");
+            }
+        });
+    </script>
 </body>
 
 </html>

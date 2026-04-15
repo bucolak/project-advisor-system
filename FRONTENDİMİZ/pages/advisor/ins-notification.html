@@ -17,23 +17,52 @@
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
 
-            <ul class="advisor-notif-menu">
-                <li><a href="#"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-user"></i><span>Requests</span></a></li>
-                <li><a href="#" class="active"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
-            </ul>
+        <ul class="advisor-notif-menu">
+            <li>
+                <a href="ins-home.html">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="ins.request.html">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Requests</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="ins-notification.html" class="active">
+                    <i class="fa-regular fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="ins-profile.html">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+        </ul>
         </aside>
 
         <main class="advisor-notif-content">
             <div class="advisor-notif-topbar">
-                <div class="advisor-notif-userbox">
-                    <i class="fa-regular fa-circle-user"></i>
-                    <div class="advisor-notif-userinfo">
-                        <span>Dr. Zeynep Pınarlı</span>
-                        <small>Advisor</small>
+                <div class="advisor-user-dropdown">
+                    <div class="advisor-user-box" onclick="toggleProfileMenu()">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <div>
+                            <div>Dr. Zeynep Pınarlı</div>
+                            <small>Advisor</small>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
-                    <i class="fa-solid fa-chevron-down"></i>
+
+                    <div class="advisor-dropdown-menu" id="profileDropdown">
+                        <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
+                    </div>
                 </div>
             </div>
 
@@ -42,6 +71,7 @@
                 <span class="advisor-notif-new">2 New</span>
             </div>
 
+            <!-- NOTIFICATION 1 -->
             <div class="advisor-notif-card">
                 <div class="advisor-notif-card-left">
                     <i class="fa-regular fa-circle-user"></i>
@@ -56,10 +86,11 @@
                 </div>
 
                 <div class="advisor-notif-card-right">
-                    <button class="advisor-notif-view-btn">view</button>
+                    <a href="ins.request.html?target=request1" class="advisor-notif-view-btn">view</a>
                 </div>
             </div>
 
+            <!-- NOTIFICATION 2 -->
             <div class="advisor-notif-card">
                 <div class="advisor-notif-card-left">
                     <i class="fa-regular fa-circle-user"></i>
@@ -74,10 +105,11 @@
                 </div>
 
                 <div class="advisor-notif-card-right">
-                    <button class="advisor-notif-view-btn">view</button>
+                    <a href="ins.request.html?target=request2" class="advisor-notif-view-btn">view</a>
                 </div>
             </div>
 
+            <!-- NOTIFICATION 3 -->
             <div class="advisor-notif-card">
                 <div class="advisor-notif-card-left">
                     <i class="fa-regular fa-circle-user"></i>
@@ -92,10 +124,11 @@
                 </div>
 
                 <div class="advisor-notif-card-right">
-                    <button class="advisor-notif-view-btn">view</button>
+                    <a href="ins.request.html?target=request3" class="advisor-notif-view-btn">view</a>
                 </div>
             </div>
 
+            <!-- NOTIFICATION 4 -->
             <div class="advisor-notif-card">
                 <div class="advisor-notif-card-left">
                     <i class="fa-regular fa-circle-user"></i>
@@ -110,10 +143,11 @@
                 </div>
 
                 <div class="advisor-notif-card-right">
-                    <button class="advisor-notif-view-btn">view</button>
+                    <a href="ins.request.html?target=request4" class="advisor-notif-view-btn">view</a>
                 </div>
             </div>
 
+            <!-- NOTIFICATION 5 -->
             <div class="advisor-notif-card">
                 <div class="advisor-notif-card-left">
                     <i class="fa-regular fa-circle-user"></i>
@@ -128,11 +162,26 @@
                 </div>
 
                 <div class="advisor-notif-card-right">
-                    <button class="advisor-notif-view-btn">view</button>
+                    <a href="ins.request.html?target=request5" class="advisor-notif-view-btn">view</a>
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+        function toggleProfileMenu() {
+            document.getElementById("profileDropdown").classList.toggle("show");
+        }
+
+        window.addEventListener("click", function (e) {
+            const dropdown = document.querySelector(".advisor-user-dropdown");
+            const profileMenu = document.getElementById("profileDropdown");
+
+            if (dropdown && !dropdown.contains(e.target)) {
+                profileMenu.classList.remove("show");
+            }
+        });
+    </script>
 </body>
 
 </html>
