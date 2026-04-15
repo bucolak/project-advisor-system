@@ -20,11 +20,33 @@
             </div>
 
             <ul class="advisor-menu">
-                <li><a class="active"><i class="fa-solid fa-house"></i>Home</a></li>
-                <li><a><i class="fa-regular fa-user"></i>Requests</a></li>
-                <li><a><i class="fa-solid fa-user-graduate"></i>My Students</a></li>
-                <li><a><i class="fa-regular fa-bell"></i>Notifications</a></li>
-                <li><a><i class="fa-regular fa-circle-user"></i>Profile</a></li>
+                <li>
+                    <a href="ins-home.html" class="active">
+                        <i class="fa-solid fa-house"></i>
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="ins.request.html">
+                        <i class="fa-regular fa-user"></i>
+                        Requests
+                    </a>
+                </li>
+
+                <li>
+                    <a href="ins-notification.html">
+                        <i class="fa-regular fa-bell"></i>
+                        Notifications
+                    </a>
+                </li>
+
+                <li>
+                    <a href="ins-profile.html">
+                        <i class="fa-regular fa-circle-user"></i>
+                        Profile
+                    </a>
+                </li>
             </ul>
         </aside>
 
@@ -33,13 +55,19 @@
 
             <!-- TOP BAR -->
             <div class="advisor-topbar">
-                <div class="advisor-user-box">
-                    <i class="fa-regular fa-circle-user"></i>
-                    <div>
-                        <div>Dr. Zeynep Pınarlı</div>
-                        <small>Advisor</small>
+                <div class="advisor-user-dropdown">
+                    <div class="advisor-user-box" onclick="toggleProfileMenu()">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <div>
+                            <div>Dr. Zeynep Pınarlı</div>
+                            <small>Advisor</small>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
-                    <i class="fa-solid fa-chevron-down"></i>
+
+                    <div class="advisor-dropdown-menu" id="profileDropdown">
+                        <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
+                    </div>
                 </div>
             </div>
 
@@ -52,28 +80,33 @@
 
             <!-- ANNOUNCEMENTS + STATUS -->
             <div class="top-section">
-
                 <div class="announcements">
                     <h3>Announcements</h3>
                     <p class="sub">These announcements are published by admin.</p>
 
-                    <div class="ann-item"><i class="fa-solid fa-thumbtack"></i> Deadline for project creation: May 20
+                    <div class="ann-item">
+                        <i class="fa-solid fa-thumbtack"></i> Deadline for project creation: May 20
                     </div>
-                    <div class="ann-item"><i class="fa-solid fa-thumbtack"></i> Evaluation results: June 5</div>
-                    <div class="ann-item"><i class="fa-solid fa-thumbtack"></i> Last day for advisor request submission:
-                        May 25</div>
+                    <div class="ann-item">
+                        <i class="fa-solid fa-thumbtack"></i> Evaluation results: June 5
+                    </div>
+                    <div class="ann-item">
+                        <i class="fa-solid fa-thumbtack"></i> Last day for advisor request submission: May 25
+                    </div>
                 </div>
 
                 <div class="status-box">
                     <h3>Advising Status</h3>
-                    <p>You are currently available for advising students</p>
 
                     <div class="status-toggle">
-                        <span class="active-status">Active</span>
-                        <span class="inactive-status">Inactive</span>
+                        <span class="active-status selected" onclick="setAdvisorStatus('active')">Active</span>
+                        <span class="inactive-status" onclick="setAdvisorStatus('inactive')">Inactive</span>
                     </div>
-                </div>
 
+                    <p class="status-text" id="statusText">
+                        You are currently available for advising students
+                    </p>
+                </div>
             </div>
 
             <!-- PROJECTS -->
@@ -86,7 +119,7 @@
                     <p>Student: Ayşe Demir</p>
                     <p>Department: Software Engineering</p>
                     <p>Skills: Python, NLP</p>
-                    <button>View Details</button>
+                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
                 </div>
 
                 <div class="project-card">
@@ -94,7 +127,7 @@
                     <p>Student: Mehmet Kaya</p>
                     <p>Department: Computer Engineering</p>
                     <p>Skills: HTML, CSS</p>
-                    <button>View Details</button>
+                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
                 </div>
 
                 <div class="project-card">
@@ -102,7 +135,7 @@
                     <p>Student: Elif Yılmaz</p>
                     <p>Department: Software Engineering</p>
                     <p>Skills: Python, SQL</p>
-                    <button>View Details</button>
+                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
                 </div>
 
                 <div class="project-card">
@@ -110,7 +143,7 @@
                     <p>Student: Burak Çelik</p>
                     <p>Department: Software Engineering</p>
                     <p>Skills: React, Node.js</p>
-                    <button>View Details</button>
+                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
                 </div>
 
                 <div class="project-card">
@@ -118,7 +151,7 @@
                     <p>Student: Ahmet Korkmaz</p>
                     <p>Department: Software Engineering</p>
                     <p>Skills: Solidity, C++</p>
-                    <button>View Details</button>
+                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
                 </div>
 
             </div>
@@ -126,6 +159,45 @@
         </main>
     </div>
 
+    <script>
+        function setAdvisorStatus(status) {
+            const activeBtn = document.querySelector(".active-status");
+            const inactiveBtn = document.querySelector(".inactive-status");
+            const statusText = document.getElementById("statusText");
+
+            activeBtn.classList.remove("selected");
+            inactiveBtn.classList.remove("selected");
+
+            if (status === "active") {
+                activeBtn.classList.add("selected");
+                statusText.textContent =
+                    "You are currently available for advising students";
+            } else {
+                inactiveBtn.classList.add("selected");
+                statusText.textContent =
+                    "You are currently unavailable for advising students";
+            }
+        }
+
+        window.onload = function () {
+            setAdvisorStatus("active");
+        };
+    </script>
+
+    <script>
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById("profileDropdown");
+            dropdown.classList.toggle("show");
+        }
+
+        document.addEventListener("click", function (e) {
+            const userDropdown = document.querySelector(".advisor-user-dropdown");
+
+            if (!userDropdown.contains(e.target)) {
+                document.getElementById("profileDropdown").classList.remove("show");
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Profile Edit</title>
+
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="student-profile-edit-page">
+        <aside class="student-profile-edit-sidebar">
+            <div class="student-profile-edit-sidebar-icon">
+                <i class="fa-solid fa-up-down-left-right"></i>
+            </div>
+
+            <ul class="student-profile-edit-menu">
+                <li>
+                    <a href="st-home.html">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="st-projects.html">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>My Projects</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="st-createprojects.html">
+                        <i class="fa-regular fa-square-plus"></i>
+                        <span>Create Project</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="st-advisorrequests.html">
+                        <i class="fa-regular fa-rectangle-list"></i>
+                        <span>Advisor Requests</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="st-advisors.html">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Advisors</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="st-notifications.html">
+                        <i class="fa-regular fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="st-profile.html" class="active">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="student-profile-edit-content">
+        <div class="student-profile-edit-topbar">
+            <div class="student-profile-edit-user-dropdown">
+                <div class="student-profile-edit-userbox" onclick="toggleStudentProfileEditMenu()">
+                    <i class="fa-regular fa-circle-user"></i>
+        
+                    <div class="student-profile-edit-userinfo">
+                        <span>Sude Torun</span>
+                        <small>Student</small>
+                    </div>
+        
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+        
+                <div class="student-profile-edit-dropdown-menu" id="studentProfileEditDropdown">
+                    <a href="../../index.html" class="student-profile-edit-logout-btn">
+                        Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+
+            <h1 class="student-profile-edit-title">Profile</h1>
+
+            <div class="student-profile-edit-card">
+                <div class="student-profile-edit-header">
+                    <div class="student-profile-edit-photo-box">
+                        <i class="fa-regular fa-camera"></i>
+                    </div>
+
+                    <div class="student-profile-edit-maininfo">
+                        <h2>Sude Torun</h2>
+
+                        <div class="student-profile-edit-row">
+                            <label>Department:</label>
+                            <input type="text" value="Software Engineering" />
+                        </div>
+
+                        <div class="student-profile-edit-row">
+                            <label>Year:</label>
+                            <input type="text" value="3" />
+                        </div>
+                    </div>
+
+                    <div class="student-profile-edit-actions">
+                        <a href="st-profile.html" class="student-save-btn">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            Save Changes
+                        </a>
+                        <a href="st-profile.html" class="student-cancel-btn">Cancel</a>
+                    </div>
+                </div>
+
+                <div class="student-profile-edit-info">
+                    <div class="student-profile-edit-row full">
+                        <label>E-mail:</label>
+                        <input type="email" value="sude.torun@st.uskudar.edu.tr" />
+                    </div>
+
+                    <div class="student-profile-edit-row full">
+                        <label>Interests:</label>
+                        <input type="text" value="" />
+                    </div>
+
+                    <div class="student-profile-edit-row full">
+                        <label>Git-Hub link:</label>
+                        <input type="text" value="" />
+                    </div>
+
+                    <div class="student-profile-edit-row full">
+                        <label>LinkedIn link:</label>
+                        <input type="text" value="" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="student-profile-edit-bottom">
+                <div class="student-profile-edit-bio-box">
+                    <label>Short bio:</label>
+                    <textarea></textarea>
+                </div>
+
+                <div class="student-profile-edit-skills-box">
+                    <label>Technical Skills:</label>
+
+                    <div class="student-profile-edit-skills">
+                        <span>Web Development</span>
+                        <span>Robotics</span>
+                        <span>Embedded systems</span>
+                        <span>Signal processing</span>
+                        <span>Control</span>
+                        <span>IoT</span>
+                        <span>Cyber Security</span>
+                        <span>NLP</span>
+                    </div>
+
+                    <button class="student-add-skill-btn">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        function toggleStudentProfileEditMenu() {
+            document
+                .getElementById("studentProfileEditDropdown")
+                .classList.toggle("show");
+        }
+
+        window.addEventListener("click", function (e) {
+            const dropdown = document.getElementById("studentProfileEditDropdown");
+            const box = document.querySelector(".student-profile-edit-userbox");
+
+            if (!box.contains(e.target)) {
+                dropdown.classList.remove("show");
+            }
+        });
+    </script>
+    <script>
+        function toggleStudentProfileMenu() {
+            document
+                .getElementById("studentProfileDropdown")
+                .classList.toggle("show");
+        }
+
+        window.addEventListener("click", function (e) {
+            const dropdown = document.getElementById("studentProfileDropdown");
+            const box = document.querySelector(".student-profile-userbox");
+
+            if (!box.contains(e.target)) {
+                dropdown.classList.remove("show");
+            }
+        });
+    </script>
+</body>
+
+</html>
