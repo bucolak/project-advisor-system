@@ -1756,27 +1756,71 @@ body {
 
 /* STATUS */
 .status-box {
+  width: 500px;
+  min-height: 310px;
   border: 1px solid #555;
-  padding: 15px;
-  width: 250px;
+  background: #efefef;
+  padding: 34px 24px 24px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.status-box h3 {
+  margin: 0 0 22px 0;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #111;
 }
 
 .status-toggle {
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: nowrap;
 }
 
-.active-status {
-  background: green;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 10px;
+.status-toggle span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  height: 52px;
+  padding: 0 22px;
+  border-radius: 18px;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
 }
 
+.active-status,
 .inactive-status {
-  background: #ccc;
-  padding: 5px 10px;
-  border-radius: 10px;
+  background: #d3d3d3;
+  color: #111;
+}
+
+.active-status.selected {
+  background: #0a9600;
+  color: #fff;
+}
+
+.inactive-status.selected {
+  background: #7d7d7d;
+  color: #fff;
+}
+
+.status-text {
+  margin: 0;
+  max-width: 420px;
+  font-size: 27px;
+  line-height: 1.15;
+  text-align: center;
+  color: #111;
 }
 
 /* PROJECTS */
