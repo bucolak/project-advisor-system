@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,8 +38,8 @@
                 <div class="profile-box">
                     <div class="profile-icon">◉</div>
                     <div class="profile-text">
-                        <div class="profile-name">Sude Torun</div>
-                        <div class="profile-role">Student</div>
+                        <div class="profile-name" id="topProfileName">Sude Torun</div>
+                        <div class="profile-role" id="topProfileRole">Student</div>
                     </div>
                     <div class="profile-arrow">⌄</div>
                 </div>
@@ -50,9 +49,9 @@
             <div class="row">
 
                 <div class="card">
-                    <h2>Welcome, Sude 👋</h2>
-                    <p>Department: Software Engineering</p>
-                    <p>Year: 3</p>
+                    <h2 id="welcomeText">Welcome, Sude 👋</h2>
+                    <p>Department: <span id="studentDepartment">Software Engineering</span></p>
+                    <p>Year: <span id="studentYear">3</span></p>
                 </div>
 
                 <div class="card">
@@ -111,6 +110,7 @@
 
     </div>
 
+    <script src="st-home.js"></script>
 </body>
 
 </html>

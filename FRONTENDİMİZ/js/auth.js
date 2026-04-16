@@ -8,18 +8,19 @@ document.getElementById("loginBtn").addEventListener("click", async function () 
   }
 
   try {
-    const response = await fetch("http://localhost:8080/login", {
+    const response = await fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email: email,
-        password: password
+        email,
+        password
       })
     });
 
     const result = await response.json();
+    console.log("LOGIN RESPONSE:", result);
 
     if (!response.ok) {
       alert(result.message || "Invalid e-mail or password.");

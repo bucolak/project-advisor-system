@@ -32,7 +32,7 @@ public class ProjectService {
 
     @Transactional
     public Project createProject(Long userId, CreateProjectRequest req) {
-        Student student = studentRepository.findByUserId(userId)
+        Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
         ProjectCategory category = null;
         if (req.getCategoryId() != null)
@@ -45,14 +45,14 @@ public class ProjectService {
     }
 
     public List<Project> getMyProjects(Long userId) {
-        Student student = studentRepository.findByUserId(userId)
+        Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
         return projectRepository.findByStudentAndIsDeletedFalse(student);
     }
 
     @Transactional
     public AdvisorRequest requestAdvisor(Long userId, Long projectId, Long advisorId) {
-        Student student = studentRepository.findByUserId(userId)
+        Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proje bulunamadı."));

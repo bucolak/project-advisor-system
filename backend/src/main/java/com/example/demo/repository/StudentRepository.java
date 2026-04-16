@@ -1,9 +1,11 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.Student;
-import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.entity.Student;
+
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Optional<Student> findByUserId(Long userId);
+    Optional<Student> findById(Long userId);
 }
