@@ -16,35 +16,36 @@
       <div class="advisor-request-sidebar-icon">
         <i class="fa-solid fa-up-down-left-right"></i>
       </div>
-<ul class="advisor-request-menu">
-  <li>
-    <a href="ins-home.html">
-      <i class="fa-solid fa-house"></i>
-      <span>Home</span>
-    </a>
-  </li>
 
-  <li>
-    <a href="ins.request.html" class="active">
-      <i class="fa-regular fa-user"></i>
-      <span>Requests</span>
-    </a>
-  </li>
+      <ul class="advisor-request-menu">
+        <li>
+          <a href="ins-home.html">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+          </a>
+        </li>
 
-  <li>
-    <a href="ins-notification.html">
-      <i class="fa-regular fa-bell"></i>
-      <span>Notifications</span>
-    </a>
-  </li>
+        <li>
+          <a href="ins.request.html" class="active">
+            <i class="fa-regular fa-user"></i>
+            <span>Requests</span>
+          </a>
+        </li>
 
-  <li>
-    <a href="ins-profile.html">
-      <i class="fa-regular fa-circle-user"></i>
-      <span>Profile</span>
-    </a>
-  </li>
-</ul>
+        <li>
+          <a href="ins-notification.html">
+            <i class="fa-regular fa-bell"></i>
+            <span>Notifications</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="ins-profile.html">
+            <i class="fa-regular fa-circle-user"></i>
+            <span>Profile</span>
+          </a>
+        </li>
+      </ul>
     </aside>
 
     <main class="advisor-request-content">
@@ -85,7 +86,7 @@
           <div class="request-info-line"><strong>Department:</strong> Computer Engineering</div>
           <div class="request-info-line"><strong>Skill:</strong> Python, Network Security</div>
 
-          <button class="view-profile-btn" onclick="openStudentModal()">
+          <button class="view-profile-btn" onclick="openStudentModal('request1')">
             view student profile
           </button>
         </div>
@@ -110,7 +111,7 @@
           <div class="request-info-line"><strong>Department:</strong> Electrical Engineering</div>
           <div class="request-info-line"><strong>Skill:</strong> Arduino, IoT</div>
 
-          <button class="view-profile-btn" onclick="openStudentModal()">
+          <button class="view-profile-btn" onclick="openStudentModal('request2')">
             view student profile
           </button>
         </div>
@@ -185,15 +186,18 @@
       </div>
 
       <div class="modal-buttons">
-        <button class="accept-btn">Accept</button>
-        <button class="reject-btn">Reject</button>
+        <button class="accept-btn" onclick="handleModalAction('accepted')">Accept</button>
+        <button class="reject-btn" onclick="handleModalAction('rejected')">Reject</button>
         <button class="close-btn" onclick="closeStudentModal()">Close</button>
       </div>
     </div>
   </div>
 
   <script>
-    function openStudentModal() {
+    let currentRequestId = null;
+
+    function openStudentModal(requestId) {
+      currentRequestId = requestId;
       document.getElementById("studentModal").classList.add("active");
     }
 
@@ -217,6 +221,13 @@
           </div>
         `;
       }
+    }
+
+    function handleModalAction(status) {
+      if (currentRequestId) {
+        setRequestStatus(currentRequestId, status);
+      }
+      closeStudentModal();
     }
 
     function toggleProfileMenu() {
