@@ -99,9 +99,9 @@
                         </div>
 
                         <div class="admin-home-category-footer">
-                            <span class="admin-home-badge tubitak">TÜBİTAK</span>
-                            <button>View</button>
-                        </div>
+     <span class="admin-home-badge tubitak">TÜBİTAK</span>
+     <button id="openTubitakModal">View</button>
+</div> 
                     </div>
 
                     <div class="admin-home-category-card">
@@ -137,8 +137,85 @@
                     </div>
                 </div>
             </div>
+            <div class="admin-projects-modal-overlay" id="tubitakModal">
+  <div class="admin-projects-modal">
+    <div class="admin-projects-modal-header">
+      <h2>TÜBİTAK Projects</h2>
+      <span class="admin-projects-modal-badge">TÜBİTAK</span>
+    </div>
+
+    <div class="admin-projects-modal-list">
+      <div class="admin-projects-modal-item">
+        <span class="admin-projects-dot"></span>
+        <span class="admin-projects-name">AI Chatbot</span>
+        <button class="admin-projects-detail-btn">View Details</button>
+      </div>
+
+      <div class="admin-projects-modal-item">
+        <span class="admin-projects-dot"></span>
+        <span class="admin-projects-name">Health Tracker</span>
+        <button class="admin-projects-detail-btn" onclick="window.location.href='ad-project-details-healthtracker.html'">
+    View Details
+  </button>
+      </div>
+
+      <div class="admin-projects-modal-item">
+        <span class="admin-projects-dot"></span>
+        <span class="admin-projects-name">Blockchain voting</span>
+        <button class="admin-projects-detail-btn">View Details</button>
+      </div>
+
+      <div class="admin-projects-modal-item">
+        <span class="admin-projects-dot"></span>
+        <span class="admin-projects-name">Smart Parking System</span>
+        <button class="admin-projects-detail-btn">View Details</button>
+      </div>
+
+      <div class="admin-projects-modal-item">
+        <span class="admin-projects-dot"></span>
+        <span class="admin-projects-name">Weather Forecast App</span>
+        <button class="admin-projects-detail-btn">View Details</button>
+      </div>
+
+      <div class="admin-projects-modal-item">
+        <span class="admin-projects-dot"></span>
+        <span class="admin-projects-name">Drone Navigation System</span>
+        <button class="admin-projects-detail-btn">View Details</button>
+      </div>
+
+      <div class="admin-projects-modal-item">
+        <span class="admin-projects-dot"></span>
+        <span class="admin-projects-name">E-Commerce Web Platform</span>
+        <button class="admin-projects-detail-btn">View Details</button>
+      </div>
+    </div>
+
+    <div class="admin-projects-modal-footer">
+      <button id="closeTubitakModal" class="admin-projects-cancel-btn">Cancel</button>
+    </div>
+  </div>
+</div>
         </main>
     </div>
+    <script>
+  const openTubitakModal = document.getElementById("openTubitakModal");
+  const tubitakModal = document.getElementById("tubitakModal");
+  const closeTubitakModal = document.getElementById("closeTubitakModal");
+
+  openTubitakModal.addEventListener("click", () => {
+    tubitakModal.classList.add("show");
+  });
+
+  closeTubitakModal.addEventListener("click", () => {
+    tubitakModal.classList.remove("show");
+  });
+
+  tubitakModal.addEventListener("click", (e) => {
+    if (e.target === tubitakModal) {
+      tubitakModal.classList.remove("show");
+    }
+  });
+</script>
 </body>
 
 </html>
