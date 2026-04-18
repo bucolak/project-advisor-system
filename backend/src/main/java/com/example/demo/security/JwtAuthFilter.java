@@ -24,37 +24,37 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(
+            HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+
         System.out.println("AUTH HEADER: " + authHeader);
         System.out.println("REQUEST URI: " + request.getRequestURI());
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            System.out.println("TOKEN VALID: " + jwtUtil.isTokenValid(token));
 
             if (jwtUtil.isTokenValid(token)) {
                 Long userId = jwtUtil.extractUserId(token);
                 String role = jwtUtil.extractRole(token);
 
-                String authority = role.startsWith("ROLE_") ? role : "ROLE_" + role;
-
+                System.out.println("TOKEN VALID: true");
                 System.out.println("EXTRACTED USER ID: " + userId);
                 System.out.println("EXTRACTED ROLE: " + role);
-                System.out.println("FINAL AUTHORITY: " + authority);
+                System.out.println("FINAL AUTHORITY: ROLE_" + role);
 
-                UsernamePasswordAuthenticationToken auth
+                UsernamePasswordAuthenticationToken authentication
                         = new UsernamePasswordAuthenticationToken(
                                 userId,
                                 null,
-                                List.of(new SimpleGrantedAuthority(authority))
+                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
                         );
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
                 System.out.println("AUTHENTICATION SET");
             }
         }

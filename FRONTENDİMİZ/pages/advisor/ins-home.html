@@ -13,7 +13,6 @@
 
     <div class="advisor-home">
 
-        <!-- SIDEBAR -->
         <aside class="advisor-sidebar">
             <div class="sidebar-icon">
                 <i class="fa-solid fa-up-down-left-right"></i>
@@ -50,48 +49,40 @@
             </ul>
         </aside>
 
-        <!-- CONTENT -->
         <main class="advisor-content">
 
-            <!-- TOP BAR -->
             <div class="advisor-topbar">
                 <div class="advisor-user-dropdown">
-                    <div class="advisor-user-box" onclick="toggleProfileMenu()">
+                    <div class="advisor-user-box" id="advisorUserBox">
                         <i class="fa-regular fa-circle-user"></i>
                         <div>
-                            <div>Dr. Zeynep Pınarlı</div>
+                            <div id="advisorTopName">Advisor Name</div>
                             <small>Advisor</small>
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
 
                     <div class="advisor-dropdown-menu" id="profileDropdown">
-                        <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
+                        <a href="../../index.html" class="advisor-logout-btn" id="advisorLogoutBtn">Log Out</a>
                     </div>
                 </div>
             </div>
 
-            <!-- WELCOME -->
             <div class="welcome-box">
-                <h2>Welcome, Dr. Zeynep 👋</h2>
-                <p>Department: Software Engineering</p>
-                <p>Title: Assistant Professor</p>
+                <h2 id="advisorWelcomeText">Welcome, Advisor 👋</h2>
+                <p>Department: <span id="advisorDepartment">-</span></p>
+                <p>Title: <span id="advisorTitle">-</span></p>
             </div>
 
-            <!-- ANNOUNCEMENTS + STATUS -->
             <div class="top-section">
                 <div class="announcements">
                     <h3>Announcements</h3>
                     <p class="sub">These announcements are published by admin.</p>
 
-                    <div class="ann-item">
-                        <i class="fa-solid fa-thumbtack"></i> Deadline for project creation: May 20
-                    </div>
-                    <div class="ann-item">
-                        <i class="fa-solid fa-thumbtack"></i> Evaluation results: June 5
-                    </div>
-                    <div class="ann-item">
-                        <i class="fa-solid fa-thumbtack"></i> Last day for advisor request submission: May 25
+                    <div id="advisorAnnouncementsList">
+                        <div class="ann-item">
+                            <i class="fa-solid fa-thumbtack"></i> No announcements found.
+                        </div>
                     </div>
                 </div>
 
@@ -99,105 +90,29 @@
                     <h3>Advising Status</h3>
 
                     <div class="status-toggle">
-                        <span class="active-status selected" onclick="setAdvisorStatus('active')">Active</span>
-                        <span class="inactive-status" onclick="setAdvisorStatus('inactive')">Inactive</span>
+                        <span class="active-status" id="advisorActiveBtn">Active</span>
+                        <span class="inactive-status" id="advisorInactiveBtn">Inactive</span>
                     </div>
 
                     <p class="status-text" id="statusText">
-                        You are currently available for advising students
+                        Loading status...
                     </p>
                 </div>
             </div>
 
-            <!-- PROJECTS -->
             <h2 class="project-title">Projects</h2>
 
-            <div class="projects">
-
+            <div class="projects" id="advisorProjectsContainer">
                 <div class="project-card">
-                    <h4>AI Chatbot <span class="tag red">TÜBİTAK</span></h4>
-                    <p>Student: Ayşe Demir</p>
-                    <p>Department: Software Engineering</p>
-                    <p>Skills: Python, NLP</p>
-                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
+                    <h4>No projects yet</h4>
+                    <p>Advisor projects will appear here.</p>
                 </div>
-
-                <div class="project-card">
-                    <h4>Smart Irrigation <span class="tag orange">TEKNOFEST</span></h4>
-                    <p>Student: Mehmet Kaya</p>
-                    <p>Department: Computer Engineering</p>
-                    <p>Skills: HTML, CSS</p>
-                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
-                </div>
-
-                <div class="project-card">
-                    <h4>Health Assistant <span class="tag red">TÜBİTAK</span></h4>
-                    <p>Student: Elif Yılmaz</p>
-                    <p>Department: Software Engineering</p>
-                    <p>Skills: Python, SQL</p>
-                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
-                </div>
-
-                <div class="project-card">
-                    <h4>Food Delivery App <span class="tag orange">TEKNOFEST</span></h4>
-                    <p>Student: Burak Çelik</p>
-                    <p>Department: Software Engineering</p>
-                    <p>Skills: React, Node.js</p>
-                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
-                </div>
-
-                <div class="project-card">
-                    <h4>Blockchain Voting <span class="tag red">TÜBİTAK</span></h4>
-                    <p>Student: Ahmet Korkmaz</p>
-                    <p>Department: Software Engineering</p>
-                    <p>Skills: Solidity, C++</p>
-                    <a href="ai-chatbot-details.html" class="view-details-btn">View Details</a>
-                </div>
-
             </div>
 
         </main>
     </div>
 
-    <script>
-        function setAdvisorStatus(status) {
-            const activeBtn = document.querySelector(".active-status");
-            const inactiveBtn = document.querySelector(".inactive-status");
-            const statusText = document.getElementById("statusText");
-
-            activeBtn.classList.remove("selected");
-            inactiveBtn.classList.remove("selected");
-
-            if (status === "active") {
-                activeBtn.classList.add("selected");
-                statusText.textContent =
-                    "You are currently available for advising students";
-            } else {
-                inactiveBtn.classList.add("selected");
-                statusText.textContent =
-                    "You are currently unavailable for advising students";
-            }
-        }
-
-        window.onload = function () {
-            setAdvisorStatus("active");
-        };
-    </script>
-
-    <script>
-        function toggleProfileMenu() {
-            const dropdown = document.getElementById("profileDropdown");
-            dropdown.classList.toggle("show");
-        }
-
-        document.addEventListener("click", function (e) {
-            const userDropdown = document.querySelector(".advisor-user-dropdown");
-
-            if (!userDropdown.contains(e.target)) {
-                document.getElementById("profileDropdown").classList.remove("show");
-            }
-        });
-    </script>
+    <script src="ins-home.js"></script>
 </body>
 
 </html>

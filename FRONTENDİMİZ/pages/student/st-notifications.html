@@ -17,133 +17,123 @@
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
 
-        <ul class="notifications-sidebar-menu">
-            <li>
-                <a href="st-home.html">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-projects.html">
-                    <i class="fa-solid fa-briefcase"></i>
-                    <span>My Projects</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-createprojects.html">
-                    <i class="fa-regular fa-square-plus"></i>
-                    <span>Create Project</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisorrequests.html">
-                    <i class="fa-regular fa-rectangle-list"></i>
-                    <span>Advisor Requests</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisors.html">
-                    <i class="fa-regular fa-user"></i>
-                    <span>Advisors</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-notifications.html" class="active">
-                    <i class="fa-regular fa-bell"></i>
-                    <span>Notifications</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-profile.html">
-                    <i class="fa-regular fa-circle-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-        </ul>
+            <ul class="notifications-sidebar-menu">
+                <li>
+                    <a href="st-home.html">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-projects.html">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>My Projects</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-createprojects.html">
+                        <i class="fa-regular fa-square-plus"></i>
+                        <span>Create Project</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-advisorrequests.html">
+                        <i class="fa-regular fa-rectangle-list"></i>
+                        <span>Advisor Requests</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-advisors.html">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Advisors</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-notifications.html" class="active">
+                        <i class="fa-regular fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-profile.html">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
         </aside>
 
         <main class="notifications-content">
             <div class="notifications-topbar">
                 <div class="student-notification-user-dropdown">
-                    <div class="notifications-student-box" onclick="toggleNotificationProfileMenu()">
+                    <div class="notifications-student-box" id="notificationsStudentBox">
                         <i class="fa-regular fa-circle-user"></i>
                         <div class="notifications-student-info">
-                            <span class="notifications-student-name">Sude Torun</span>
+                            <span class="notifications-student-name" id="notificationsStudentName">Student Name</span>
                             <span class="notifications-student-role">Student</span>
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
 
                     <div class="student-notification-dropdown-menu" id="notificationProfileDropdown">
-                        <a href="../../index.html" class="student-notification-logout-btn">Log Out</a>
+                        <a href="../../index.html" class="student-notification-logout-btn" id="notificationsLogoutBtn">
+                            Log Out
+                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="notifications-header">
                 <h1 class="notifications-title">Notifications</h1>
-                <span class="notifications-new-count">1 New</span>
+                <span class="notifications-new-count" id="notificationsNewCount">0 New</span>
             </div>
 
-            <div class="notification-item">
-                <i class="fa-regular fa-bell notification-icon warning"></i>
-                <span>Last day to submit advisor requests: May 25.</span>
-            </div>
-
-            <div class="notification-item">
-                <i class="fa-solid fa-circle-check notification-icon success"></i>
-                <span>Your application to AI Chatbot has been accepted.</span>
-            </div>
-
-            <div class="notification-item">
-                <i class="fa-regular fa-bell notification-icon warning"></i>
-                <span>Project evaluation results will be announced on June 5.</span>
-            </div>
-
-            <div class="notification-item">
-                <i class="fa-solid fa-xmark notification-icon danger"></i>
-                <span>Your request to join Web Platform was declined.</span>
-            </div>
-
-            <div class="student-request-card">
-                <div class="student-request-left">
-                    <i class="fa-regular fa-circle-user"></i>
+            <div id="notificationsList">
+                <div class="notification-item">
+                    <i class="fa-regular fa-bell notification-icon warning"></i>
+                    <span>Loading notifications...</span>
                 </div>
+            </div>
 
-                <div class="student-request-middle">
-                    <p>
-                        <strong>Emre Şahin</strong> wants to join your project Cyber Security Monitoring Tool
-                    </p>
-
-                    <div class="student-request-actions" id="studentRequestActions">
-                        <button class="accept-btn" onclick="setStudentRequestResult('accepted')">Accept</button>
-                        <button class="reject-btn" onclick="setStudentRequestResult('rejected')">Reject</button>
+            <div id="studentRequestSection">
+                <div class="student-request-card" id="studentRequestCard" style="display: none;">
+                    <div class="student-request-left">
+                        <i class="fa-regular fa-circle-user"></i>
                     </div>
-                </div>
 
-                <div class="student-request-right">
-                    <button class="view-profile-btn" onclick="openStudentProfile()">
-                        view student profile
-                    </button>
+                    <div class="student-request-middle">
+                        <p id="studentRequestText">
+                            Student request will appear here.
+                        </p>
+
+                        <div class="student-request-actions" id="studentRequestActions">
+                            <button class="accept-btn" id="acceptStudentRequestBtn">Accept</button>
+                            <button class="reject-btn" id="rejectStudentRequestBtn">Reject</button>
+                        </div>
+                    </div>
+
+                    <div class="student-request-right">
+                        <button class="view-profile-btn" id="viewStudentProfileBtn">
+                            view student profile
+                        </button>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- STUDENT PROFILE MODAL -->
     <div class="student-profile-overlay" id="studentProfileOverlay">
         <div class="student-profile-modal">
 
             <div class="student-profile-top">
                 <h2>Student Profile</h2>
-                <span class="student-profile-tag">TÜBİTAK</span>
+                <span class="student-profile-tag" id="studentProfileTag">PROJECT</span>
             </div>
 
             <div class="student-profile-content">
@@ -152,122 +142,53 @@
                         <i class="fa-regular fa-circle-user"></i>
 
                         <div class="student-profile-name">
-                            <h3>Emre Şahin</h3>
-                            <p>Computer Engineering</p>
+                            <h3 id="modalStudentName">Student Name</h3>
+                            <p id="modalStudentDepartment">Department</p>
                         </div>
                     </div>
 
                     <div class="student-profile-section">
                         <h4>Relevant Courses:</h4>
-                        <ul>
-                            <li>Network Security</li>
-                            <li>Computer Networks</li>
-                            <li>Operating Systems</li>
-                            <li>Cyber Security Fundamentals</li>
+                        <ul id="modalRelevantCourses">
+                            <li>No data</li>
                         </ul>
                     </div>
 
                     <div class="student-profile-section">
                         <h4>Research Interests:</h4>
-                        <ul>
-                            <li>Network Security</li>
-                            <li>Intrusion Detection Systems</li>
-                            <li>Ethical Hacking</li>
-                            <li>Threat Analysis</li>
+                        <ul id="modalResearchInterests">
+                            <li>No data</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="student-profile-right">
                     <h3>Other Project</h3>
-
-                    <div class="student-project-card">
-                        <div class="student-project-header">
-                            <h4>IoT Smart Lock</h4>
-                            <span class="student-project-badge tubitak">TÜBİTAK</span>
-                        </div>
-
-                        <div class="student-project-body">
-                            <p><strong>Project:</strong> Backend Developer</p>
-                        </div>
-
-                        <div class="student-project-footer">
-                            <p><strong>Skills:</strong> Python, Raspberry Pi</p>
-                        </div>
-                    </div>
-
-                    <div class="student-project-card">
-                        <div class="student-project-header">
-                            <h4>Distributed File System</h4>
-                            <span class="student-project-badge teknofest">TEKNOFEST</span>
-                        </div>
-
-                        <div class="student-project-body">
-                            <p><strong>Project:</strong> Backend Developer</p>
-                        </div>
-
-                        <div class="student-project-footer">
-                            <p><strong>Skills:</strong> Python, C++</p>
+                    <div id="modalStudentProjects">
+                        <div class="student-project-card">
+                            <div class="student-project-header">
+                                <h4>No other projects</h4>
+                            </div>
+                            <div class="student-project-body">
+                                <p><strong>Project:</strong> No data</p>
+                            </div>
+                            <div class="student-project-footer">
+                                <p><strong>Skills:</strong> -</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="student-profile-bottom">
-                <button class="student-profile-close-btn" onclick="closeStudentProfile()">
+                <button class="student-profile-close-btn" id="closeStudentProfileBtn">
                     Close
                 </button>
             </div>
         </div>
     </div>
 
-    <script>
-        function toggleNotificationProfileMenu() {
-            document
-                .getElementById("notificationProfileDropdown")
-                .classList.toggle("show");
-        }
-
-        function setStudentRequestResult(status) {
-            const actions = document.getElementById("studentRequestActions");
-
-            if (status === "accepted") {
-                actions.innerHTML = `
-                    <div class="student-request-final accepted">
-                        Accepted
-                    </div>
-                `;
-            } else {
-                actions.innerHTML = `
-                    <div class="student-request-final rejected">
-                        Rejected
-                    </div>
-                `;
-            }
-        }
-
-        function openStudentProfile() {
-            document.getElementById("studentProfileOverlay").classList.add("show");
-        }
-
-        function closeStudentProfile() {
-            document.getElementById("studentProfileOverlay").classList.remove("show");
-        }
-
-        window.addEventListener("click", function (e) {
-            const dropdown = document.getElementById("notificationProfileDropdown");
-            const box = document.querySelector(".notifications-student-box");
-
-            if (box && !box.contains(e.target)) {
-                dropdown.classList.remove("show");
-            }
-
-            const modal = document.getElementById("studentProfileOverlay");
-            if (e.target === modal) {
-                closeStudentProfile();
-            }
-        });
-    </script>
+    <script src="st-notifications.js"></script>
 </body>
 
 </html>

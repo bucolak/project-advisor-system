@@ -75,15 +75,15 @@
             <i class="fa-regular fa-circle-user"></i>
 
             <div class="st-projects-userinfo">
-              <span>Sude Torun</span>
-              <small>Student</small>
+              <span id="studentTopName">Student Name</span>
+              <small id="studentTopRole">Student</small>
             </div>
 
             <i class="fa-solid fa-chevron-down st-projects-userbox-arrow" id="studentUserArrow"></i>
           </div>
 
           <div class="st-projects-logout-menu" id="studentLogoutMenu">
-            <a href="../../index.html" class="st-projects-logout-btn">
+            <a href="../../index.html" class="st-projects-logout-btn" id="logoutBtn">
               <i class="fa-solid fa-right-from-bracket"></i>
               <span>Log Out</span>
             </a>
@@ -102,59 +102,12 @@
           <span>The projects that I joined,</span>
         </div>
 
-        <div class="st-projects-cards">
+        <div class="st-projects-cards" id="joinedProjectsContainer">
           <div class="st-projects-card">
             <div class="st-projects-card-header">
-              <h3>Robotic Arm<br />Control</h3>
-              <span class="st-projects-badge orange">TEKNOFEST</span>
+              <h3>No joined projects yet</h3>
             </div>
-
-            <p>Robotic arm control using image processing</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Skills:</strong> OpenCV, C++</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Team:</strong> 5/6</p>
-
-            <div class="st-projects-card-footer">
-              <span class="assigned">Advisor: Assigned</span>
-              <button type="button">View Details</button>
-            </div>
-          </div>
-
-          <div class="st-projects-card">
-            <div class="st-projects-card-header">
-              <h3>React Web App</h3>
-              <span class="st-projects-badge yellow">COURSE</span>
-            </div>
-
-            <p>Web application eg React.js</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Skills:</strong> React.js, JavaScript</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Team:</strong> 3/5</p>
-
-            <div class="st-projects-card-footer">
-              <span class="assigned">Advisor: Assigned</span>
-              <button type="button">View Details</button>
-            </div>
-          </div>
-
-          <div class="st-projects-card">
-            <div class="st-projects-card-header">
-              <h3>AI Chatbot</h3>
-              <span class="st-projects-badge pink">TÜBİTAK</span>
-            </div>
-
-            <p>Ai-based chatbot system</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Skills:</strong> Python, NLP</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Team:</strong> 5/5</p>
-
-            <div class="st-projects-card-footer">
-              <span class="assigned">Advisor: Assigned</span>
-              <button type="button">View Details</button>
-            </div>
+            <p>Your joined projects will appear here.</p>
           </div>
         </div>
       </section>
@@ -165,65 +118,19 @@
           <span>The projects that I created,</span>
         </div>
 
-        <div class="st-projects-cards">
+        <div class="st-projects-cards" id="createdProjectsContainer">
           <div class="st-projects-card">
             <div class="st-projects-card-header">
-              <h3>Smart Parking<br />System</h3>
-              <span class="st-projects-badge red">TÜBİTAK</span>
+              <h3>No created projects yet</h3>
             </div>
-
-            <p>IoT-based parking system with real-time availability tracking</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Skills:</strong> Arduino, Python</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Team:</strong> 2/7</p>
-
-            <div class="st-projects-card-footer">
-              <span class="not-assigned">Advisor: Not assigned</span>
-              <button type="button">View Details</button>
-            </div>
-          </div>
-
-          <div class="st-projects-card">
-            <div class="st-projects-card-header">
-              <h3>Weather<br />Forecast App</h3>
-              <span class="st-projects-badge orange">TEKNOFEST</span>
-            </div>
-
-            <p>Web app displaying real-time data via APIs</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Skills:</strong> JavaScript, REST API</p>
-            <div class="st-projects-line"></div>
-            <p><strong>Team:</strong> 2/4</p>
-
-            <div class="st-projects-card-footer">
-              <span class="not-assigned">Advisor: Not assigned</span>
-              <button type="button">View Details</button>
-            </div>
+            <p>Your created projects will appear here.</p>
           </div>
         </div>
       </section>
     </main>
   </div>
 
-  <script>
-    const studentUserBox = document.getElementById("studentUserBox");
-    const studentLogoutMenu = document.getElementById("studentLogoutMenu");
-    const studentUserArrow = document.getElementById("studentUserArrow");
-
-    studentUserBox.addEventListener("click", function (e) {
-      e.stopPropagation();
-      studentLogoutMenu.classList.toggle("show");
-      studentUserArrow.classList.toggle("rotate");
-    });
-
-    document.addEventListener("click", function (e) {
-      if (!studentUserBox.contains(e.target) && !studentLogoutMenu.contains(e.target)) {
-        studentLogoutMenu.classList.remove("show");
-        studentUserArrow.classList.remove("rotate");
-      }
-    });
-  </script>
+  <script src="st-projects.js"></script>
 </body>
 
 </html>

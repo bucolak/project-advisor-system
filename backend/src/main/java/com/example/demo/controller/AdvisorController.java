@@ -1,44 +1,28 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.UpdateStatusRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.dto.response.AdvisorProfileResponse;
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.service.AdvisorService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/advisors")
 public class AdvisorController {
+
     private final AdvisorService advisorService;
-    public AdvisorController(AdvisorService advisorService) { this.advisorService = advisorService; }
 
-    @GetMapping("/advisors")
-    public ResponseEntity<ApiResponse> getActiveAdvisors() {
-        return ResponseEntity.ok(ApiResponse.ok("Aktif danışmanlar.", advisorService.getActiveAdvisors()));
+    public AdvisorController(AdvisorService advisorService) {
+        this.advisorService = advisorService;
     }
 
-    @GetMapping("/advisor-requests/pending")
-    @PreAuthorize("hasRole('ADVISOR')")
-    public ResponseEntity<ApiResponse> getPendingRequests(Authentication auth) {
-        Long userId = (Long) auth.getPrincipal();
-        return ResponseEntity.ok(ApiResponse.ok("Bekleyen istekler.", advisorService.getPendingRequests(userId)));
-    }
-
-    @PutMapping("/advisor-requests/{requestId}/status")
-    @PreAuthorize("hasRole('ADVISOR')")
-    public ResponseEntity<ApiResponse> updateStatus(Authentication auth,
-            @PathVariable Long requestId, @RequestBody UpdateStatusRequest req) {
-        Long userId = (Long) auth.getPrincipal();
-        return ResponseEntity.ok(ApiResponse.ok("İstek güncellendi.",
-                advisorService.updateRequestStatus(userId, requestId, req.getStatus())));
-    }
-
-    @GetMapping("/advisors/my-students")
-    @PreAuthorize("hasRole('ADVISOR')")
-    public ResponseEntity<ApiResponse> getMyStudents(Authentication auth) {
-        Long userId = (Long) auth.getPrincipal();
-        return ResponseEntity.ok(ApiResponse.ok("Öğrencileriniz.", advisorService.getMyStudents(userId)));
+    @GetMapping("/{userId}/profile")
+    public ResponseEntity<ApiResponse> getAdvisorProfile(@PathVariable Long userId) {
+        AdvisorProfileResponse profile = advisorService.getAdvisorProfile(userId);
+        return ResponseEntity.ok(ApiResponse.ok("Advisor profile fetched.", profile));
     }
 }

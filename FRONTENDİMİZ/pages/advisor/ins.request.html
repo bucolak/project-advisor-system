@@ -51,17 +51,17 @@
     <main class="advisor-request-content">
       <div class="advisor-request-topbar">
         <div class="advisor-user-dropdown">
-          <div class="advisor-user-box" onclick="toggleProfileMenu()">
+          <div class="advisor-user-box" id="advisorUserBox">
             <i class="fa-regular fa-circle-user"></i>
             <div>
-              <div>Dr. Zeynep Pınarlı</div>
+              <div id="advisorTopName">Advisor</div>
               <small>Advisor</small>
             </div>
             <i class="fa-solid fa-chevron-down"></i>
           </div>
 
           <div class="advisor-dropdown-menu" id="profileDropdown">
-            <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
+            <a href="../../index.html" class="advisor-logout-btn" id="advisorLogoutBtn">Log Out</a>
           </div>
         </div>
       </div>
@@ -70,69 +70,28 @@
         <h1>Advisor Request</h1>
         <div class="advisor-request-pending">
           <i class="fa-solid fa-triangle-exclamation"></i>
-          <span>2 Pending Requests</span>
+          <span id="pendingRequestCount">0 Pending Requests</span>
         </div>
       </div>
 
-      <!-- REQUEST CARD 1 -->
-      <div class="request-card" id="request1">
-        <div class="request-card-left">
-          <div class="request-project-title-row">
-            <div class="request-project-title">Cyber Security Monitoring Tool</div>
-            <span class="request-tag tubitak">TÜBİTAK</span>
-          </div>
-
-          <div class="request-info-line"><strong>Student:</strong> Emre Şahin</div>
-          <div class="request-info-line"><strong>Department:</strong> Computer Engineering</div>
-          <div class="request-info-line"><strong>Skill:</strong> Python, Network Security</div>
-
-          <button class="view-profile-btn" onclick="openStudentModal('request1')">
-            view student profile
-          </button>
-        </div>
-
-        <div class="request-card-right">
-          <div class="request-actions" id="request1-actions">
-            <button class="accept-btn" onclick="setRequestStatus('request1', 'accepted')">Accept</button>
-            <button class="reject-btn" onclick="setRequestStatus('request1', 'rejected')">Reject</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- REQUEST CARD 2 -->
-      <div class="request-card" id="request2">
-        <div class="request-card-left">
-          <div class="request-project-title-row">
-            <div class="request-project-title">Smart Home Automation</div>
-            <span class="request-tag teknofest">TEKNOFEST</span>
-          </div>
-
-          <div class="request-info-line"><strong>Student:</strong> Can Özkan</div>
-          <div class="request-info-line"><strong>Department:</strong> Electrical Engineering</div>
-          <div class="request-info-line"><strong>Skill:</strong> Arduino, IoT</div>
-
-          <button class="view-profile-btn" onclick="openStudentModal('request2')">
-            view student profile
-          </button>
-        </div>
-
-        <div class="request-card-right">
-          <div class="request-actions" id="request2-actions">
-            <button class="accept-btn" onclick="setRequestStatus('request2', 'accepted')">Accept</button>
-            <button class="reject-btn" onclick="setRequestStatus('request2', 'rejected')">Reject</button>
+      <div id="advisorRequestsContainer">
+        <div class="request-card">
+          <div class="request-card-left">
+            <div class="request-project-title-row">
+              <div class="request-project-title">Loading requests...</div>
+            </div>
           </div>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- MODAL -->
   <div class="student-modal-overlay" id="studentModal">
     <div class="student-modal">
 
       <div class="modal-top">
         <h2>Student Profile</h2>
-        <div class="modal-tag">TÜBİTAK</div>
+        <div class="modal-tag" id="modalProjectTag">PROJECT</div>
       </div>
 
       <div class="modal-content">
@@ -140,138 +99,47 @@
           <div class="student-basic">
             <i class="fa-regular fa-circle-user"></i>
             <div>
-              <h3>Emre Şahin</h3>
-              <p>Computer Engineering</p>
+              <h3 id="modalStudentName">Student Name</h3>
+              <p id="modalStudentDepartment">Department</p>
             </div>
           </div>
 
           <div class="student-detail-section">
             <h4>Relevant Courses:</h4>
-            <ul>
-              <li>Network Security</li>
-              <li>Computer Networks</li>
-              <li>Operating Systems</li>
-              <li>Cyber Security Fundamentals</li>
+            <ul id="modalRelevantCourses">
+              <li>No data</li>
             </ul>
           </div>
 
           <div class="student-detail-section">
             <h4>Research Interests:</h4>
-            <ul>
-              <li>Network Security</li>
-              <li>Intrusion Detection Systems</li>
-              <li>Ethical Hacking</li>
-              <li>Threat Analysis</li>
+            <ul id="modalResearchInterests">
+              <li>No data</li>
             </ul>
           </div>
         </div>
 
         <div class="modal-right">
           <h3>Other Project</h3>
-
-          <div class="other-project-card">
-            <div class="project-mini-tag">TÜBİTAK</div>
-            <h4>IoT Smart Lock</h4>
-            <p><strong>Project:</strong> Backend Developer</p>
-            <p><strong>Skills:</strong> Python, Raspberry Pi</p>
-          </div>
-
-          <div class="other-project-card">
-            <div class="project-mini-tag orange">TEKNOFEST</div>
-            <h4>Distributed File System</h4>
-            <p><strong>Project:</strong> Backend Developer</p>
-            <p><strong>Skills:</strong> Python, C++</p>
+          <div id="modalOtherProjects">
+            <div class="other-project-card">
+              <h4>No other projects</h4>
+              <p><strong>Project:</strong> No data</p>
+              <p><strong>Skills:</strong> -</p>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="modal-buttons">
-        <button class="accept-btn" onclick="handleModalAction('accepted')">Accept</button>
-        <button class="reject-btn" onclick="handleModalAction('rejected')">Reject</button>
-        <button class="close-btn" onclick="closeStudentModal()">Close</button>
+        <button class="accept-btn" id="modalAcceptBtn">Accept</button>
+        <button class="reject-btn" id="modalRejectBtn">Reject</button>
+        <button class="close-btn" id="modalCloseBtn">Close</button>
       </div>
     </div>
   </div>
 
-  <script>
-    let currentRequestId = null;
-
-    function openStudentModal(requestId) {
-      currentRequestId = requestId;
-      document.getElementById("studentModal").classList.add("active");
-    }
-
-    function closeStudentModal() {
-      document.getElementById("studentModal").classList.remove("active");
-    }
-
-    function setRequestStatus(requestId, status) {
-      const actions = document.getElementById(requestId + "-actions");
-
-      if (status === "accepted") {
-        actions.innerHTML = `
-          <div class="request-final-status accepted-status">
-            Accepted
-          </div>
-        `;
-      } else {
-        actions.innerHTML = `
-          <div class="request-final-status rejected-status">
-            Rejected
-          </div>
-        `;
-      }
-    }
-
-    function handleModalAction(status) {
-      if (currentRequestId) {
-        setRequestStatus(currentRequestId, status);
-      }
-      closeStudentModal();
-    }
-
-    function toggleProfileMenu() {
-      document.getElementById("profileDropdown").classList.toggle("show");
-    }
-
-    window.addEventListener("click", function (e) {
-      const modal = document.getElementById("studentModal");
-      if (e.target === modal) {
-        closeStudentModal();
-      }
-
-      const dropdown = document.querySelector(".advisor-user-dropdown");
-      const profileMenu = document.getElementById("profileDropdown");
-
-      if (dropdown && !dropdown.contains(e.target)) {
-        profileMenu.classList.remove("show");
-      }
-    });
-
-    window.addEventListener("DOMContentLoaded", function () {
-      const params = new URLSearchParams(window.location.search);
-      const targetId = params.get("target");
-
-      if (targetId) {
-        const targetCard = document.getElementById(targetId);
-
-        if (targetCard) {
-          setTimeout(() => {
-            targetCard.scrollIntoView({
-              behavior: "smooth",
-              block: "center"
-            });
-
-            targetCard.classList.add("request-card-highlight");
-
-            setTimeout(() => {
-              targetCard.classList.remove("request-card-highlight");
-            }, 3000);
-          }, 150);
-        }
-      }
-    });
-  </script>
+  <script src="ins.request.js"></script>
 </body>
 
 </html>

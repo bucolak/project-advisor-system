@@ -17,6 +17,7 @@
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/ProjectCategory.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/AdminController.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/request/RegisterStudentRequest.java
+/Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/response/AdvisorProfileResponse.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/repository/ProjectCategoryRepository.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/service/AuthService.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/request/RegisterAdvisorRequest.java

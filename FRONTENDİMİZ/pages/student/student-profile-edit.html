@@ -24,42 +24,42 @@
                         <span>Home</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="st-projects.html">
                         <i class="fa-solid fa-briefcase"></i>
                         <span>My Projects</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="st-createprojects.html">
                         <i class="fa-regular fa-square-plus"></i>
                         <span>Create Project</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="st-advisorrequests.html">
                         <i class="fa-regular fa-rectangle-list"></i>
                         <span>Advisor Requests</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="st-advisors.html">
                         <i class="fa-regular fa-user"></i>
                         <span>Advisors</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="st-notifications.html">
                         <i class="fa-regular fa-bell"></i>
                         <span>Notifications</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="st-profile.html" class="active">
                         <i class="fa-regular fa-circle-user"></i>
@@ -70,26 +70,27 @@
         </aside>
 
         <main class="student-profile-edit-content">
-        <div class="student-profile-edit-topbar">
-            <div class="student-profile-edit-user-dropdown">
-                <div class="student-profile-edit-userbox" onclick="toggleStudentProfileEditMenu()">
-                    <i class="fa-regular fa-circle-user"></i>
-        
-                    <div class="student-profile-edit-userinfo">
-                        <span>Sude Torun</span>
-                        <small>Student</small>
+            <div class="student-profile-edit-topbar">
+                <div class="student-profile-edit-user-dropdown">
+                    <div class="student-profile-edit-userbox" id="studentProfileEditUserBox">
+                        <i class="fa-regular fa-circle-user"></i>
+
+                        <div class="student-profile-edit-userinfo">
+                            <span id="studentTopName">Student</span>
+                            <small>Student</small>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
-        
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
-        
-                <div class="student-profile-edit-dropdown-menu" id="studentProfileEditDropdown">
-                    <a href="../../index.html" class="student-profile-edit-logout-btn">
-                        Log Out
-                    </a>
+
+                    <div class="student-profile-edit-dropdown-menu" id="studentProfileEditDropdown">
+                        <a href="../../index.html" class="student-profile-edit-logout-btn"
+                            id="studentProfileEditLogoutBtn">
+                            Log Out
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
 
             <h1 class="student-profile-edit-title">Profile</h1>
 
@@ -100,24 +101,24 @@
                     </div>
 
                     <div class="student-profile-edit-maininfo">
-                        <h2>Sude Torun</h2>
+                        <h2 id="studentDisplayName">Student</h2>
 
                         <div class="student-profile-edit-row">
                             <label>Department:</label>
-                            <input type="text" value="Software Engineering" />
+                            <input type="text" id="studentDepartment" value="" />
                         </div>
 
                         <div class="student-profile-edit-row">
                             <label>Year:</label>
-                            <input type="text" value="3" />
+                            <input type="text" id="studentYear" value="" />
                         </div>
                     </div>
 
                     <div class="student-profile-edit-actions">
-                        <a href="st-profile.html" class="student-save-btn">
+                        <button type="button" class="student-save-btn" id="studentSaveBtn">
                             <i class="fa-regular fa-pen-to-square"></i>
                             Save Changes
-                        </a>
+                        </button>
                         <a href="st-profile.html" class="student-cancel-btn">Cancel</a>
                     </div>
                 </div>
@@ -125,22 +126,22 @@
                 <div class="student-profile-edit-info">
                     <div class="student-profile-edit-row full">
                         <label>E-mail:</label>
-                        <input type="email" value="sude.torun@st.uskudar.edu.tr" />
+                        <input type="email" id="studentEmail" value="" />
                     </div>
 
                     <div class="student-profile-edit-row full">
                         <label>Interests:</label>
-                        <input type="text" value="" />
+                        <input type="text" id="studentInterests" value="" />
                     </div>
 
                     <div class="student-profile-edit-row full">
                         <label>Git-Hub link:</label>
-                        <input type="text" value="" />
+                        <input type="text" id="studentGithub" value="" />
                     </div>
 
                     <div class="student-profile-edit-row full">
                         <label>LinkedIn link:</label>
-                        <input type="text" value="" />
+                        <input type="text" id="studentLinkedin" value="" />
                     </div>
                 </div>
             </div>
@@ -148,62 +149,25 @@
             <div class="student-profile-edit-bottom">
                 <div class="student-profile-edit-bio-box">
                     <label>Short bio:</label>
-                    <textarea></textarea>
+                    <textarea id="studentBio" placeholder="No bio found."></textarea>
                 </div>
 
                 <div class="student-profile-edit-skills-box">
                     <label>Technical Skills:</label>
 
-                    <div class="student-profile-edit-skills">
-                        <span>Web Development</span>
-                        <span>Robotics</span>
-                        <span>Embedded systems</span>
-                        <span>Signal processing</span>
-                        <span>Control</span>
-                        <span>IoT</span>
-                        <span>Cyber Security</span>
-                        <span>NLP</span>
+                    <div class="student-profile-edit-skills" id="studentSkillsContainer">
+                        <span class="student-no-skill-text">No skills found.</span>
                     </div>
 
-                    <button class="student-add-skill-btn">
+                    <button type="button" class="student-add-skill-btn" id="studentAddSkillBtn">
                         <i class="fa-solid fa-plus"></i>
                     </button>
                 </div>
             </div>
         </main>
     </div>
-    <script>
-        function toggleStudentProfileEditMenu() {
-            document
-                .getElementById("studentProfileEditDropdown")
-                .classList.toggle("show");
-        }
 
-        window.addEventListener("click", function (e) {
-            const dropdown = document.getElementById("studentProfileEditDropdown");
-            const box = document.querySelector(".student-profile-edit-userbox");
-
-            if (!box.contains(e.target)) {
-                dropdown.classList.remove("show");
-            }
-        });
-    </script>
-    <script>
-        function toggleStudentProfileMenu() {
-            document
-                .getElementById("studentProfileDropdown")
-                .classList.toggle("show");
-        }
-
-        window.addEventListener("click", function (e) {
-            const dropdown = document.getElementById("studentProfileDropdown");
-            const box = document.querySelector(".student-profile-userbox");
-
-            if (!box.contains(e.target)) {
-                dropdown.classList.remove("show");
-            }
-        });
-    </script>
+    <script src="student-profile-edit.js"></script>
 </body>
 
 </html>

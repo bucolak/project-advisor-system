@@ -49,6 +49,7 @@ com/example/demo/entity/Project$ProjectBuilder.class
 com/example/demo/entity/AdvisorRequest.class
 com/example/demo/entity/AdvisorRequest$AdvisorRequestBuilder.class
 com/example/demo/controller/ProjectController.class
+com/example/demo/dto/response/AdvisorProfileResponse.class
 com/example/demo/entity/Notification$NotificationBuilder.class
 com/example/demo/service/AdminService.class
 com/example/demo/entity/Student$StudentBuilder.class

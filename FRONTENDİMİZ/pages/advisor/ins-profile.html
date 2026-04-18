@@ -23,21 +23,21 @@
                         <span>Home</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="ins.request.html">
                         <i class="fa-regular fa-user"></i>
                         <span>Requests</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="ins-notification.html">
                         <i class="fa-regular fa-bell"></i>
                         <span>Notifications</span>
                     </a>
                 </li>
-            
+
                 <li>
                     <a href="ins-profile.html" class="active">
                         <i class="fa-regular fa-circle-user"></i>
@@ -50,17 +50,17 @@
         <main class="advisor-profile-content">
             <div class="advisor-profile-topbar">
                 <div class="advisor-user-dropdown">
-                    <div class="advisor-user-box" onclick="toggleProfileMenu()">
+                    <div class="advisor-user-box" id="advisorUserBox">
                         <i class="fa-regular fa-circle-user"></i>
                         <div>
-                            <div>Dr. Zeynep Pınarlı</div>
+                            <div id="advisorTopName">Advisor</div>
                             <small>Advisor</small>
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
                     </div>
 
                     <div class="advisor-dropdown-menu" id="profileDropdown">
-                        <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
+                        <a href="../../index.html" class="advisor-logout-btn" id="advisorLogoutBtn">Log Out</a>
                     </div>
                 </div>
             </div>
@@ -80,16 +80,16 @@
                 </div>
 
                 <div class="advisor-profile-main-right">
-                    <h2>Dr. Zeynep Pınarlı</h2>
+                    <h2 id="advisorProfileName">Advisor</h2>
                     <p class="advisor-role">Advisor</p>
 
                     <div class="advisor-profile-info-list">
-                        <p><strong>Department:</strong> Software Engineering</p>
-                        <p><strong>Title:</strong> Associate Professor</p>
-                        <p><strong>E-mail:</strong> zeynep.pinarli@uskudar.com</p>
+                        <p><strong>Department:</strong> <span id="advisorDepartment">-</span></p>
+                        <p><strong>Title:</strong> <span id="advisorTitle">-</span></p>
+                        <p><strong>E-mail:</strong> <span id="advisorEmail">-</span></p>
                         <p class="status-line">
-                            <strong>Currently advising status:</strong> Active
-                            <span class="advisor-profile-status-dot"></span>
+                            <strong>Currently advising status:</strong> <span id="advisorStatusTextInline">-</span>
+                            <span class="advisor-profile-status-dot" id="advisorStatusDot"></span>
                         </p>
                     </div>
                 </div>
@@ -99,22 +99,15 @@
                 <div class="advisor-profile-left-col">
                     <div class="advisor-profile-section">
                         <h3>Area of Expertise</h3>
-                        <div class="advisor-profile-tags">
-                            <span>Artificial Intelligence</span>
-                            <span>NLP</span>
-                            <span>Machine Learning</span>
-                            <span>IoT</span>
-                            <span>Cyber Security</span>
+                        <div class="advisor-profile-tags" id="advisorExpertiseTags">
+                            <span>No expertise found</span>
                         </div>
                     </div>
 
                     <div class="advisor-profile-section research-section">
                         <h3>Research Interests</h3>
-                        <ul class="advisor-profile-research-list">
-                            <li>AI applications in healthcare</li>
-                            <li>NLP technologies</li>
-                            <li>Cyber security and network monitoring</li>
-                            <li>IoT and smart systems</li>
+                        <ul class="advisor-profile-research-list" id="advisorResearchList">
+                            <li>No research interests found</li>
                         </ul>
                     </div>
                 </div>
@@ -123,15 +116,10 @@
                     <div class="advisor-profile-section">
                         <h3>Previously Supervised<br />Project Types</h3>
 
-                        <div class="advisor-profile-project-types">
+                        <div class="advisor-profile-project-types" id="advisorProjectTypes">
                             <div class="project-type-row">
-                                <span class="type-badge tubitak">TÜBİTAK</span>
-                                <span class="type-text">Projects</span>
-                            </div>
-
-                            <div class="project-type-row">
-                                <span class="type-badge teknofest">TEKNOFEST</span>
-                                <span class="type-text">Projects</span>
+                                <span class="type-badge tubitak">-</span>
+                                <span class="type-text">No data</span>
                             </div>
                         </div>
                     </div>
@@ -139,28 +127,15 @@
                     <div class="advisor-profile-status-card">
                         <h3>Advising Status</h3>
                         <div class="advisor-profile-status-divider"></div>
-                        <p>You are currently available<br />for advising students</p>
-                        <button class="advisor-profile-active-btn">Active</button>
+                        <p id="advisorStatusCardText">Loading status...</p>
+                        <button class="advisor-profile-active-btn" id="advisorStatusButton">-</button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <script>
-        function toggleProfileMenu() {
-            document.getElementById("profileDropdown").classList.toggle("show");
-        }
-
-        window.addEventListener("click", function (e) {
-            const dropdown = document.querySelector(".advisor-user-dropdown");
-            const profileMenu = document.getElementById("profileDropdown");
-
-            if (dropdown && !dropdown.contains(e.target)) {
-                profileMenu.classList.remove("show");
-            }
-        });
-    </script>
+    <script src="ins-profile.js"></script>
 </body>
 
 </html>

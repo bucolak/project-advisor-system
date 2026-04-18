@@ -17,78 +17,81 @@
             <div class="sidebar-icon">
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
-<ul class="sidebar-menu">
-    <li>
-        <a href="st-home.html">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-        </a>
-    </li>
 
-    <li>
-        <a href="st-projects.html">
-            <i class="fa-solid fa-briefcase"></i>
-            <span>My Projects</span>
-        </a>
-    </li>
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="st-home.html">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
 
-    <li>
-        <a href="st-createprojects.html">
-            <i class="fa-regular fa-square-plus"></i>
-            <span>Create Project</span>
-        </a>
-    </li>
+                <li>
+                    <a href="st-projects.html">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>My Projects</span>
+                    </a>
+                </li>
 
-    <li>
-        <a href="st-advisorrequest.html" class="active">
-            <i class="fa-regular fa-rectangle-list"></i>
-            <span>Advisor Requests</span>
-        </a>
-    </li>
+                <li>
+                    <a href="st-createprojects.html">
+                        <i class="fa-regular fa-square-plus"></i>
+                        <span>Create Project</span>
+                    </a>
+                </li>
 
-    <li>
-        <a href="st-advisors.html">
-            <i class="fa-regular fa-user"></i>
-            <span>Advisors</span>
-        </a>
-    </li>
+                <li>
+                    <a href="st-advisorrequest.html" class="active">
+                        <i class="fa-regular fa-rectangle-list"></i>
+                        <span>Advisor Requests</span>
+                    </a>
+                </li>
 
-    <li>
-        <a href="st-notifications.html">
-            <i class="fa-regular fa-bell"></i>
-            <span>Notifications</span>
-        </a>
-    </li>
+                <li>
+                    <a href="st-advisors.html">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Advisors</span>
+                    </a>
+                </li>
 
-    <li>
-        <a href="st-profile.html">
-            <i class="fa-regular fa-circle-user"></i>
-            <span>Profile</span>
-        </a>
-    </li>
-</ul>
-           
+                <li>
+                    <a href="st-notifications.html">
+                        <i class="fa-regular fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-profile.html">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
         </aside>
 
         <main class="advisor-content">
-        <div class="advisor-topbar">
-            <div class="advisor-user-dropdown">
-                <div class="student-box" onclick="toggleProfileMenu()">
-                    <i class="fa-regular fa-circle-user"></i>
-        
-                    <div class="student-info">
-                        <span class="student-name">Sude Torun</span>
-                        <span class="student-role">Student</span>
+            <div class="advisor-topbar">
+                <div class="advisor-user-dropdown">
+                    <div class="student-box" id="studentBox">
+                        <i class="fa-regular fa-circle-user"></i>
+
+                        <div class="student-info">
+                            <span class="student-name" id="studentName">Student Name</span>
+                            <span class="student-role">Student</span>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
-        
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
-        
-                <div class="advisor-dropdown-menu" id="profileDropdown">
-                    <a href="../../index.html" class="advisor-logout-btn">Log Out</a>
+
+                    <div class="advisor-dropdown-menu" id="profileDropdown">
+                        <a href="../../index.html" class="advisor-logout-btn" id="logoutBtn">
+                            Log Out
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+
             <h1 class="advisor-title">Advisor Requests</h1>
 
             <div class="advisor-table-wrapper">
@@ -101,83 +104,10 @@
                         </tr>
                     </thead>
 
-                    <tbody>
-                        <tr id="requestRow1">
-                            <td>
-                                <div class="table-flex">
-                                    <i class="fa-regular fa-circle-user"></i>
-                                    <span>İrem Taş</span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="table-flex">
-                                    <i class="fa-regular fa-rectangle-list"></i>
-                                    <span>Fitness App</span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="status-area">
-                                    <span class="status-badge pending">
-                                        <i class="fa-solid fa-rotate-right"></i>
-                                        Pending
-                                    </span>
-
-                                    <button class="withdraw-btn" onclick="withdrawRequest('requestRow1')">
-                                        Withdraw
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
+                    <tbody id="advisorRequestsTableBody">
                         <tr>
-                            <td>
-                                <div class="table-flex">
-                                    <i class="fa-regular fa-circle-user"></i>
-                                    <span>Nur Çelik</span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="table-flex">
-                                    <i class="fa-regular fa-rectangle-list"></i>
-                                    <span>React Web App</span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="status-area">
-                                    <span class="status-badge accepted">
-                                        <i class="fa-solid fa-circle-check"></i>
-                                        Accepted
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <div class="table-flex">
-                                    <i class="fa-regular fa-circle-user"></i>
-                                    <span>Mehmet Kara</span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="table-flex">
-                                    <i class="fa-regular fa-rectangle-list"></i>
-                                    <span>Web Platform</span>
-                                </div>
-                            </td>
-
-                            <td>
-                                <div class="status-area">
-                                    <span class="status-badge rejected">
-                                        <i class="fa-solid fa-xmark"></i>
-                                        Rejected
-                                    </span>
-                                </div>
+                            <td colspan="3" class="empty-row">
+                                Loading advisor requests...
                             </td>
                         </tr>
                     </tbody>
@@ -186,43 +116,7 @@
         </main>
     </div>
 
-    <script>
-        function withdrawRequest(rowId) {
-            const row = document.getElementById(rowId);
-
-            row.style.transition = "all 0.3s ease";
-            row.style.opacity = "0";
-           
-
-            setTimeout(() => {
-                row.remove();
-            }, 300);
-        }
-    </script>
-<script>
-    function withdrawRequest(rowId) {
-        const row = document.getElementById(rowId);
-
-        row.style.transition = "all 0.3s ease";
-        row.style.opacity = "0";
-
-        setTimeout(() => {
-            row.remove();
-        }, 300);
-    }
-
-    function toggleProfileMenu() {
-        document.getElementById("profileDropdown").classList.toggle("show");
-    }
-
-    window.addEventListener("click", function (e) {
-        const dropdown = document.querySelector(".advisor-user-dropdown");
-
-        if (!dropdown.contains(e.target)) {
-            document.getElementById("profileDropdown").classList.remove("show");
-        }
-    });
-</script>
+    <script src="st-advisorrequest.js"></script>
 </body>
 
 </html>

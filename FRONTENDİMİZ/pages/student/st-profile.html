@@ -17,66 +17,66 @@
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
 
-        <ul class="profile-sidebar-menu">
-            <li>
-                <a href="st-home.html">
-                    <i class="fa-solid fa-house"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-projects.html">
-                    <i class="fa-solid fa-briefcase"></i>
-                    <span>My Projects</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-createprojects.html">
-                    <i class="fa-regular fa-square-plus"></i>
-                    <span>Create Project</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisorrequests.html">
-                    <i class="fa-regular fa-rectangle-list"></i>
-                    <span>Advisor Requests</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisors.html">
-                    <i class="fa-regular fa-user"></i>
-                    <span>Advisors</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-notifications.html">
-                    <i class="fa-regular fa-bell"></i>
-                    <span>Notifications</span>
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-profile.html" class="active">
-                    <i class="fa-regular fa-circle-user"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-        </ul>
+            <ul class="profile-sidebar-menu">
+                <li>
+                    <a href="st-home.html">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-projects.html">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>My Projects</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-createprojects.html">
+                        <i class="fa-regular fa-square-plus"></i>
+                        <span>Create Project</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-advisorrequests.html">
+                        <i class="fa-regular fa-rectangle-list"></i>
+                        <span>Advisor Requests</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-advisors.html">
+                        <i class="fa-regular fa-user"></i>
+                        <span>Advisors</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-notifications.html">
+                        <i class="fa-regular fa-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="st-profile.html" class="active">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+            </ul>
         </aside>
 
         <main class="profile-content">
             <div class="profile-topbar">
                 <div class="student-profile-user-dropdown">
-                    <div class="student-profile-userbox" onclick="toggleStudentProfileMenu()">
+                    <div class="student-profile-userbox" id="studentProfileUserBox">
                         <i class="fa-regular fa-circle-user"></i>
 
                         <div class="student-profile-userinfo">
-                            <span>Sude Torun</span>
+                            <span id="topProfileName">Student Name</span>
                             <small>Student</small>
                         </div>
 
@@ -84,7 +84,7 @@
                     </div>
 
                     <div class="student-profile-dropdown-menu" id="studentProfileDropdown">
-                        <a href="../../index.html" class="student-profile-logout-btn">
+                        <a href="../../index.html" class="student-profile-logout-btn" id="studentProfileLogoutBtn">
                             Log Out
                         </a>
                     </div>
@@ -99,16 +99,16 @@
                         <i class="fa-regular fa-circle-user"></i>
 
                         <div class="profile-main-info">
-                            <h2>Sude Torun</h2>
+                            <h2 id="profileFullName">Student Name</h2>
 
                             <div class="profile-info-row">
                                 <span class="label">Department:</span>
-                                <span class="value long">Software Engineering</span>
+                                <span class="value long" id="profileDepartment">-</span>
                             </div>
 
                             <div class="profile-info-row">
                                 <span class="label">Year:</span>
-                                <span class="value short">3</span>
+                                <span class="value short" id="profileYear">-</span>
                             </div>
                         </div>
                     </div>
@@ -122,22 +122,22 @@
                 <div class="profile-contact-info">
                     <div class="profile-info-row">
                         <span class="label">E-mail:</span>
-                        <span class="value email">sude.torun@st.uskudar.edu.tr</span>
+                        <span class="value email" id="profileEmail">-</span>
                     </div>
 
                     <div class="profile-info-row">
                         <span class="label">Interests:</span>
-                        <span class="value blank"></span>
+                        <span class="value" id="profileInterests">-</span>
                     </div>
 
                     <div class="profile-info-row">
                         <span class="label">Git-Hub link:</span>
-                        <span class="value blank medium"></span>
+                        <span class="value medium" id="profileGithub">-</span>
                     </div>
 
                     <div class="profile-info-row">
                         <span class="label">LinkedIn link:</span>
-                        <span class="value blank medium"></span>
+                        <span class="value medium" id="profileLinkedin">-</span>
                     </div>
                 </div>
             </div>
@@ -145,42 +145,20 @@
             <div class="profile-bottom-section">
                 <div class="profile-bio-box">
                     <h3>Short bio:</h3>
-                    <div class="bio-area"></div>
+                    <div class="bio-area" id="profileBio">No bio information.</div>
                 </div>
 
                 <div class="profile-skills-box">
                     <h3>Technical Skills:</h3>
-                    <div class="skills-area">
-                        <span class="skill-tag">Web Development</span>
-                        <span class="skill-tag">Robotics</span>
-                        <span class="skill-tag">Embedded systems</span>
-                        <span class="skill-tag">Signal processing</span>
-                        <span class="skill-tag">Control</span>
-                        <span class="skill-tag">IoT</span>
-                        <span class="skill-tag">Cyber Security</span>
-                        <span class="skill-tag">NLP</span>
+                    <div class="skills-area" id="profileSkills">
+                        <span class="skill-tag">No skills found</span>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <script>
-        function toggleStudentProfileMenu() {
-            document
-                .getElementById("studentProfileDropdown")
-                .classList.toggle("show");
-        }
-
-        window.addEventListener("click", function (e) {
-            const dropdown = document.getElementById("studentProfileDropdown");
-            const box = document.querySelector(".student-profile-userbox");
-
-            if (box && !box.contains(e.target)) {
-                dropdown.classList.remove("show");
-            }
-        });
-    </script>
+    <script src="st-profile.js"></script>
 </body>
 
 </html>

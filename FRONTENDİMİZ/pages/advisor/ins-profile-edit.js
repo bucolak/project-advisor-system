@@ -1,0 +1,157 @@
+const API_BASE = "http://localhost:8080";
+
+document.addEventListener("DOMContentLoaded", async function () {
+  setupDropdown();
+  setupLogout();
+  setupInterestAdder();
+  setupSaveButton();
+
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  const role = localStorage.getItem("role");
+
+  console.log("TOKEN:", token);
+  console.log("USER ID:", userId);
+  console.log("ROLE:", role);
+
+  if (!token || !userId || role !== "ADVISOR") {
+    alert("Unauthorized access.");
+    window.location.href = "../../index.html";
+    return;
+  }
+
+  await loadAdvisorProfile(token, userId);
+});
+
+function setupDropdown() {
+  const userBox = document.getElementById("advisorUserBox");
+  const dropdown = document.getElementById("profileDropdown");
+
+  if (!userBox || !dropdown) return;
+
+  userBox.addEventListener("click", function (e) {
+    e.stopPropagation();
+    dropdown.classList.toggle("show");
+  });
+
+  window.addEventListener("click", function (e) {
+    if (!userBox.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.remove("show");
+    }
+  });
+}
+
+function setupLogout() {
+  const logoutBtn = document.getElementById("advisorLogoutBtn");
+
+  if (!logoutBtn) return;
+
+  logoutBtn.addEventListener("click", function () {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+  });
+}
+
+function setupInterestAdder() {
+  const addInterestBtn = document.getElementById("addInterestBtn");
+  const list = document.getElementById("researchInterestList");
+
+  addInterestBtn.addEventListener("click", function () {
+    const li = document.createElement("li");
+    li.innerHTML = `<input type="text" placeholder="Enter new research interest" />`;
+    list.appendChild(li);
+  });
+}
+
+function setupSaveButton() {
+  const saveBtn = document.getElementById("advisorSaveBtn");
+
+  saveBtn.addEventListener("click", function () {
+    alert("Advisor update endpoint is not connected yet. The form is now showing real data only.");
+  });
+}
+
+async function loadAdvisorProfile(token, userId) {
+  try {
+    const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    const text = await response.text();
+    console.log("ADVISOR PROFILE STATUS:", response.status);
+    console.log("ADVISOR PROFILE RESPONSE:", text);
+
+    if (!response.ok) {
+      alert(`Failed to load advisor profile. Status: ${response.status}`);
+      return;
+    }
+
+    const result = JSON.parse(text);
+
+    if (!result.success || !result.data) {
+      alert(result.message || "Failed to load advisor profile.");
+      return;
+    }
+
+    const advisor = result.data;
+
+    const firstName = advisor.firstName || "";
+    const lastName = advisor.lastName || "";
+    const fullName = `Dr. ${`${firstName} ${lastName}`.trim()}`.trim();
+
+    document.getElementById("advisorTopName").textContent = fullName;
+    document.getElementById("advisorDisplayName").textContent = fullName;
+
+    document.getElementById("fullName").value = `${firstName} ${lastName}`.trim();
+    document.getElementById("email").value = advisor.email || "";
+    document.getElementById("department").value = advisor.department || "";
+    document.getElementById("title").value = advisor.title || "";
+    document.getElementById("areasOfExpertise").value = advisor.areasOfExpertise || "";
+
+    renderResearchInterests(advisor.researchInterests);
+
+  } catch (error) {
+    console.error("Advisor edit profile load error:", error);
+    alert("Server error while loading advisor profile.");
+  }
+}
+
+function renderResearchInterests(researchValue) {
+  const list = document.getElementById("researchInterestList");
+  list.innerHTML = "";
+
+  let researchItems = [];
+
+  if (Array.isArray(researchValue)) {
+    researchItems = researchValue;
+  } else if (typeof researchValue === "string" && researchValue.trim() !== "") {
+    researchItems = researchValue
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean);
+  }
+
+  if (!researchItems.length) {
+    list.innerHTML = `<li><input type="text" placeholder="No research interest found" /></li>`;
+    return;
+  }
+
+  researchItems.forEach(item => {
+    const li = document.createElement("li");
+    li.innerHTML = `<input type="text" value="${escapeHtml(item)}" />`;
+    list.appendChild(li);
+  });
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
