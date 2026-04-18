@@ -1,6 +1,10 @@
-document.getElementById("loginBtn").addEventListener("click", async function () {
-  const email = document.getElementById("email").value.trim().toLowerCase();
-  const password = document.getElementById("password").value.trim();
+const loginBtn = document.getElementById("loginBtn");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+
+async function loginUser() {
+  const email = emailInput.value.trim().toLowerCase();
+  const password = passwordInput.value.trim();
 
   if (!email || !password) {
     alert("Please enter e-mail and password.");
@@ -14,20 +18,25 @@ document.getElementById("loginBtn").addEventListener("click", async function () 
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        email,
-        password
+        email: email,
+        password: password
       })
     });
 
     const result = await response.json();
     console.log("LOGIN RESPONSE:", result);
 
-    if (!response.ok) {
+    if (!response.ok || !result.success) {
       alert(result.message || "Invalid e-mail or password.");
       return;
     }
 
     const authData = result.data;
+
+    if (!authData || !authData.token || !authData.role || !authData.userId) {
+      alert("Login response is incomplete.");
+      return;
+    }
 
     localStorage.setItem("token", authData.token);
     localStorage.setItem("role", authData.role);
@@ -46,5 +55,19 @@ document.getElementById("loginBtn").addEventListener("click", async function () 
   } catch (error) {
     console.error("Login error:", error);
     alert("Server error. Please try again.");
+  }
+}
+
+loginBtn.addEventListener("click", loginUser);
+
+passwordInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    loginUser();
+  }
+});
+
+emailInput.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    loginUser();
   }
 });

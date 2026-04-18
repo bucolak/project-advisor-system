@@ -1,4 +1,5 @@
 const API_BASE = "http://localhost:8080";
+
 document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -14,42 +15,59 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
+  await loadStudentProfile(token, userId);
+});
+
+async function loadStudentProfile(token, userId) {
   try {
     const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Authorization": `Bearer ${token}`
       }
     });
 
-    console.log("STATUS:", response.status);
+    console.log("PROFILE STATUS:", response.status);
 
     const text = await response.text();
-    console.log("RAW HOME RESPONSE:", text);
+    console.log("RAW PROFILE RESPONSE:", text);
+
+    if (!response.ok) {
+      alert(`Failed to load student data. Status: ${response.status}`);
+      return;
+    }
 
     let result = {};
     try {
       result = JSON.parse(text);
-    } catch (e) {
-      console.log("JSON parse error:", e);
+    } catch (error) {
+      console.error("JSON parse error:", error);
+      alert("Invalid server response.");
+      return;
     }
 
-    if (!response.ok) {
+    if (!result.success) {
       alert(result.message || "Failed to load student data.");
       return;
     }
 
     const profile = result.data;
-    const fullName = `${profile.firstName} ${profile.lastName}`;
+    if (!profile) {
+      alert("Student profile data not found.");
+      return;
+    }
 
-    document.getElementById("topProfileName").textContent = fullName;
+    const firstName = profile.firstName || "";
+    const lastName = profile.lastName || "";
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    document.getElementById("topProfileName").textContent = fullName || "Student";
     document.getElementById("topProfileRole").textContent = "Student";
-    document.getElementById("welcomeText").textContent = `Welcome, ${profile.firstName} 👋`;
-    document.getElementById("studentDepartment").textContent = profile.department || "";
-    document.getElementById("studentYear").textContent = profile.year ?? "";
+    document.getElementById("welcomeText").textContent = `Welcome, ${firstName || "Student"} 👋`;
+    document.getElementById("studentDepartment").textContent = profile.department || "-";
+    document.getElementById("studentYear").textContent = profile.year ?? "-";
   } catch (error) {
     console.error("Student home load error:", error);
     alert("Server error while loading home page.");
   }
-});
+}

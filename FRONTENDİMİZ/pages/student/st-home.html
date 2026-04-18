@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +12,6 @@
 
     <div class="dashboard-container">
 
-        <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-top-icons">
                 <div>⌃</div>
@@ -30,80 +30,58 @@
             </nav>
         </aside>
 
-        <!-- MAIN -->
         <main class="main-content">
 
-            <!-- PROFILE -->
             <div class="top-profile">
                 <div class="profile-box">
                     <div class="profile-icon">◉</div>
                     <div class="profile-text">
-                        <div class="profile-name" id="topProfileName">Sude Torun</div>
+                        <div class="profile-name" id="topProfileName">Student Name</div>
                         <div class="profile-role" id="topProfileRole">Student</div>
                     </div>
                     <div class="profile-arrow">⌄</div>
                 </div>
             </div>
 
-            <!-- WELCOME + ADVISORS -->
             <div class="row">
-
                 <div class="card">
-                    <h2 id="welcomeText">Welcome, Sude 👋</h2>
-                    <p>Department: <span id="studentDepartment">Software Engineering</span></p>
-                    <p>Year: <span id="studentYear">3</span></p>
+                    <h2 id="welcomeText">Welcome 👋</h2>
+                    <p>Department: <span id="studentDepartment"></span></p>
+                    <p>Year: <span id="studentYear"></span></p>
                 </div>
 
                 <div class="card">
                     <h3>My Advisors</h3>
-                    <p>Dr. Ahmet Yılmaz</p>
-                    <p>Dr. Emine Kaya</p>
+                    <div id="myAdvisorsList">
+                        <p>No advisor data yet.</p>
+                    </div>
                 </div>
-
             </div>
 
-            <!-- ANNOUNCEMENTS + REQUESTS -->
             <div class="row">
-
                 <div class="card">
                     <h3>Announcements</h3>
-                    <ul>
-                        <li>Deadline: May 20</li>
-                        <li>Evaluation: June 5</li>
-                        <li>Last submission: May 25</li>
+                    <ul id="announcementsList">
+                        <li>No announcements yet.</li>
                     </ul>
                 </div>
 
                 <div class="card">
                     <h3>Advisor Requests</h3>
-                    <p>Dr. Ahmet Demir - Pending</p>
-                    <p>Dr. Büşra Yılmaz - Accepted</p>
+                    <div id="advisorRequestsList">
+                        <p>No advisor requests yet.</p>
+                    </div>
                 </div>
-
             </div>
 
-            <!-- OPEN PROJECTS -->
             <div class="card">
                 <h3>Open Projects</h3>
-
-                <div class="project-grid">
-
+                <div class="project-grid" id="openProjectsList">
                     <div class="project-card">
-                        <h4>E-Commerce Platform</h4>
-                        <p>Skills: React, Node</p>
-                        <button>View</button>
-                        <button>Apply</button>
+                        <h4>No open projects yet</h4>
+                        <p>Projects will appear here when connected to backend.</p>
                     </div>
-
-                    <div class="project-card">
-                        <h4>AI Health App</h4>
-                        <p>Skills: Python, AI</p>
-                        <button>View</button>
-                        <button>Apply</button>
-                    </div>
-
                 </div>
-
             </div>
 
         </main>

@@ -17,12 +17,12 @@ public class DataInitializer {
 
     @Bean
     public CommandLineRunner initUsers(UserRepository userRepository,
-                                       StudentRepository studentRepository,
-                                       PasswordEncoder passwordEncoder) {
+            StudentRepository studentRepository,
+            PasswordEncoder passwordEncoder) {
         return args -> {
 
-            if (!userRepository.existsByEmail("sude@uskudar.com")) {
-                User studentUser = User.builder()
+            User studentUser = userRepository.findByEmail("sude@uskudar.com").orElseGet(() -> {
+                User newUser = User.builder()
                         .email("sude@uskudar.com")
                         .passwordHash(passwordEncoder.encode("1234"))
                         .role(Role.STUDENT)
@@ -32,8 +32,10 @@ public class DataInitializer {
                         .isDeleted(false)
                         .build();
 
-                userRepository.save(studentUser);
+                return userRepository.save(newUser);
+            });
 
+            if (!studentRepository.existsById(studentUser.getId())) {
                 Student student = Student.builder()
                         .user(studentUser)
                         .department("Software Engineering")
