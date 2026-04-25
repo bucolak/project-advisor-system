@@ -5,7 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Project</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
         * {
             margin: 0;
@@ -24,7 +26,6 @@
             min-height: 100vh;
         }
 
-        /* SIDEBAR */
         .sidebar {
             width: 240px;
             background: #d9d9d9;
@@ -73,7 +74,6 @@
             color: #fff;
         }
 
-        /* MAIN */
         .main {
             flex: 1;
             padding: 28px 36px 40px;
@@ -123,7 +123,6 @@
             margin-bottom: 26px;
         }
 
-        /* TABS */
         .tabs {
             display: flex;
             gap: 42px;
@@ -165,7 +164,6 @@
             display: block;
         }
 
-        /* FORM LAYOUT */
         .project-form {
             max-width: 1150px;
         }
@@ -311,112 +309,35 @@
         .submit-btn:hover {
             background: #1976d2;
         }
-
-        @media (max-width: 1100px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .small-input {
-                width: 100%;
-            }
-
-            .sidebar {
-                width: 210px;
-            }
-        }
-
-        @media (max-width: 780px) {
-            .app {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-            }
-
-            .main {
-                padding: 20px;
-            }
-
-            .page-title {
-                font-size: 30px;
-            }
-
-            .tabs {
-                gap: 20px;
-            }
-        }
     </style>
 </head>
 
 <body>
     <div class="app">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-top">
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
 
-        <ul class="sidebar-menu">
-            <li>
-                <a href="st-home.html">
-                    <i class="fa-solid fa-house"></i>
-                    Home
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-projects.html">
-                    <i class="fa-solid fa-briefcase"></i>
-                    My Projects
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-createprojects.html" class="active">
-                    <i class="fa-regular fa-square-plus"></i>
-                    Create Project
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisorrequests.html">
-                    <i class="fa-regular fa-rectangle-list"></i>
-                    Advisor Requests
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-advisors.html">
-                    <i class="fa-regular fa-user"></i>
-                    Advisors
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-notifications.html">
-                    <i class="fa-regular fa-bell"></i>
-                    Notifications
-                </a>
-            </li>
-        
-            <li>
-                <a href="st-profile.html">
-                    <i class="fa-regular fa-circle-user"></i>
-                    Profile
-                </a>
-            </li>
-        </ul>
+            <ul class="sidebar-menu">
+                <li><a href="st-home.html"><i class="fa-solid fa-house"></i>Home</a></li>
+                <li><a href="st-projects.html"><i class="fa-solid fa-briefcase"></i>My Projects</a></li>
+                <li><a href="st-createprojects.html" class="active"><i class="fa-regular fa-square-plus"></i>Create
+                        Project</a></li>
+                <li><a href="st-advisorrequests.html"><i class="fa-regular fa-rectangle-list"></i>Advisor Requests</a>
+                </li>
+                <li><a href="st-advisors.html"><i class="fa-regular fa-user"></i>Advisors</a></li>
+                <li><a href="st-notifications.html"><i class="fa-regular fa-bell"></i>Notifications</a></li>
+                <li><a href="st-profile.html"><i class="fa-regular fa-circle-user"></i>Profile</a></li>
+            </ul>
         </aside>
 
-        <!-- Main -->
         <main class="main">
             <div class="top-bar">
                 <div class="profile-box">
                     <i class="fa-regular fa-circle-user"></i>
                     <div class="profile-info">
-                        <span class="name">Sude Torun</span>
+                        <span class="name" id="studentTopName">Loading...</span>
                         <span class="role">Student</span>
                     </div>
                     <i class="fa-solid fa-chevron-down" style="font-size: 12px;"></i>
@@ -430,12 +351,11 @@
                 <button class="tab-btn" data-tab="otherProject">Other Projects</button>
             </div>
 
-            <!-- COURSE PROJECT -->
             <section class="tab-content active" id="courseProject">
-                <form class="project-form">
+                <form class="project-form" id="courseProjectForm">
                     <div class="full-width form-group">
                         <label>Project Title <span class="required-star">*</span></label>
-                        <input type="text" placeholder="Write the project title" />
+                        <input type="text" id="courseTitle" placeholder="Write the project title" />
                     </div>
 
                     <div class="form-grid">
@@ -453,19 +373,22 @@
 
                             <div class="form-group">
                                 <label>Team Size <span class="required-star">*</span></label>
-                                <input class="small-input" type="number" min="1" placeholder="Enter team size" />
+                                <input class="small-input" id="courseTeamSize" type="number" min="1"
+                                    placeholder="Enter team size" />
                             </div>
 
                             <div class="form-group">
                                 <label>Roles Needed <span class="required-star">*</span></label>
-                                <textarea style="min-height: 120px;" placeholder="Write needed roles"></textarea>
+                                <textarea id="courseRoles" style="min-height: 120px;"
+                                    placeholder="Write needed roles"></textarea>
                             </div>
                         </div>
 
                         <div class="right-column">
                             <div class="form-group">
                                 <label>Description <span class="required-star">*</span></label>
-                                <textarea placeholder="Write a brief description of the project"></textarea>
+                                <textarea id="courseDescription"
+                                    placeholder="Write a brief description of the project"></textarea>
                             </div>
                         </div>
                     </div>
@@ -476,25 +399,19 @@
                 </form>
             </section>
 
-            <!-- OTHER PROJECT -->
             <section class="tab-content" id="otherProject">
-                <form class="project-form">
+                <form class="project-form" id="otherProjectForm">
                     <div class="full-width form-group">
                         <label>Project Title <span class="required-star">*</span></label>
-                        <input type="text" placeholder="Write the project title" />
+                        <input type="text" id="otherTitle" placeholder="Write the project title" />
                     </div>
 
                     <div class="form-grid">
                         <div class="left-column">
                             <div class="form-group">
                                 <label>Project Type <span class="required-star">*</span></label>
-                                <select>
-                                    <option value="">Select a project type</option>
-                                    <option>Research Project</option>
-                                    <option>Personal Project</option>
-                                    <option>Competition Project</option>
-                                    <option>Startup Project</option>
-                                    <option>Social Responsibility Project</option>
+                                <select id="projectTypeSelect">
+                                    <option value="">Loading project types...</option>
                                 </select>
                             </div>
 
@@ -511,22 +428,25 @@
 
                             <div class="form-group">
                                 <label>Team Size <span class="required-star">*</span></label>
-                                <input class="small-input" type="number" min="1" placeholder="Enter team size" />
+                                <input class="small-input" id="otherTeamSize" type="number" min="1"
+                                    placeholder="Enter team size" />
                             </div>
 
                             <div class="form-group">
                                 <label>Roles Needed <span class="required-star">*</span></label>
-                                <textarea style="min-height: 120px;" placeholder="Write needed roles"></textarea>
+                                <textarea id="otherRoles" style="min-height: 120px;"
+                                    placeholder="Write needed roles"></textarea>
                             </div>
                         </div>
 
                         <div class="right-column">
                             <div class="form-group">
                                 <label>Description <span class="required-star">*</span></label>
-                                <textarea placeholder="Write a brief description of the project"></textarea>
+                                <textarea id="otherDescription"
+                                    placeholder="Write a brief description of the project"></textarea>
                             </div>
 
-                            <div class="advisor-choice">
+                            <div class="advisor-choice" id="advisorChoiceBox">
                                 <div class="advisor-label">
                                     <i class="fa-regular fa-address-card"></i>
                                     <span>Need Advisor / Not</span>
@@ -548,49 +468,7 @@
         </main>
     </div>
 
-    <script>
-        // TAB SWITCH
-        const tabButtons = document.querySelectorAll(".tab-btn");
-        const tabContents = document.querySelectorAll(".tab-content");
-
-        tabButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                const target = button.dataset.tab;
-
-                tabButtons.forEach(btn => btn.classList.remove("active"));
-                tabContents.forEach(content => content.classList.remove("active"));
-
-                button.classList.add("active");
-                document.getElementById(target).classList.add("active");
-            });
-        });
-
-        // SKILL TAG SELECT
-        const skillTags = document.querySelectorAll(".skill-tag");
-        skillTags.forEach(tag => {
-            tag.addEventListener("click", () => {
-                tag.classList.toggle("selected");
-            });
-        });
-
-        // ADVISOR YES/NO TOGGLE
-        const advisorButtons = document.querySelectorAll(".toggle-btn");
-        advisorButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                advisorButtons.forEach(btn => btn.classList.remove("active"));
-                button.classList.add("active");
-            });
-        });
-
-        // FORM SUBMIT PREVENT DEFAULT
-        const forms = document.querySelectorAll("form");
-        forms.forEach(form => {
-            form.addEventListener("submit", (e) => {
-                e.preventDefault();
-                alert("Project created successfully! (Frontend demo)");
-            });
-        });
-    </script>
+    <script src="st-createprojects.js"></script>
 </body>
 
 </html>

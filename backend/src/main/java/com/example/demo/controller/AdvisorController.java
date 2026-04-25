@@ -20,6 +20,13 @@ public class AdvisorController {
         this.advisorService = advisorService;
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponse> getAllAdvisors() {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Advisors fetched.", advisorService.getAllAdvisors())
+        );
+    }
+
     @GetMapping("/{userId}/profile")
     public ResponseEntity<ApiResponse> getAdvisorProfile(@PathVariable Long userId) {
         AdvisorProfileResponse profile = advisorService.getAdvisorProfile(userId);

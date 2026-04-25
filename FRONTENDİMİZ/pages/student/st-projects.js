@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "STUDENT") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -19,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   await loadStudentProfile(token, userId);
-  await loadStudentProjects(token, userId);
+  await loadStudentProjects(token);
 });
 
 function setupUserDropdown() {
@@ -60,27 +56,15 @@ async function loadStudentProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
-    const text = await response.text();
-    console.log("PROFILE STATUS:", response.status);
-    console.log("RAW PROFILE RESPONSE:", text);
+    if (!response.ok) return;
 
-    if (!response.ok) {
-      alert(`Failed to load student profile. Status: ${response.status}`);
-      return;
-    }
+    const result = await response.json();
+    const profile = result.data || result;
 
-    const result = JSON.parse(text);
-
-    if (!result.success || !result.data) {
-      alert(result.message || "Failed to load student profile.");
-      return;
-    }
-
-    const profile = result.data;
     const fullName = `${profile.firstName || ""} ${profile.lastName || ""}`.trim();
 
     document.getElementById("studentTopName").textContent = fullName || "Student";
@@ -88,57 +72,37 @@ async function loadStudentProfile(token, userId) {
 
   } catch (error) {
     console.error("Profile load error:", error);
-    alert("Server error while loading profile.");
   }
 }
 
-async function loadStudentProjects(token, userId) {
+async function loadStudentProjects(token) {
+  renderEmptyProjects("joinedProjectsContainer", "No joined projects yet.");
+
   try {
-    /*
-      Buradaki endpointleri backend'inizdeki gerçek endpointlere göre ayarlayın.
-      Şu an en olası tahmin endpointleri kullandım.
-    */
-
-    const joinedResponse = await fetch(`${API_BASE}/api/students/${userId}/joined-projects`, {
+    const response = await fetch(`${API_BASE}/api/projects/my-projects`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
-    const createdResponse = await fetch(`${API_BASE}/api/students/${userId}/created-projects`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
+    const text = await response.text();
 
-    const joinedText = await joinedResponse.text();
-    const createdText = await createdResponse.text();
+    console.log("MY PROJECTS STATUS:", response.status);
+    console.log("MY PROJECTS RESPONSE:", text);
 
-    console.log("JOINED PROJECTS STATUS:", joinedResponse.status);
-    console.log("JOINED PROJECTS RESPONSE:", joinedText);
-
-    console.log("CREATED PROJECTS STATUS:", createdResponse.status);
-    console.log("CREATED PROJECTS RESPONSE:", createdText);
-
-    if (joinedResponse.ok) {
-      const joinedResult = JSON.parse(joinedText);
-      renderProjects("joinedProjectsContainer", joinedResult.data || [], false);
-    } else {
-      renderEmptyProjects("joinedProjectsContainer", "No joined projects yet.");
+    if (!response.ok) {
+      renderEmptyProjects("createdProjectsContainer", "Could not load created projects.");
+      return;
     }
 
-    if (createdResponse.ok) {
-      const createdResult = JSON.parse(createdText);
-      renderProjects("createdProjectsContainer", createdResult.data || [], true);
-    } else {
-      renderEmptyProjects("createdProjectsContainer", "No created projects yet.");
-    }
+    const result = JSON.parse(text);
+    const projects = result.data || result || [];
+
+    renderProjects("createdProjectsContainer", projects, true);
 
   } catch (error) {
     console.error("Projects load error:", error);
-    renderEmptyProjects("joinedProjectsContainer", "Could not load joined projects.");
     renderEmptyProjects("createdProjectsContainer", "Could not load created projects.");
   }
 }
@@ -161,35 +125,57 @@ function renderProjects(containerId, projects, isCreatedSection) {
     const card = document.createElement("div");
     card.className = "st-projects-card";
 
-    const badgeText = project.categoryName || project.projectType || "PROJECT";
-    const badgeClass = getBadgeClass(badgeText);
+    const categoryName =
+      project.category?.name ||
+      project.categoryName ||
+      project.projectType ||
+      "PROJECT";
 
-    const advisorAssigned = project.advisorAssigned === true || project.advisorName;
-    const advisorText = advisorAssigned
-      ? `Advisor: ${project.advisorName || "Assigned"}`
-      : "Advisor: Not assigned";
+    const badgeClass = getBadgeClass(categoryName);
+
+    const advisorName =
+      project.advisorName ||
+      project.advisor?.fullName ||
+      project.advisor?.name ||
+      "";
+
+    const advisorAssigned = Boolean(advisorName);
 
     card.innerHTML = `
       <div class="st-projects-card-header">
         <h3>${project.title || "Untitled Project"}</h3>
-        <span class="st-projects-badge ${badgeClass}">${badgeText}</span>
+        <span class="st-projects-badge ${badgeClass}">${categoryName}</span>
       </div>
 
       <p>${project.description || "No description available."}</p>
+
       <div class="st-projects-line"></div>
+
       <p><strong>Skills:</strong> ${project.requiredSkills || project.skills || "-"}</p>
+
       <div class="st-projects-line"></div>
-      <p><strong>Team:</strong> ${project.currentTeamSize ?? 0}/${project.teamSize ?? "-"}</p>
+
+      <p><strong>Team:</strong> ${project.currentTeamSize ?? 1}/${project.teamSize ?? "-"}</p>
+
+      <div class="st-projects-line"></div>
+
+      <p><strong>Roles Needed:</strong> ${project.rolesNeeded || "-"}</p>
 
       <div class="st-projects-card-footer">
-        <span class="${advisorAssigned ? "assigned" : "not-assigned"}">${advisorText}</span>
-        <button type="button" data-project-id="${project.id}">View Details</button>
+        <span class="${advisorAssigned ? "assigned" : "not-assigned"}">
+          ${advisorAssigned ? `Advisor: ${advisorName}` : "Advisor: Not assigned"}
+        </span>
+
+        <button type="button" data-project-id="${project.id}">
+          View Details
+        </button>
       </div>
     `;
 
     const viewButton = card.querySelector("button");
     viewButton.addEventListener("click", function () {
-      alert(`Project detail page will open for project ID: ${project.id}`);
+      const projectId = this.dataset.projectId;
+      alert(`Project detail page will open for project ID: ${projectId}`);
     });
 
     container.appendChild(card);
@@ -205,18 +191,18 @@ function renderEmptyProjects(containerId, message) {
       <div class="st-projects-card-header">
         <h3>${message}</h3>
       </div>
-      <p>Projects will appear here when connected to backend.</p>
+      <p>Projects will appear here.</p>
     </div>
   `;
 }
 
 function getBadgeClass(type) {
-  const value = String(type).toUpperCase();
+  const value = String(type || "").toUpperCase();
 
   if (value.includes("TÜBİTAK")) return "red";
+  if (value.includes("TUBITAK")) return "red";
   if (value.includes("TEKNOFEST")) return "orange";
   if (value.includes("COURSE")) return "yellow";
-  if (value.includes("TUBITAK")) return "red";
 
   return "pink";
 }

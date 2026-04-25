@@ -1,0 +1,66 @@
+package com.example.demo.controller;
+
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.dto.response.ApiResponse;
+import com.example.demo.enums.RequestStatus;
+import com.example.demo.service.AdvisorRequestService;
+
+@RestController
+@RequestMapping("/api/advisor-requests")
+public class AdvisorRequestController {
+
+    private final AdvisorRequestService advisorRequestService;
+
+    public AdvisorRequestController(AdvisorRequestService advisorRequestService) {
+        this.advisorRequestService = advisorRequestService;
+    }
+
+    @GetMapping("/pending")
+    @PreAuthorize("hasAuthority('ROLE_ADVISOR')")
+    public ResponseEntity<ApiResponse> getPendingRequests(Authentication auth) {
+        Long advisorUserId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Pending advisor requests fetched.",
+                        advisorRequestService.getPendingRequestsForAdvisor(advisorUserId)
+                )
+        );
+    }
+
+    @PutMapping("/{requestId}/status")
+    @PreAuthorize("hasAuthority('ROLE_ADVISOR')")
+    public ResponseEntity<ApiResponse> updateRequestStatus(
+            Authentication auth,
+            @PathVariable Long requestId,
+            @RequestBody Map<String, String> body
+    ) {
+        Long advisorUserId = (Long) auth.getPrincipal();
+
+        String statusText = body.get("status");
+
+        if (statusText == null) {
+            throw new RuntimeException("Status is required.");
+        }
+
+        RequestStatus status = RequestStatus.valueOf(statusText.toUpperCase());
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Advisor request updated.",
+                        advisorRequestService.updateRequestStatus(advisorUserId, requestId, status)
+                )
+        );
+    }
+}

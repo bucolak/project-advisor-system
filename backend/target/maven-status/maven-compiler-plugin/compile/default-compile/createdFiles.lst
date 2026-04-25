@@ -2,6 +2,7 @@ com/example/demo/entity/Announcement.class
 com/example/demo/entity/Advisor$AdvisorBuilder.class
 com/example/demo/enums/ProjectStatus.class
 com/example/demo/controller/StudentController.class
+com/example/demo/service/AdvisorRequestService.class
 com/example/demo/repository/AdvisorRequestRepository.class
 com/example/demo/entity/User.class
 com/example/demo/security/JwtUtil.class
@@ -14,6 +15,7 @@ com/example/demo/entity/ProjectCategory.class
 com/example/demo/dto/request/UpdateStatusRequest.class
 com/example/demo/repository/UserRepository.class
 com/example/demo/entity/Student.class
+com/example/demo/controller/ProjectCategoryController.class
 com/example/demo/dto/response/ApiResponse.class
 com/example/demo/repository/AnnouncementRepository.class
 com/example/demo/enums/RequestStatus.class
@@ -31,6 +33,7 @@ com/example/demo/service/StudentService.class
 com/example/demo/ProjectManagementApplication.class
 com/example/demo/repository/ProjectRepository.class
 com/example/demo/entity/Project.class
+com/example/demo/controller/AdvisorRequestController.class
 com/example/demo/enums/AdvisingStatus.class
 com/example/demo/dto/response/StudentProfileResponse.class
 com/example/demo/repository/AdvisorRepository.class

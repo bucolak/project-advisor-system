@@ -44,8 +44,10 @@ public class SecurityConfig {
                         "/v3/api-docs/**"
                 ).permitAll()
                 .requestMatchers("/api/students/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
-                .requestMatchers("/api/advisors/**").hasAnyAuthority("ROLE_ADVISOR", "ROLE_ADMIN")
+                .requestMatchers("/api/advisors/**").hasAnyAuthority("ROLE_ADVISOR", "ROLE_ADMIN", "ROLE_STUDENT")
                 .requestMatchers("/api/advisor-requests/**").hasAnyAuthority("ROLE_ADVISOR", "ROLE_STUDENT")
+                .requestMatchers("/api/projects/**").hasAuthority("ROLE_STUDENT")
+                .requestMatchers("/api/categories/**").authenticated()
                 .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 )
@@ -57,18 +59,21 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowedOrigins(List.of(
                 "http://127.0.0.1:5500",
                 "http://localhost:5500",
                 "http://127.0.0.1",
                 "http://localhost"
         ));
+
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 

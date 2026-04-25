@@ -12,10 +12,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "STUDENT") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -24,12 +20,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   await loadStudentProfile(token, userId);
   await loadAdvisors(token);
-  await loadStudentProjectsForModal(token, userId);
+  await loadStudentProjectsForModal(token);
 });
 
 function setupDropdown() {
   const box = document.getElementById("advisorsStudentBox");
   const dropdown = document.getElementById("advisorProfileDropdown");
+
+  if (!box || !dropdown) return;
 
   box.addEventListener("click", function (e) {
     e.stopPropagation();
@@ -46,6 +44,8 @@ function setupDropdown() {
 function setupLogout() {
   const logoutBtn = document.getElementById("advisorsLogoutBtn");
 
+  if (!logoutBtn) return;
+
   logoutBtn.addEventListener("click", function () {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
@@ -56,20 +56,19 @@ function setupLogout() {
 function setupSearch() {
   const searchInput = document.getElementById("advisorSearch");
 
+  if (!searchInput) return;
+
   searchInput.addEventListener("keyup", function () {
     filterAdvisors(this.value);
   });
 }
 
 function setupModal() {
-  const closeBtn = document.getElementById("closeRequestModalBtn");
-  const cancelBtn = document.getElementById("cancelRequestBtn");
-  const sendBtn = document.getElementById("sendRequestBtn");
-  const modal = document.getElementById("requestModal");
+  document.getElementById("closeRequestModalBtn").addEventListener("click", closeRequestModal);
+  document.getElementById("cancelRequestBtn").addEventListener("click", closeRequestModal);
+  document.getElementById("sendRequestBtn").addEventListener("click", sendAdvisorRequest);
 
-  closeBtn.addEventListener("click", closeRequestModal);
-  cancelBtn.addEventListener("click", closeRequestModal);
-  sendBtn.addEventListener("click", sendAdvisorRequest);
+  const modal = document.getElementById("requestModal");
 
   window.addEventListener("click", function (e) {
     if (e.target === modal) {
@@ -83,43 +82,35 @@ async function loadStudentProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
+    if (!response.ok) return;
+
     const result = await response.json();
+    const profile = result.data || result;
 
-    if (!response.ok || !result.success) {
-      return;
-    }
+    const fullName = `${profile.firstName || ""} ${profile.lastName || ""}`.trim();
 
-    const profile = result.data;
-    document.getElementById("advisorsStudentName").textContent =
-      `${profile.firstName} ${profile.lastName}`;
+    document.getElementById("advisorsStudentName").textContent = fullName || "Student";
+
   } catch (error) {
     console.error("Student profile load error:", error);
   }
 }
 
 async function loadAdvisors(token) {
-  const tableBody = document.getElementById("advisorsTableBody");
-
   try {
-    /*
-      Bunu backend endpointinize göre düzenle:
-      Örn:
-      GET /api/advisors
-      veya
-      GET /api/students/advisors
-    */
     const response = await fetch(`${API_BASE}/api/advisors`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     const text = await response.text();
+
     console.log("ADVISORS STATUS:", response.status);
     console.log("ADVISORS RESPONSE:", text);
 
@@ -129,65 +120,14 @@ async function loadAdvisors(token) {
     }
 
     const result = JSON.parse(text);
-    const advisors = result.data || [];
+    const advisors = result.data || result || [];
 
-    if (advisors.length === 0) {
+    if (!advisors.length) {
       renderEmptyAdvisors("No advisor found.");
       return;
     }
 
-    tableBody.innerHTML = "";
-
-    advisors.forEach(advisor => {
-      const row = document.createElement("tr");
-      row.className = "advisor-row";
-      row.dataset.status = (advisor.advisingStatus || "inactive").toLowerCase();
-
-      const fullName = advisor.fullName || `${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
-      const status = (advisor.advisingStatus || "INACTIVE").toUpperCase();
-      const isActive = status === "ACTIVE";
-
-      const expertiseHtml = (advisor.areasOfExpertise || advisor.expertise || "")
-        .split(",")
-        .map(item => item.trim())
-        .filter(Boolean)
-        .map(item => `<span class="expertise-tag">${item}</span>`)
-        .join("");
-
-      row.innerHTML = `
-        <td>
-          <div class="advisor-name-cell">
-            <i class="fa-regular fa-circle-user"></i>
-            <div class="advisor-name-text">
-              <span>${fullName || "-"}</span>
-            </div>
-            <span class="advisor-dot ${isActive ? "green" : "red"}"></span>
-          </div>
-        </td>
-        <td>${advisor.department || "-"}</td>
-        <td>
-          <div class="expertise-tags">
-            ${expertiseHtml || '<span class="expertise-tag">-</span>'}
-          </div>
-        </td>
-        <td id="action-${advisor.userId || advisor.id}">
-          ${
-            isActive
-              ? `<button class="advisor-request-btn" data-advisor-id="${advisor.userId || advisor.id}">Request</button>`
-              : `<span class="advisor-disabled-text">You cannot request!</span>`
-          }
-        </td>
-      `;
-
-      tableBody.appendChild(row);
-    });
-
-    document.querySelectorAll(".advisor-request-btn").forEach(button => {
-      button.addEventListener("click", function () {
-        const advisorId = this.dataset.advisorId;
-        openRequestModal(advisorId);
-      });
-    });
+    renderAdvisors(advisors);
 
   } catch (error) {
     console.error("Advisors load error:", error);
@@ -195,8 +135,74 @@ async function loadAdvisors(token) {
   }
 }
 
+function renderAdvisors(advisors) {
+  const tableBody = document.getElementById("advisorsTableBody");
+  tableBody.innerHTML = "";
+
+  advisors.forEach(advisor => {
+    const advisorId = advisor.userId || advisor.id;
+
+    const fullName =
+      advisor.fullName ||
+      `${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
+
+    const status = String(advisor.advisingStatus || "INACTIVE").toUpperCase();
+    const isActive = status === "ACTIVE";
+
+    const expertiseHtml = String(advisor.areasOfExpertise || advisor.expertise || "")
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean)
+      .map(item => `<span class="expertise-tag">${item}</span>`)
+      .join("");
+
+    const row = document.createElement("tr");
+    row.className = "advisor-row";
+    row.dataset.status = status.toLowerCase();
+
+    row.innerHTML = `
+      <td>
+        <div class="advisor-name-cell">
+          <i class="fa-regular fa-circle-user"></i>
+
+          <div class="advisor-name-text">
+            <span>${fullName || "-"}</span>
+          </div>
+
+          <span class="advisor-dot ${isActive ? "green" : "red"}"></span>
+        </div>
+      </td>
+
+      <td>${advisor.department || "-"}</td>
+
+      <td>
+        <div class="expertise-tags">
+          ${expertiseHtml || '<span class="expertise-tag">-</span>'}
+        </div>
+      </td>
+
+      <td id="action-${advisorId}">
+        ${
+          isActive
+            ? `<button class="advisor-request-btn" data-advisor-id="${advisorId}">Request</button>`
+            : `<span class="advisor-disabled-text">You cannot request!</span>`
+        }
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+
+  document.querySelectorAll(".advisor-request-btn").forEach(button => {
+    button.addEventListener("click", function () {
+      openRequestModal(this.dataset.advisorId);
+    });
+  });
+}
+
 function renderEmptyAdvisors(message) {
   const tableBody = document.getElementById("advisorsTableBody");
+
   tableBody.innerHTML = `
     <tr>
       <td colspan="4">${message}</td>
@@ -212,7 +218,7 @@ function filterAdvisors(inputValue) {
 
   let found = false;
 
-  rows.forEach((row) => {
+  rows.forEach(row => {
     const rowText = row.textContent.toLowerCase();
     const status = row.dataset.status.toLowerCase();
 
@@ -228,9 +234,7 @@ function filterAdvisors(inputValue) {
 
     row.style.display = matches ? "" : "none";
 
-    if (matches) {
-      found = true;
-    }
+    if (matches) found = true;
   });
 
   if (input === "" || found) {
@@ -242,39 +246,35 @@ function filterAdvisors(inputValue) {
   }
 }
 
-async function loadStudentProjectsForModal(token, userId) {
+async function loadStudentProjectsForModal(token) {
   const projectSelect = document.getElementById("projectSelect");
 
   try {
-    /*
-      Bunu da backend endpointinize göre düzenleyin.
-      Muhtemel endpoint:
-      GET /api/students/{userId}/created-projects
-      veya
-      GET /api/projects/student/{userId}
-    */
-    const response = await fetch(`${API_BASE}/api/students/${userId}/created-projects`, {
+    const response = await fetch(`${API_BASE}/api/projects/my-projects`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
-    if (!response.ok) {
-      return;
-    }
+    if (!response.ok) return;
 
     const result = await response.json();
-    const projects = result.data || [];
+    const projects = result.data || result || [];
 
     projectSelect.innerHTML = `<option value="">Select a project</option>`;
 
-    projects.forEach(project => {
-      const option = document.createElement("option");
-      option.value = project.id;
-      option.textContent = project.title;
-      projectSelect.appendChild(option);
-    });
+    projects
+      .filter(project => {
+        const advisorRequired = project.category?.advisorRequired;
+        return advisorRequired !== false;
+      })
+      .forEach(project => {
+        const option = document.createElement("option");
+        option.value = project.id;
+        option.textContent = project.title;
+        projectSelect.appendChild(option);
+      });
 
   } catch (error) {
     console.error("Project list load error:", error);
@@ -294,8 +294,7 @@ function closeRequestModal() {
 
 async function sendAdvisorRequest() {
   const token = localStorage.getItem("token");
-  const projectSelect = document.getElementById("projectSelect");
-  const selectedProjectId = projectSelect.value;
+  const selectedProjectId = document.getElementById("projectSelect").value;
 
   if (!selectedProjectId || !currentAdvisorId) {
     alert("Please select a project.");
@@ -303,24 +302,18 @@ async function sendAdvisorRequest() {
   }
 
   try {
-    /*
-      Bunu backend endpointinize göre düzenleyin.
-      Muhtemel:
-      POST /api/advisor-requests
-    */
-    const response = await fetch(`${API_BASE}/api/advisor-requests`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        advisorId: Number(currentAdvisorId),
-        projectId: Number(selectedProjectId)
-      })
-    });
+    const response = await fetch(
+      `${API_BASE}/api/projects/${selectedProjectId}/request-advisor/${currentAdvisorId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
 
     const text = await response.text();
+
     console.log("SEND REQUEST STATUS:", response.status);
     console.log("SEND REQUEST RESPONSE:", text);
 
@@ -330,6 +323,7 @@ async function sendAdvisorRequest() {
     }
 
     const actionCell = document.getElementById(`action-${currentAdvisorId}`);
+    const projectSelect = document.getElementById("projectSelect");
     const selectedProjectText = projectSelect.options[projectSelect.selectedIndex].text;
 
     actionCell.innerHTML = `
