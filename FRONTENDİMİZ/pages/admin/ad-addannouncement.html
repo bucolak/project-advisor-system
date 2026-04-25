@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,8 +9,11 @@
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
+
 <body>
+
   <div class="admin-addann-page">
+
     <aside class="admin-addann-sidebar">
       <div class="admin-addann-sidebar-icon">
         <i class="fa-solid fa-up-down-left-right"></i>
@@ -44,73 +48,161 @@
           </a>
         </li>
       </ul>
+
     </aside>
 
+
+
     <main class="admin-addann-content">
+
       <div class="admin-addann-topbar">
         <div class="admin-addann-userbox">
           <i class="fa-regular fa-circle-user"></i>
+
           <div class="admin-addann-userinfo">
-            <span>Ali Yılmaz</span>
+            <span id="adminTopName">Loading...</span>
             <small>Admin</small>
           </div>
+
           <i class="fa-solid fa-chevron-down"></i>
         </div>
       </div>
 
-      <h1 class="admin-addann-title">Add New Announcement</h1>
 
-      <form class="admin-addann-form">
+
+      <h1 class="admin-addann-title">
+        Add New Announcement
+      </h1>
+
+
+
+      <form class="admin-addann-form" id="announcementForm">
+
         <div class="admin-addann-field full">
-          <label>Title <span>*</span></label>
-          <input type="text" placeholder="Enter annoucement title" />
+          <label>
+            Title <span>*</span>
+          </label>
+
+          <input type="text" id="announcementTitle" placeholder="Enter announcement title" />
         </div>
 
+
+
         <div class="admin-addann-grid">
+
           <div class="admin-addann-left">
+
             <div class="admin-addann-field">
-              <label>Related Category <span>*</span></label>
-              <select>
-                <option>Select a project type</option>
-                <option>TÜBİTAK</option>
-                <option>Teknofest</option>
-                <option>Course</option>
+              <label>
+                Related Category <span>*</span>
+              </label>
+
+              <select id="announcementCategory">
+                <option value="">
+                  Select a project type
+                </option>
+
+                <option value="TÜBİTAK">
+                  TÜBİTAK
+                </option>
+
+                <option value="TEKNOFEST">
+                  TEKNOFEST
+                </option>
+
+                <option value="COURSE">
+                  COURSE
+                </option>
+
               </select>
             </div>
 
+
+
             <div class="admin-addann-field">
-              <label>Deadline <span>*</span></label>
+              <label>
+                Deadline <span>*</span>
+              </label>
+
               <div class="admin-addann-datebox">
                 <i class="fa-regular fa-calendar"></i>
-                <input type="text" placeholder="Select date" />
+
+                <input type="date" id="announcementDeadline" />
               </div>
             </div>
 
+
+
             <div class="admin-addann-field">
-              <label>Announcement Type <span>*</span></label>
-              <select>
-                <option>Select a project type</option>
-                <option>Application deadlines</option>
-                <option>Evaluation Dates</option>
-                <option>Result Announcement Dates</option>
+              <label>
+                Announcement Type <span>*</span>
+              </label>
+
+              <select id="announcementType">
+
+                <option value="">
+                  Select announcement type
+                </option>
+
+                <option value="APPLICATION_DEADLINE">
+                  Application deadlines
+                </option>
+
+                <option value="EVALUATION_DATE">
+                  Evaluation Dates
+                </option>
+
+                <option value="RESULT_ANNOUNCEMENT_DATE">
+                  Result Announcement Dates
+                </option>
+
               </select>
+
             </div>
+
           </div>
+
+
 
           <div class="admin-addann-right">
+
             <div class="admin-addann-field">
-              <label>Description <span>*</span></label>
-              <textarea placeholder="Enter detailed description"></textarea>
+
+              <label>
+                Description <span>*</span>
+              </label>
+
+              <textarea id="announcementDescription" placeholder="Enter detailed description"></textarea>
+
             </div>
+
           </div>
+
         </div>
 
+
+
         <div class="admin-addann-actions">
-          <a href="ad-announce.html" class="admin-addann-cancel">Cancel</a>
-          <button type="submit" class="admin-addann-publish">Publish Announcement</button>
+
+          <a href="ad-announce.html" class="admin-addann-cancel">
+            Cancel
+          </a>
+
+          <button type="submit" class="admin-addann-publish">
+            Publish Announcement
+          </button>
+
         </div>
+
       </form>
+
     </main>
+
   </div>
+
+
+  <script src="ad-addannouncement.js"></script>
+
 </body>
+
 </html>

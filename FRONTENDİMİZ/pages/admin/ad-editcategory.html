@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit Category</title>
+
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
+
 <body>
   <div class="admin-editcat-page">
     <aside class="admin-editcat-sidebar">
@@ -49,23 +52,26 @@
       <div class="admin-editcat-topbar">
         <div class="admin-editcat-userbox">
           <i class="fa-regular fa-circle-user"></i>
+
           <div class="admin-editcat-userinfo">
-            <span>Ali Yılmaz</span>
+            <span id="adminTopName">Loading...</span>
             <small>Admin</small>
           </div>
+
           <i class="fa-solid fa-chevron-down"></i>
         </div>
       </div>
 
       <h1 class="admin-editcat-title">Edit Category</h1>
 
-      <div class="admin-editcat-card">
+      <form class="admin-editcat-card" id="editCategoryForm">
         <div class="admin-editcat-field">
           <label>
             <i class="fa-regular fa-folder-open"></i>
             Category Name
           </label>
-          <input type="text" value="TÜBİTAK Projects" />
+
+          <input type="text" id="categoryName" placeholder="Loading category name..." />
         </div>
 
         <div class="admin-editcat-field">
@@ -73,7 +79,8 @@
             <i class="fa-regular fa-folder"></i>
             Description
           </label>
-          <textarea>Student research projects</textarea>
+
+          <textarea id="categoryDescription" placeholder="Loading description..."></textarea>
         </div>
 
         <div class="admin-editcat-row">
@@ -82,7 +89,8 @@
               <i class="fa-solid fa-users"></i>
               Team Size(min-max)
             </label>
-            <input type="text" value="2-5" />
+
+            <input type="text" id="teamSize" placeholder="Loading team size..." />
           </div>
 
           <div class="admin-editcat-half small">
@@ -90,7 +98,8 @@
               <i class="fa-solid fa-wallet"></i>
               Budget
             </label>
-            <input type="text" value="₺ 10000" />
+
+            <input type="number" id="budget" placeholder="Loading budget..." />
           </div>
         </div>
 
@@ -101,17 +110,20 @@
           </div>
 
           <div class="admin-editcat-toggle">
-            <button type="button" class="active">Yes</button>
-            <button type="button">No</button>
+            <button type="button" id="advisorYes">Yes</button>
+            <button type="button" id="advisorNo">No</button>
           </div>
         </div>
 
         <div class="admin-editcat-actions">
           <a href="ad-projectcat.html" class="admin-editcat-cancel">Cancel</a>
-          <button class="admin-editcat-save">Save Changes</button>
+          <button type="submit" class="admin-editcat-save">Save Changes</button>
         </div>
-      </div>
+      </form>
     </main>
   </div>
+
+  <script src="ad-editcategory.js"></script>
 </body>
+
 </html>

@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Add New Category</title>
 
-  <link rel="stylesheet" href="../../css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
+
   <div class="admin-addcat-page">
+
     <aside class="admin-addcat-sidebar">
       <div class="admin-addcat-sidebar-icon">
         <i class="fa-solid fa-up-down-left-right"></i>
@@ -45,77 +48,125 @@
           </a>
         </li>
       </ul>
+
     </aside>
 
+
+
     <main class="admin-addcat-content">
+
       <div class="admin-addcat-topbar">
         <div class="admin-addcat-userbox">
+
           <i class="fa-regular fa-circle-user"></i>
 
           <div class="admin-addcat-userinfo">
-            <span>Ali Yılmaz</span>
+            <span id="adminTopName">Loading...</span>
             <small>Admin</small>
           </div>
 
           <i class="fa-solid fa-chevron-down"></i>
+
         </div>
       </div>
 
-      <h1 class="admin-addcat-title">Add New Category</h1>
 
-      <div class="admin-addcat-card">
+      <h1 class="admin-addcat-title">
+        Add New Category
+      </h1>
+
+
+      <form id="createCategoryForm" class="admin-addcat-card">
+
         <div class="admin-addcat-field">
           <label>
             <i class="fa-regular fa-folder-open"></i>
             Category Name
           </label>
-          <input type="text" placeholder="Enter category name" />
+
+          <input id="categoryName" type="text" placeholder="Enter category name" required />
         </div>
+
+
 
         <div class="admin-addcat-field">
           <label>
             <i class="fa-regular fa-folder"></i>
             Description
           </label>
-          <textarea placeholder="Enter description"></textarea>
+
+          <textarea id="categoryDescription" placeholder="Enter description" required></textarea>
+
         </div>
 
+
+
         <div class="admin-addcat-row">
+
           <div class="admin-addcat-half">
             <label>
               <i class="fa-solid fa-users"></i>
-              Team Size(min-max)
+              Team Size (min-max)
             </label>
-            <input type="text" placeholder="Enter the team size interval" />
+
+            <input id="teamSize" type="text" placeholder="Example: 2-5" />
           </div>
+
 
           <div class="admin-addcat-half small">
             <label>
               <i class="fa-solid fa-wallet"></i>
               Budget
             </label>
-            <input type="text" placeholder="₺ 0.00" />
+
+            <input id="budget" type="number" placeholder="0" />
           </div>
+
         </div>
 
+
+
         <div class="admin-addcat-advisor">
+
           <div class="admin-addcat-advisor-title">
             <i class="fa-regular fa-address-card"></i>
             Need Advisor / Not
           </div>
 
           <div class="admin-addcat-toggle">
-            <button type="button" class="active">Yes</button>
-            <button type="button">No</button>
+            <button type="button" id="advisorYes" class="active">
+              Yes
+            </button>
+
+            <button type="button" id="advisorNo">
+              No
+            </button>
           </div>
+
         </div>
 
+
+
         <div class="admin-addcat-actions">
-          <a href="ad-projectcat.html" class="admin-addcat-cancel">Cancel</a>
-          <button class="admin-addcat-create">Create Category</button>
+
+          <a href="ad-projectcat.html" class="admin-addcat-cancel">
+            Cancel
+          </a>
+
+          <button type="submit" class="admin-addcat-create">
+            Create Category
+          </button>
+
         </div>
-      </div>
+
+      </form>
+
     </main>
   </div>
+
+
+  <script src="ad-addcategory.js"></script>
+
 </body>
+
 </html>

@@ -2,69 +2,78 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Home</title>
-    <link rel="stylesheet" href="../../css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
     <div class="admin-home-page">
+
         <aside class="admin-home-sidebar">
             <div class="admin-home-sidebar-icon">
                 <i class="fa-solid fa-up-down-left-right"></i>
             </div>
-<ul class="admin-home-menu">
-    <li>
-        <a href="../admin/ad-home.html" class="active">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-        </a>
-    </li>
 
-    <li>
-        <a href="../admin/ad-projectcat.html">
-            <i class="fa-regular fa-folder-open"></i>
-            <span>Project Categories</span>
-        </a>
-    </li>
+            <ul class="admin-home-menu">
+                <li>
+                    <a href="ad-home.html" class="active">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
 
-    <li>
-        <a href="../admin/ad-addannouncement.html">
-            <i class="fa-regular fa-flag"></i>
-            <span>Announcements <br>& Dates</span>
-        </a>
-    </li>
+                <li>
+                    <a href="ad-projectcat.html">
+                        <i class="fa-regular fa-folder-open"></i>
+                        <span>Project Categories</span>
+                    </a>
+                </li>
 
-    <li>
-        <a href="../admin/ad-user.html">
-            <i class="fa-regular fa-user"></i>
-            <span>User Management</span>
-        </a>
-    </li>
-</ul>
-           
+                <li>
+                    <a href="ad-announce.html">
+                        <i class="fa-regular fa-flag"></i>
+                        <span>Announcements <br>& Dates</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="ad-user.html">
+                        <i class="fa-regular fa-user"></i>
+                        <span>User Management</span>
+                    </a>
+                </li>
+            </ul>
         </aside>
 
         <main class="admin-home-content">
+
             <div class="admin-home-topbar">
-                <div class="admin-home-userbox">
+                <div class="admin-home-userbox" id="adminUserBox">
                     <i class="fa-regular fa-circle-user"></i>
+
                     <div class="admin-home-userinfo">
-                        <span>Ali Yılmaz</span>
+                        <span id="adminTopName">Loading...</span>
                         <small>Admin</small>
                     </div>
+
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
             </div>
 
             <div class="admin-home-upper">
                 <div class="admin-home-welcome-card">
-                    <h2>Welcome, Ali Yılmaz 👋</h2>
+                    <h2 id="adminWelcomeText">Loading...</h2>
+
                     <p><strong>Role:</strong> Admin</p>
                     <p><strong>System Access:</strong> Full Control</p>
-                    <p class="admin-home-welcome-text">You can manage categories, users and announcements.</p>
+
+                    <p class="admin-home-welcome-text">
+                        You can manage categories, users and announcements.
+                    </p>
                 </div>
             </div>
 
@@ -73,16 +82,11 @@
                     <h3>Announcements</h3>
                     <div class="admin-home-divider"></div>
 
-                    <div class="admin-home-ann-item">
-                        <i class="fa-regular fa-calendar"></i>
-                        <span>TÜBİTAK Deadline: May 20</span>
-                    </div>
-
-                    <div class="admin-home-ann-divider"></div>
-
-                    <div class="admin-home-ann-item">
-                        <i class="fa-regular fa-calendar"></i>
-                        <span>Teknofest Evaluation: June 5</span>
+                    <div id="adminAnnouncementsList">
+                        <div class="admin-home-ann-item">
+                            <i class="fa-regular fa-calendar"></i>
+                            <span>Loading announcements...</span>
+                        </div>
                     </div>
                 </div>
 
@@ -92,17 +96,17 @@
 
                     <div class="admin-home-overview-item">
                         <i class="fa-regular fa-user"></i>
-                        <span>Total Users: 24</span>
+                        <span id="totalUsersText">Loading...</span>
                     </div>
 
                     <div class="admin-home-overview-item">
                         <i class="fa-regular fa-circle-check green"></i>
-                        <span>Active: 20</span>
+                        <span id="activeUsersText">Loading...</span>
                     </div>
 
                     <div class="admin-home-overview-item">
                         <i class="fa-regular fa-square-xmark red"></i>
-                        <span>Deactivated: 4</span>
+                        <span id="inactiveUsersText">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -110,135 +114,36 @@
             <div class="admin-home-lower">
                 <h3 class="admin-home-section-title">Project Categories</h3>
 
-                <div class="admin-home-categories-wrapper">
+                <div class="admin-home-categories-wrapper" id="adminCategoriesWrapper">
                     <div class="admin-home-category-card">
                         <div class="admin-home-category-body">
-                            <h4>TÜBİTAK Projects</h4>
-                            <p>Student research projects</p>
-                            <div class="admin-home-line"></div>
-                            <p><strong>Active Projects:</strong> 7</p>
-                            <div class="admin-home-line"></div>
-                            <p><strong>Deadlines:</strong> 3</p>
-                        </div>
-
-                        <div class="admin-home-category-footer">
-     <span class="admin-home-badge tubitak">TÜBİTAK</span>
-     <button id="openTubitakModal">View</button>
-</div> 
-                    </div>
-
-                    <div class="admin-home-category-card">
-                        <div class="admin-home-category-body">
-                            <h4>Course Projects</h4>
-                            <p>University Course projects</p>
-                            <div class="admin-home-line"></div>
-                            <p><strong>Active Projects:</strong> 9</p>
-                            <div class="admin-home-line"></div>
-                            <p><strong>Deadlines:</strong> 5</p>
-                        </div>
-
-                        <div class="admin-home-category-footer">
-                            <span class="admin-home-badge course">COURSE</span>
-                            <button>View</button>
-                        </div>
-                    </div>
-
-                    <div class="admin-home-category-card">
-                        <div class="admin-home-category-body">
-                            <h4>Teknofest Projects</h4>
-                            <p>Student Competition projects</p>
-                            <div class="admin-home-line"></div>
-                            <p><strong>Active Projects:</strong> 10</p>
-                            <div class="admin-home-line"></div>
-                            <p><strong>Deadlines:</strong> 4</p>
-                        </div>
-
-                        <div class="admin-home-category-footer">
-                            <span class="admin-home-badge teknofest">TEKNOFEST</span>
-                            <button>View</button>
+                            <h4>Loading categories...</h4>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="admin-projects-modal-overlay" id="tubitakModal">
-  <div class="admin-projects-modal">
-    <div class="admin-projects-modal-header">
-      <h2>TÜBİTAK Projects</h2>
-      <span class="admin-projects-modal-badge">TÜBİTAK</span>
-    </div>
 
-    <div class="admin-projects-modal-list">
-      <div class="admin-projects-modal-item">
-        <span class="admin-projects-dot"></span>
-        <span class="admin-projects-name">AI Chatbot</span>
-        <button class="admin-projects-detail-btn">View Details</button>
-      </div>
+            <div class="admin-projects-modal-overlay" id="categoryProjectsModal">
+                <div class="admin-projects-modal">
+                    <div class="admin-projects-modal-header">
+                        <h2 id="modalCategoryTitle">Projects</h2>
+                        <span id="modalCategoryBadge" class="admin-projects-modal-badge">Loading...</span>
+                    </div>
 
-      <div class="admin-projects-modal-item">
-        <span class="admin-projects-dot"></span>
-        <span class="admin-projects-name">Health Tracker</span>
-        <button class="admin-projects-detail-btn" onclick="window.location.href='ad-project-details-healthtracker.html'">
-    View Details
-  </button>
-      </div>
+                    <div id="modalProjectsList" class="admin-projects-modal-list"></div>
 
-      <div class="admin-projects-modal-item">
-        <span class="admin-projects-dot"></span>
-        <span class="admin-projects-name">Blockchain voting</span>
-        <button class="admin-projects-detail-btn">View Details</button>
-      </div>
+                    <div class="admin-projects-modal-footer">
+                        <button id="closeCategoryProjectsModal" class="admin-projects-cancel-btn">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-      <div class="admin-projects-modal-item">
-        <span class="admin-projects-dot"></span>
-        <span class="admin-projects-name">Smart Parking System</span>
-        <button class="admin-projects-detail-btn">View Details</button>
-      </div>
-
-      <div class="admin-projects-modal-item">
-        <span class="admin-projects-dot"></span>
-        <span class="admin-projects-name">Weather Forecast App</span>
-        <button class="admin-projects-detail-btn">View Details</button>
-      </div>
-
-      <div class="admin-projects-modal-item">
-        <span class="admin-projects-dot"></span>
-        <span class="admin-projects-name">Drone Navigation System</span>
-        <button class="admin-projects-detail-btn">View Details</button>
-      </div>
-
-      <div class="admin-projects-modal-item">
-        <span class="admin-projects-dot"></span>
-        <span class="admin-projects-name">E-Commerce Web Platform</span>
-        <button class="admin-projects-detail-btn">View Details</button>
-      </div>
-    </div>
-
-    <div class="admin-projects-modal-footer">
-      <button id="closeTubitakModal" class="admin-projects-cancel-btn">Cancel</button>
-    </div>
-  </div>
-</div>
         </main>
     </div>
-    <script>
-  const openTubitakModal = document.getElementById("openTubitakModal");
-  const tubitakModal = document.getElementById("tubitakModal");
-  const closeTubitakModal = document.getElementById("closeTubitakModal");
 
-  openTubitakModal.addEventListener("click", () => {
-    tubitakModal.classList.add("show");
-  });
-
-  closeTubitakModal.addEventListener("click", () => {
-    tubitakModal.classList.remove("show");
-  });
-
-  tubitakModal.addEventListener("click", (e) => {
-    if (e.target === tubitakModal) {
-      tubitakModal.classList.remove("show");
-    }
-  });
-</script>
+    <script src="ad-home.js"></script>
 </body>
 
 </html>

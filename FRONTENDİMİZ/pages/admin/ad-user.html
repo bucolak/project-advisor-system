@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Management</title>
+
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
+
 <body>
   <div class="admin-user-page">
     <aside class="admin-user-sidebar">
@@ -49,10 +52,12 @@
       <div class="admin-user-topbar">
         <div class="admin-user-userbox">
           <i class="fa-regular fa-circle-user"></i>
+
           <div class="admin-user-userinfo">
-            <span>Ali Yılmaz</span>
+            <span id="adminTopName">Admin</span>
             <small>Admin</small>
           </div>
+
           <i class="fa-solid fa-chevron-down"></i>
         </div>
       </div>
@@ -67,11 +72,12 @@
 
         <div class="admin-user-role-filter">
           <label for="roleSelect">Role:</label>
+
           <select id="roleSelect">
             <option value="all">All</option>
             <option value="admin">Admin</option>
             <option value="student">Student</option>
-            <option value="instructor">Instructor</option>
+            <option value="advisor">Advisor</option>
           </select>
         </div>
       </div>
@@ -89,156 +95,16 @@
           </thead>
 
           <tbody id="userTableBody">
-            <tr class="user-row" data-role="admin" data-name="melis kara">
-              <td>
-                <div class="admin-user-name-cell">
-                     <div class="admin-user-profile-icon">
-    <i class="fa-regular fa-circle-user"></i>
-  </div>
-                  <span>Melis Kara</span>
-                </div>
-              </td>
-              <td><span class="admin-user-role admin">Admin</span></td>
-              <td>System<br>Admin</td>
-              <td>
-                <button class="admin-user-status-toggle active">Active</button>
-              </td>
-              <td>Mar 23, 2026</td>
+            <tr>
+              <td colspan="5">Loading users...</td>
             </tr>
-
-            <tr class="user-row" data-role="student" data-name="burak demir">
-              <td>
-                <div class="admin-user-name-cell">
-                      <div class="admin-user-profile-icon">
-    <i class="fa-regular fa-circle-user"></i>
-  </div>
-                  <span>Burak Demir</span>
-                </div>
-              </td>
-              <td><span class="admin-user-role student">Student</span></td>
-              <td>Software<br>Engineering</td>
-              <td>
-                <button class="admin-user-status-toggle active">Active</button>
-              </td>
-              <td>Apr 10, 2024</td>
-            </tr>
-
-            <tr class="user-row" data-role="instructor" data-name="ayşe sarı">
-              <td>
-                <div class="admin-user-name-cell">
-                     <div class="admin-user-profile-icon">
-    <i class="fa-regular fa-circle-user"></i>
-  </div>
-                  <span>Ayşe Sarı</span>
-                </div>
-              </td>
-              <td><span class="admin-user-role instructor">Instructor</span></td>
-              <td>Electrical<br>Engineering</td>
-              <td>
-                <button class="admin-user-status-toggle active">Active</button>
-              </td>
-              <td>Mar 5, 2024</td>
-            </tr>
-
-            <tr class="user-row" data-role="student" data-name="emre şahin">
-              <td>
-                <div class="admin-user-name-cell">
-                      <div class="admin-user-profile-icon">
-    <i class="fa-regular fa-circle-user"></i>
-  </div>
-                  <span>Emre Şahin</span>
-                </div>
-              </td>
-              <td><span class="admin-user-role student">Student</span></td>
-              <td>Mechanical<br>Engineering</td>
-              <td>
-                <button class="admin-user-status-toggle active">Active</button>
-              </td>
-              <td>Feb 21, 2024</td>
-            </tr>
-
-            <tr class="user-row" data-role="instructor" data-name="su yanık">
-              <td>
-                <div class="admin-user-name-cell">
-                    <div class="admin-user-profile-icon">
-    <i class="fa-regular fa-circle-user"></i>
-  </div>
-                  <span>Su Yanık</span>
-                </div>
-              </td>
-              <td><span class="admin-user-role instructor">Instructor</span></td>
-              <td>Mechanical<br>Engineering</td>
-              <td>
-                <button class="admin-user-status-toggle active">Active</button>
-              </td>
-              <td>Aug 3, 2024</td>
-            </tr>
-
-            <tr class="user-row" data-role="student" data-name="ali selim">
-              <td>
-                <div class="admin-user-name-cell">
-                      <div class="admin-user-profile-icon">
-    <i class="fa-regular fa-circle-user"></i>
-  </div>
-                  <span>Ali Selim</span>
-                </div>
-              </td>
-              <td><span class="admin-user-role student">Student</span></td>
-              <td>Computer<br>Engineering</td>
-              <td>
-                <button class="admin-user-status-toggle active">Active</button>
-              </td>
-              <td>Dec 22, 2024</td>
-            </tr>
-
-          
           </tbody>
         </table>
       </div>
     </main>
   </div>
 
-  <script>
-    const searchInput = document.getElementById("userSearchInput");
-    const roleSelect = document.getElementById("roleSelect");
-    const userRows = document.querySelectorAll(".user-row");
-    const statusButtons = document.querySelectorAll(".admin-user-status-toggle");
-
-    function filterUsers() {
-      const searchValue = searchInput.value.toLowerCase().trim();
-      const selectedRole = roleSelect.value;
-
-      userRows.forEach((row) => {
-        const userName = row.dataset.name;
-        const userRole = row.dataset.role;
-
-        const matchesSearch = userName.includes(searchValue);
-        const matchesRole = selectedRole === "all" || userRole === selectedRole;
-
-        if (matchesSearch && matchesRole) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    }
-
-    searchInput.addEventListener("input", filterUsers);
-    roleSelect.addEventListener("change", filterUsers);
-
-    statusButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        if (button.classList.contains("active")) {
-          button.classList.remove("active");
-          button.classList.add("inactive");
-          button.textContent = "Inactive";
-        } else {
-          button.classList.remove("inactive");
-          button.classList.add("active");
-          button.textContent = "Active";
-        }
-      });
-    });
-  </script>
+  <script src="ad-user.js"></script>
 </body>
+
 </html>
