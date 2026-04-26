@@ -74,6 +74,13 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok("Kategoriler.", adminService.getAllCategories()));
     }
 
+    @GetMapping("/announcement-types")
+    public ResponseEntity<ApiResponse> getAnnouncementTypes() {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Duyuru türleri.", adminService.getAnnouncementTypes())
+        );
+    }
+
     @GetMapping("/categories/{id}")
     public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long id) {
         ProjectCategory category = projectCategoryRepository.findById(id)
@@ -118,6 +125,18 @@ public class AdminController {
             category.setName(body.get("name").toString());
         }
 
+        if (body.get("description") != null) {
+            category.setDescription(body.get("description").toString());
+        }
+
+        if (body.get("teamSize") != null) {
+            category.setTeamSize(body.get("teamSize").toString());
+        }
+
+        if (body.get("budget") != null && !body.get("budget").toString().isBlank()) {
+            category.setBudget(Double.parseDouble(body.get("budget").toString()));
+        }
+
         if ("COURSE".equalsIgnoreCase(category.getName())) {
             category.setAdvisorRequired(false);
         } else if (body.get("advisorRequired") != null) {
@@ -147,13 +166,25 @@ public class AdminController {
     ) {
         Long adminId = (Long) auth.getPrincipal();
 
+        String title = body.get("title");
+        String category = body.get("category");
+        String deadline = body.get("deadline");
+        String type = body.get("type");
+        String description = body.get("description");
+
+        String content
+                = "Category: " + category
+                + "\nType: " + type
+                + "\nDeadline: " + deadline
+                + "\nDescription: " + description;
+
         return ResponseEntity.ok(
                 ApiResponse.ok(
                         "Duyuru oluşturuldu.",
                         adminService.createAnnouncement(
-                                body.get("title"),
-                                body.get("content"),
-                                body.get("targetRole"),
+                                title,
+                                content,
+                                "ALL",
                                 adminId
                         )
                 )

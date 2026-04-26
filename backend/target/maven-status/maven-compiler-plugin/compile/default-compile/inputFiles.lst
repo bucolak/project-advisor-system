@@ -1,5 +1,6 @@
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/enums/ApplicationStatus.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/request/CreateProjectRequest.java
+/Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/repository/AnnouncementTypeRepository.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/enums/UserStatus.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/StudentController.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/repository/UserRepository.java
@@ -41,6 +42,7 @@
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/service/StudentService.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/request/LoginRequest.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/config/SecurityConfig.java
+/Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/AnnouncementType.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/Student.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/Project.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/AdvisorRequest.java

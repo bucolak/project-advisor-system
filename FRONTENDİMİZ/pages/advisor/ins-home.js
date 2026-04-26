@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   await loadAdvisorInfo(token, userId);
   await loadAdvisorStudents(token);
-  await loadPendingRequests(token);
 });
 
 function setupDropdown() {
@@ -58,7 +57,7 @@ async function loadAdvisorInfo(token, userId) {
     const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
@@ -128,7 +127,7 @@ async function loadAdvisorStudents(token) {
     const response = await fetch(`${API_BASE}/api/advisors/my-students`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
@@ -171,7 +170,9 @@ async function loadAdvisorStudents(token) {
         "Student";
 
       card.innerHTML = `
-        <h4>${student.projectTitle || "Student Project"} <span class="tag red">${student.projectType || "PROJECT"}</span></h4>
+        <h4>${student.projectTitle || "Student Project"} 
+          <span class="tag red">${student.projectType || "PROJECT"}</span>
+        </h4>
         <p>Student: ${studentName}</p>
         <p>Department: ${student.department || "-"}</p>
         <p>Skills: ${student.skills || "-"}</p>
@@ -183,68 +184,11 @@ async function loadAdvisorStudents(token) {
 
   } catch (error) {
     console.error("Advisor students load error:", error);
+
     container.innerHTML = `
       <div class="project-card">
         <h4>Server error</h4>
         <p>Projects could not be loaded.</p>
-      </div>
-    `;
-  }
-}
-
-async function loadPendingRequests(token) {
-  const announcementsContainer = document.getElementById("advisorAnnouncementsList");
-
-  try {
-    const response = await fetch(`${API_BASE}/api/advisor-requests/pending`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const text = await response.text();
-    console.log("PENDING REQUESTS STATUS:", response.status);
-    console.log("PENDING REQUESTS RESPONSE:", text);
-
-    if (!response.ok) {
-      announcementsContainer.innerHTML = `
-        <div class="ann-item">
-          <i class="fa-solid fa-thumbtack"></i> No announcements found.
-        </div>
-      `;
-      return;
-    }
-
-    const result = JSON.parse(text);
-    const requests = result.data || result || [];
-
-    if (!requests.length) {
-      announcementsContainer.innerHTML = `
-        <div class="ann-item">
-          <i class="fa-solid fa-thumbtack"></i> No pending advisor requests.
-        </div>
-      `;
-      return;
-    }
-
-    announcementsContainer.innerHTML = "";
-
-    requests.slice(0, 3).forEach(item => {
-      const div = document.createElement("div");
-      div.className = "ann-item";
-      div.innerHTML = `
-        <i class="fa-solid fa-thumbtack"></i>
-        Pending request: ${item.studentName || "Student"} - ${item.projectTitle || "Project"}
-      `;
-      announcementsContainer.appendChild(div);
-    });
-
-  } catch (error) {
-    console.error("Pending requests load error:", error);
-    announcementsContainer.innerHTML = `
-      <div class="ann-item">
-        <i class="fa-solid fa-thumbtack"></i> Server error while loading requests.
       </div>
     `;
   }

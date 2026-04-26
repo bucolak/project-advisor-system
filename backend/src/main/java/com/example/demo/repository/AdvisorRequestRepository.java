@@ -15,6 +15,8 @@ public interface AdvisorRequestRepository extends JpaRepository<AdvisorRequest, 
 
     List<AdvisorRequest> findByAdvisorAndStatus(Advisor advisor, RequestStatus status);
 
+    List<AdvisorRequest> findByAdvisorOrderByRequestDateDesc(Advisor advisor);
+
     List<AdvisorRequest> findByProjectAndStatus(Project project, RequestStatus status);
 
     Optional<AdvisorRequest> findByProjectAndAdvisor(Project project, Advisor advisor);

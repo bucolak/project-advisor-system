@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.example.demo.entity.Advisor;
+import com.example.demo.entity.AnnouncementType;
 import com.example.demo.entity.ProjectCategory;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
@@ -14,6 +15,7 @@ import com.example.demo.enums.AdvisingStatus;
 import com.example.demo.enums.Role;
 import com.example.demo.enums.UserStatus;
 import com.example.demo.repository.AdvisorRepository;
+import com.example.demo.repository.AnnouncementTypeRepository;
 import com.example.demo.repository.ProjectCategoryRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.UserRepository;
@@ -27,6 +29,7 @@ public class DataInitializer {
             StudentRepository studentRepository,
             AdvisorRepository advisorRepository,
             ProjectCategoryRepository projectCategoryRepository,
+            AnnouncementTypeRepository announcementTypeRepository,
             PasswordEncoder passwordEncoder,
             TransactionTemplate transactionTemplate
     ) {
@@ -149,6 +152,38 @@ public class DataInitializer {
                         ProjectCategory.builder()
                                 .name("COURSE")
                                 .advisorRequired(false)
+                                .build()
+                );
+            }
+
+            if (!announcementTypeRepository.existsByName("TÜBİTAK Application Deadlines")) {
+                announcementTypeRepository.save(
+                        AnnouncementType.builder()
+                                .name("TÜBİTAK Application Deadlines")
+                                .build()
+                );
+            }
+
+            if (!announcementTypeRepository.existsByName("TEKNOFEST Application Deadlines")) {
+                announcementTypeRepository.save(
+                        AnnouncementType.builder()
+                                .name("TEKNOFEST Application Deadlines")
+                                .build()
+                );
+            }
+
+            if (!announcementTypeRepository.existsByName("Evaluation Dates")) {
+                announcementTypeRepository.save(
+                        AnnouncementType.builder()
+                                .name("Evaluation Dates")
+                                .build()
+                );
+            }
+
+            if (!announcementTypeRepository.existsByName("Result Announcement Dates")) {
+                announcementTypeRepository.save(
+                        AnnouncementType.builder()
+                                .name("Result Announcement Dates")
                                 .build()
                 );
             }

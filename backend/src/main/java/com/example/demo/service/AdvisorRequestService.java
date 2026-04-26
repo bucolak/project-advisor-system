@@ -48,6 +48,17 @@ public class AdvisorRequestService {
                 .toList();
     }
 
+    public List<Map<String, Object>> getAllRequestsForAdvisor(Long advisorUserId) {
+        Advisor advisor = advisorRepository.findById(advisorUserId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Advisor not found."));
+
+        return advisorRequestRepository
+                .findByAdvisorOrderByRequestDateDesc(advisor)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public List<Map<String, Object>> getRequestsForStudent(Long studentUserId) {
         Student student = studentRepository.findById(studentUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found."));
@@ -72,14 +83,15 @@ public class AdvisorRequestService {
         }
 
         if (request.getStatus() != RequestStatus.PENDING) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This request is already processed.");
+            return toResponse(request);
         }
 
         request.setStatus(status);
         request.setResponseDate(LocalDateTime.now());
 
         if (status == RequestStatus.ACCEPTED) {
-            advisor.setCurrentQuota(advisor.getCurrentQuota() + 1);
+            Integer currentQuota = advisor.getCurrentQuota() == null ? 0 : advisor.getCurrentQuota();
+            advisor.setCurrentQuota(currentQuota + 1);
             advisorRepository.save(advisor);
         }
 

@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   await loadAdvisorProfile(token, userId);
-  await loadPendingAdvisorRequests(token);
+  await loadAdvisorRequests(token);
 });
 
 function setupDropdown() {
@@ -93,12 +93,12 @@ async function loadAdvisorProfile(token, userId) {
   }
 }
 
-async function loadPendingAdvisorRequests(token) {
+async function loadAdvisorRequests(token) {
   const container = document.getElementById("advisorRequestsContainer");
   const pendingCount = document.getElementById("pendingRequestCount");
 
   try {
-    const response = await fetch(`${API_BASE}/api/advisor-requests/pending`, {
+    const response = await fetch(`${API_BASE}/api/advisor-requests/my`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
@@ -107,8 +107,8 @@ async function loadPendingAdvisorRequests(token) {
 
     const text = await response.text();
 
-    console.log("PENDING REQUESTS STATUS:", response.status);
-    console.log("PENDING REQUESTS RESPONSE:", text);
+    console.log("ADVISOR REQUESTS STATUS:", response.status);
+    console.log("ADVISOR REQUESTS RESPONSE:", text);
 
     if (!response.ok) {
       container.innerHTML = `
@@ -128,14 +128,18 @@ async function loadPendingAdvisorRequests(token) {
     const result = JSON.parse(text);
     const requests = result.data || result || [];
 
-    pendingCount.textContent = `${requests.length} Pending Requests`;
+    const pendingRequests = requests.filter(request =>
+      String(request.status || "").toUpperCase() === "PENDING"
+    );
+
+    pendingCount.textContent = `${pendingRequests.length} Pending Requests`;
 
     if (!requests.length) {
       container.innerHTML = `
         <div class="request-card">
           <div class="request-card-left">
             <div class="request-project-title-row">
-              <div class="request-project-title">No pending requests</div>
+              <div class="request-project-title">No advisor requests</div>
             </div>
           </div>
         </div>
@@ -146,7 +150,7 @@ async function loadPendingAdvisorRequests(token) {
     renderRequests(requests);
 
   } catch (error) {
-    console.error("Pending advisor requests load error:", error);
+    console.error("Advisor requests load error:", error);
 
     container.innerHTML = `
       <div class="request-card">
@@ -176,6 +180,34 @@ function renderRequests(requests) {
 
     const projectType = request.projectType || "PROJECT";
     const badgeClass = getProjectTagClass(projectType);
+    const status = String(request.status || "PENDING").toUpperCase();
+
+    let actionsHtml = "";
+
+    if (status === "PENDING") {
+      actionsHtml = `
+        <button class="accept-btn" data-request-id="${request.id}">Accept</button>
+        <button class="reject-btn" data-request-id="${request.id}">Reject</button>
+      `;
+    } else if (status === "ACCEPTED") {
+      actionsHtml = `
+        <div class="request-final-status accepted-status">
+          Accepted
+        </div>
+      `;
+    } else if (status === "REJECTED") {
+      actionsHtml = `
+        <div class="request-final-status rejected-status">
+          Rejected
+        </div>
+      `;
+    } else {
+      actionsHtml = `
+        <div class="request-final-status">
+          ${status}
+        </div>
+      `;
+    }
 
     const card = document.createElement("div");
     card.className = "request-card";
@@ -191,6 +223,7 @@ function renderRequests(requests) {
         <div class="request-info-line"><strong>Student:</strong> ${studentName}</div>
         <div class="request-info-line"><strong>Department:</strong> ${request.studentDepartment || request.department || "-"}</div>
         <div class="request-info-line"><strong>Skill:</strong> ${request.studentSkills || request.skills || "-"}</div>
+        <div class="request-info-line"><strong>Status:</strong> ${status}</div>
 
         <button class="view-profile-btn" data-request-id="${request.id}">
           view student profile
@@ -199,8 +232,7 @@ function renderRequests(requests) {
 
       <div class="request-card-right">
         <div class="request-actions" id="${requestCardId}-actions">
-          <button class="accept-btn" data-request-id="${request.id}">Accept</button>
-          <button class="reject-btn" data-request-id="${request.id}">Reject</button>
+          ${actionsHtml}
         </div>
       </div>
     `;
@@ -211,13 +243,20 @@ function renderRequests(requests) {
       openStudentModal(request);
     });
 
-    card.querySelector(".accept-btn").addEventListener("click", async function () {
-      await updateRequestStatus(request.id, "ACCEPTED");
-    });
+    const acceptBtn = card.querySelector(".accept-btn");
+    const rejectBtn = card.querySelector(".reject-btn");
 
-    card.querySelector(".reject-btn").addEventListener("click", async function () {
-      await updateRequestStatus(request.id, "REJECTED");
-    });
+    if (acceptBtn) {
+      acceptBtn.addEventListener("click", async function () {
+        await updateRequestStatus(request.id, "ACCEPTED");
+      });
+    }
+
+    if (rejectBtn) {
+      rejectBtn.addEventListener("click", async function () {
+        await updateRequestStatus(request.id, "REJECTED");
+      });
+    }
   });
 }
 
@@ -251,21 +290,7 @@ async function updateRequestStatus(requestId, status) {
       return;
     }
 
-    const card = document.querySelector(`button[data-request-id="${requestId}"]`)?.closest(".request-card");
-    const actions = card?.querySelector(".request-actions");
-
-    if (actions) {
-      actions.innerHTML = `
-        <div class="request-final-status ${status === "ACCEPTED" ? "accepted-status" : "rejected-status"}">
-          ${status === "ACCEPTED" ? "Accepted" : "Rejected"}
-        </div>
-      `;
-    }
-
-    const countEl = document.getElementById("pendingRequestCount");
-    const currentCount = parseInt(countEl.textContent, 10) || 0;
-    const nextCount = Math.max(0, currentCount - 1);
-    countEl.textContent = `${nextCount} Pending Requests`;
+    await loadAdvisorRequests(token);
 
   } catch (error) {
     console.error("Update request status error:", error);
@@ -275,6 +300,8 @@ async function updateRequestStatus(requestId, status) {
 
 function openStudentModal(request) {
   currentRequest = request;
+
+  const status = String(request.status || "PENDING").toUpperCase();
 
   document.getElementById("modalStudentName").textContent =
     request.studentName ||
@@ -290,6 +317,17 @@ function openStudentModal(request) {
   setList("modalRelevantCourses", []);
   setList("modalResearchInterests", []);
   setOtherProjects([]);
+
+  const modalAcceptBtn = document.getElementById("modalAcceptBtn");
+  const modalRejectBtn = document.getElementById("modalRejectBtn");
+
+  if (status === "PENDING") {
+    modalAcceptBtn.style.display = "inline-block";
+    modalRejectBtn.style.display = "inline-block";
+  } else {
+    modalAcceptBtn.style.display = "none";
+    modalRejectBtn.style.display = "none";
+  }
 
   document.getElementById("studentModal").classList.add("active");
 }
@@ -329,6 +367,21 @@ function setOtherProjects(projects) {
     `;
     return;
   }
+
+  container.innerHTML = "";
+
+  projects.forEach(project => {
+    const card = document.createElement("div");
+    card.className = "other-project-card";
+
+    card.innerHTML = `
+      <h4>${project.title || "-"}</h4>
+      <p><strong>Project:</strong> ${project.description || "-"}</p>
+      <p><strong>Skills:</strong> ${project.skills || "-"}</p>
+    `;
+
+    container.appendChild(card);
+  });
 }
 
 function getProjectTagClass(projectType) {

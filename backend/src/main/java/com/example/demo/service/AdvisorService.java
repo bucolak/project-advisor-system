@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -8,9 +10,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.response.AdvisorProfileResponse;
 import com.example.demo.entity.Advisor;
+import com.example.demo.entity.AdvisorRequest;
+import com.example.demo.entity.Project;
+import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
 import com.example.demo.enums.AdvisingStatus;
+import com.example.demo.enums.RequestStatus;
 import com.example.demo.repository.AdvisorRepository;
+import com.example.demo.repository.AdvisorRequestRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
@@ -18,53 +25,29 @@ public class AdvisorService {
 
     private final AdvisorRepository advisorRepository;
     private final UserRepository userRepository;
+    private final AdvisorRequestRepository advisorRequestRepository;
 
-    public AdvisorService(AdvisorRepository advisorRepository, UserRepository userRepository) {
+    public AdvisorService(
+            AdvisorRepository advisorRepository,
+            UserRepository userRepository,
+            AdvisorRequestRepository advisorRequestRepository
+    ) {
         this.advisorRepository = advisorRepository;
         this.userRepository = userRepository;
+        this.advisorRequestRepository = advisorRequestRepository;
     }
 
     public List<AdvisorProfileResponse> getAllAdvisors() {
         return advisorRepository.findAll()
                 .stream()
-                .map(advisor -> {
-                    User user = advisor.getUser();
-
-                    return new AdvisorProfileResponse(
-                            user.getId(),
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getEmail(),
-                            advisor.getTitle(),
-                            advisor.getDepartment(),
-                            advisor.getAreasOfExpertise(),
-                            advisor.getCurrentQuota(),
-                            advisor.getMaxQuota(),
-                            advisor.getAdvisingStatus().name()
-                    );
-                })
+                .map(this::toProfileResponse)
                 .toList();
     }
 
     public List<AdvisorProfileResponse> getActiveAdvisors() {
         return advisorRepository.findByAdvisingStatus(AdvisingStatus.ACTIVE)
                 .stream()
-                .map(advisor -> {
-                    User user = advisor.getUser();
-
-                    return new AdvisorProfileResponse(
-                            user.getId(),
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getEmail(),
-                            advisor.getTitle(),
-                            advisor.getDepartment(),
-                            advisor.getAreasOfExpertise(),
-                            advisor.getCurrentQuota(),
-                            advisor.getMaxQuota(),
-                            advisor.getAdvisingStatus().name()
-                    );
-                })
+                .map(this::toProfileResponse)
                 .toList();
     }
 
@@ -87,5 +70,62 @@ public class AdvisorService {
                 advisor.getMaxQuota(),
                 advisor.getAdvisingStatus().name()
         );
+    }
+
+    public List<Map<String, Object>> getMyStudents(Long advisorUserId) {
+        Advisor advisor = advisorRepository.findById(advisorUserId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Advisor not found."));
+
+        List<AdvisorRequest> acceptedRequests
+                = advisorRequestRepository.findByAdvisorAndStatus(advisor, RequestStatus.ACCEPTED);
+
+        return acceptedRequests.stream()
+                .map(this::toAdvisorStudentProjectResponse)
+                .toList();
+    }
+
+    private AdvisorProfileResponse toProfileResponse(Advisor advisor) {
+        User user = advisor.getUser();
+
+        return new AdvisorProfileResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                advisor.getTitle(),
+                advisor.getDepartment(),
+                advisor.getAreasOfExpertise(),
+                advisor.getCurrentQuota(),
+                advisor.getMaxQuota(),
+                advisor.getAdvisingStatus().name()
+        );
+    }
+
+    private Map<String, Object> toAdvisorStudentProjectResponse(AdvisorRequest request) {
+        Project project = request.getProject();
+        Student student = project.getStudent();
+        User studentUser = student.getUser();
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("requestId", request.getId());
+        map.put("status", request.getStatus().name());
+
+        map.put("projectId", project.getId());
+        map.put("projectTitle", project.getTitle());
+        map.put("projectDescription", project.getDescription());
+        map.put("projectType", project.getCategory() != null ? project.getCategory().getName() : "PROJECT");
+        map.put("requiredSkills", project.getRequiredSkills());
+        map.put("teamSize", project.getTeamSize());
+        map.put("rolesNeeded", project.getRolesNeeded());
+
+        map.put("studentId", studentUser.getId());
+        map.put("firstName", studentUser.getFirstName());
+        map.put("lastName", studentUser.getLastName());
+        map.put("studentName", studentUser.getFirstName() + " " + studentUser.getLastName());
+        map.put("department", student.getDepartment());
+        map.put("skills", student.getSkills());
+
+        return map;
     }
 }

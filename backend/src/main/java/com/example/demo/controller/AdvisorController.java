@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,22 @@ public class AdvisorController {
     @GetMapping("/{userId}/profile")
     public ResponseEntity<ApiResponse> getAdvisorProfile(@PathVariable Long userId) {
         AdvisorProfileResponse profile = advisorService.getAdvisorProfile(userId);
-        return ResponseEntity.ok(ApiResponse.ok("Advisor profile fetched.", profile));
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Advisor profile fetched.", profile)
+        );
+    }
+
+    @GetMapping("/my-students")
+    @PreAuthorize("hasAuthority('ROLE_ADVISOR')")
+    public ResponseEntity<ApiResponse> getMyStudents(Authentication auth) {
+        Long advisorUserId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Advisor accepted projects fetched.",
+                        advisorService.getMyStudents(advisorUserId)
+                )
+        );
     }
 }

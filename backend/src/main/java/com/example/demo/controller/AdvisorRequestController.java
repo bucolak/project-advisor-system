@@ -39,6 +39,19 @@ public class AdvisorRequestController {
         );
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasAuthority('ROLE_ADVISOR')")
+    public ResponseEntity<ApiResponse> getAllAdvisorRequests(Authentication auth) {
+        Long advisorUserId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Advisor requests fetched.",
+                        advisorRequestService.getAllRequestsForAdvisor(advisorUserId)
+                )
+        );
+    }
+
     @GetMapping("/my-requests")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<ApiResponse> getMyAdvisorRequests(Authentication auth) {
@@ -63,7 +76,7 @@ public class AdvisorRequestController {
 
         String statusText = body.get("status");
 
-        if (statusText == null) {
+        if (statusText == null || statusText.isBlank()) {
             throw new RuntimeException("Status is required.");
         }
 

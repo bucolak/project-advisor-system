@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   await loadAdminInfo(token, userId);
+  await loadCategories(token);
+  await loadAnnouncementTypes(token);
+
   setupAnnouncementForm(token);
 });
 
@@ -20,7 +23,7 @@ async function loadAdminInfo(token, userId) {
     const response = await fetch(`${API_BASE}/api/admin/users`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
@@ -37,13 +40,80 @@ async function loadAdminInfo(token, userId) {
     if (!admin) return;
 
     const fullName = `${admin.firstName || ""} ${admin.lastName || ""}`.trim();
-
-    if (fullName) {
-      document.getElementById("adminTopName").textContent = fullName;
-    }
+    document.getElementById("adminTopName").textContent = fullName || "Admin";
 
   } catch (error) {
     console.error("Admin info load error:", error);
+  }
+}
+
+async function loadCategories(token) {
+  const select = document.getElementById("announcementCategory");
+
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/categories`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      select.innerHTML = `<option value="">Could not load categories</option>`;
+      return;
+    }
+
+    const result = await response.json();
+    const categories = result.data || result || [];
+
+    select.innerHTML = `<option value="">Select a project type</option>`;
+
+    categories.forEach(category => {
+      const option = document.createElement("option");
+      option.value = category.name;
+      option.textContent = category.name;
+      option.dataset.id = category.id;
+      select.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error("Category load error:", error);
+    select.innerHTML = `<option value="">Server error</option>`;
+  }
+}
+
+async function loadAnnouncementTypes(token) {
+  const select = document.getElementById("announcementType");
+
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/announcement-types`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      select.innerHTML = `<option value="">Could not load announcement types</option>`;
+      return;
+    }
+
+    const result = await response.json();
+    const types = result.data || result || [];
+
+    select.innerHTML = `<option value="">Select announcement type</option>`;
+
+    types.forEach(type => {
+      const option = document.createElement("option");
+      option.value = type.name;
+      option.textContent = type.name;
+      option.dataset.id = type.id;
+      select.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error("Announcement type load error:", error);
+    select.innerHTML = `<option value="">Server error</option>`;
   }
 }
 
@@ -66,7 +136,7 @@ function setupAnnouncementForm(token) {
       const response = await fetch(`${API_BASE}/api/admin/announcements`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -79,6 +149,7 @@ function setupAnnouncementForm(token) {
       });
 
       const text = await response.text();
+
       console.log("ADD ANNOUNCEMENT STATUS:", response.status);
       console.log("ADD ANNOUNCEMENT RESPONSE:", text);
 
