@@ -63,8 +63,10 @@ async function loadStudentProfile(token, userId) {
     if (!response.ok) return;
 
     const result = await response.json();
-    const profile = result.data || result;
 
+    if (!result.success || !result.data) return;
+
+    const profile = result.data;
     const fullName = `${profile.firstName || ""} ${profile.lastName || ""}`.trim();
 
     document.getElementById("studentTopName").textContent = fullName || "Student";
@@ -76,35 +78,101 @@ async function loadStudentProfile(token, userId) {
 }
 
 async function loadStudentProjects(token) {
-  renderEmptyProjects("joinedProjectsContainer", "No joined projects yet.");
-
   try {
-    const response = await fetch(`${API_BASE}/api/projects/my-projects`, {
+    const joinedResponse = await fetch(`${API_BASE}/api/projects/joined-projects`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
 
-    const text = await response.text();
+    const createdResponse = await fetch(`${API_BASE}/api/projects/my-projects`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-    console.log("MY PROJECTS STATUS:", response.status);
-    console.log("MY PROJECTS RESPONSE:", text);
-
-    if (!response.ok) {
-      renderEmptyProjects("createdProjectsContainer", "Could not load created projects.");
-      return;
+    if (joinedResponse.ok) {
+      const joinedResult = await joinedResponse.json();
+      const joinedApplications = joinedResult.data || [];
+      renderJoinedProjects("joinedProjectsContainer", joinedApplications);
+    } else {
+      renderEmptyProjects("joinedProjectsContainer", "No joined projects yet.");
     }
 
-    const result = JSON.parse(text);
-    const projects = result.data || result || [];
-
-    renderProjects("createdProjectsContainer", projects, true);
+    if (createdResponse.ok) {
+      const createdResult = await createdResponse.json();
+      const createdProjects = createdResult.data || [];
+      renderProjects("createdProjectsContainer", createdProjects, true);
+    } else {
+      renderEmptyProjects("createdProjectsContainer", "No created projects yet.");
+    }
 
   } catch (error) {
     console.error("Projects load error:", error);
+    renderEmptyProjects("joinedProjectsContainer", "Could not load joined projects.");
     renderEmptyProjects("createdProjectsContainer", "Could not load created projects.");
   }
+}
+
+function renderJoinedProjects(containerId, applications) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (!applications || applications.length === 0) {
+    renderEmptyProjects(containerId, "No joined projects yet.");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  applications.forEach(application => {
+    const project = application.project;
+
+    if (!project) return;
+
+    const card = document.createElement("div");
+    card.className = "st-projects-card";
+
+    const categoryName =
+      project.category?.name ||
+      project.categoryName ||
+      "PROJECT";
+
+    const badgeClass = getBadgeClass(categoryName);
+
+    const ownerName =
+      project.student?.user
+        ? `${project.student.user.firstName || ""} ${project.student.user.lastName || ""}`.trim()
+        : "Student";
+
+    card.innerHTML = `
+      <div class="st-projects-card-header">
+        <h3>${project.title || "Untitled Project"}</h3>
+        <span class="st-projects-badge ${badgeClass}">${categoryName}</span>
+      </div>
+
+      <p>${project.description || "No description available."}</p>
+      <div class="st-projects-line"></div>
+      <p><strong>Owner:</strong> ${ownerName}</p>
+      <div class="st-projects-line"></div>
+      <p><strong>Skills:</strong> ${project.requiredSkills || "-"}</p>
+      <div class="st-projects-line"></div>
+      <p><strong>Team:</strong> ${project.teamSize ?? "-"}</p>
+
+      <div class="st-projects-card-footer">
+        <span class="assigned">Joined</span>
+        <button type="button" data-project-id="${project.id}">View Details</button>
+      </div>
+    `;
+
+    card.querySelector("button").addEventListener("click", function () {
+      alert(`Project detail page will open for project ID: ${project.id}`);
+    });
+
+    container.appendChild(card);
+  });
 }
 
 function renderProjects(containerId, projects, isCreatedSection) {
@@ -125,57 +193,34 @@ function renderProjects(containerId, projects, isCreatedSection) {
     const card = document.createElement("div");
     card.className = "st-projects-card";
 
-    const categoryName =
+    const badgeText =
       project.category?.name ||
       project.categoryName ||
       project.projectType ||
       "PROJECT";
 
-    const badgeClass = getBadgeClass(categoryName);
-
-    const advisorName =
-      project.advisorName ||
-      project.advisor?.fullName ||
-      project.advisor?.name ||
-      "";
-
-    const advisorAssigned = Boolean(advisorName);
+    const badgeClass = getBadgeClass(badgeText);
 
     card.innerHTML = `
       <div class="st-projects-card-header">
         <h3>${project.title || "Untitled Project"}</h3>
-        <span class="st-projects-badge ${badgeClass}">${categoryName}</span>
+        <span class="st-projects-badge ${badgeClass}">${badgeText}</span>
       </div>
 
       <p>${project.description || "No description available."}</p>
-
       <div class="st-projects-line"></div>
-
       <p><strong>Skills:</strong> ${project.requiredSkills || project.skills || "-"}</p>
-
       <div class="st-projects-line"></div>
-
-      <p><strong>Team:</strong> ${project.currentTeamSize ?? 1}/${project.teamSize ?? "-"}</p>
-
-      <div class="st-projects-line"></div>
-
-      <p><strong>Roles Needed:</strong> ${project.rolesNeeded || "-"}</p>
+      <p><strong>Team:</strong> ${project.teamSize ?? "-"}</p>
 
       <div class="st-projects-card-footer">
-        <span class="${advisorAssigned ? "assigned" : "not-assigned"}">
-          ${advisorAssigned ? `Advisor: ${advisorName}` : "Advisor: Not assigned"}
-        </span>
-
-        <button type="button" data-project-id="${project.id}">
-          View Details
-        </button>
+        <span class="assigned">Created</span>
+        <button type="button" data-project-id="${project.id}">View Details</button>
       </div>
     `;
 
-    const viewButton = card.querySelector("button");
-    viewButton.addEventListener("click", function () {
-      const projectId = this.dataset.projectId;
-      alert(`Project detail page will open for project ID: ${projectId}`);
+    card.querySelector("button").addEventListener("click", function () {
+      alert(`Project detail page will open for project ID: ${project.id}`);
     });
 
     container.appendChild(card);
@@ -197,7 +242,7 @@ function renderEmptyProjects(containerId, message) {
 }
 
 function getBadgeClass(type) {
-  const value = String(type || "").toUpperCase();
+  const value = String(type).toUpperCase();
 
   if (value.includes("TÜBİTAK")) return "red";
   if (value.includes("TUBITAK")) return "red";

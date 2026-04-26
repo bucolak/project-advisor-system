@@ -87,6 +87,13 @@ public class ProjectService {
         return projectRepository.findByStudentAndIsDeletedFalse(student);
     }
 
+    public List<ProjectApplication> getJoinedProjects(Long userId) {
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+
+        return projectApplicationRepository.findByStudentAndStatus(student, ApplicationStatus.ACCEPTED);
+    }
+
     public List<Project> getOpenProjectsForStudent(Long userId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
@@ -116,7 +123,65 @@ public class ProjectService {
                 .status(ApplicationStatus.PENDING)
                 .build();
 
-        return projectApplicationRepository.save(application);
+        ProjectApplication savedApplication = projectApplicationRepository.save(application);
+
+        notificationService.createNotification(
+                project.getStudent().getUser(),
+                applicant.getUser().getFirstName()
+                + " "
+                + applicant.getUser().getLastName()
+                + " wants to join your project "
+                + project.getTitle()
+        );
+
+        return savedApplication;
+    }
+
+    public List<ProjectApplication> getIncomingApplications(Long ownerId) {
+        Student owner = studentRepository.findById(ownerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+
+        return projectApplicationRepository.findByProjectStudent(owner);
+    }
+
+    @Transactional
+    public ProjectApplication respondApplication(Long ownerId, Long applicationId, String status) {
+        Student owner = studentRepository.findById(ownerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+
+        ProjectApplication application = projectApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Başvuru bulunamadı."));
+
+        if (!application.getProject().getStudent().getUserId().equals(owner.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu proje size ait değil.");
+        }
+
+        ApplicationStatus newStatus;
+
+        if (status.equalsIgnoreCase("ACCEPTED")) {
+            newStatus = ApplicationStatus.ACCEPTED;
+        } else if (status.equalsIgnoreCase("REJECTED")) {
+            newStatus = ApplicationStatus.REJECTED;
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Geçersiz durum.");
+        }
+
+        application.setStatus(newStatus);
+
+        ProjectApplication savedApplication = projectApplicationRepository.save(application);
+
+        String resultText = newStatus == ApplicationStatus.ACCEPTED ? "accepted" : "rejected";
+
+        notificationService.createNotification(
+                application.getStudent().getUser(),
+                "Your application for "
+                + application.getProject().getTitle()
+                + " has been "
+                + resultText
+                + "."
+        );
+
+        return savedApplication;
     }
 
     @Transactional

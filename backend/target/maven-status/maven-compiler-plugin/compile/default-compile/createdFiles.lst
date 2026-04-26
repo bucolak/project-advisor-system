@@ -5,6 +5,7 @@ com/example/demo/enums/ProjectStatus.class
 com/example/demo/controller/StudentController.class
 com/example/demo/service/AdvisorRequestService.class
 com/example/demo/repository/AdvisorRequestRepository.class
+com/example/demo/controller/NotificationController.class
 com/example/demo/entity/User.class
 com/example/demo/security/JwtUtil.class
 com/example/demo/config/SecurityConfig.class

@@ -11,10 +11,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "STUDENT") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -22,8 +18,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   await loadStudentProfile(token, userId);
-  await loadNotifications(token, userId);
-  await loadIncomingStudentRequest(token, userId);
+  await loadNotifications(token);
+  await loadIncomingStudentRequest(token);
 });
 
 function setupDropdown() {
@@ -43,9 +39,7 @@ function setupDropdown() {
 }
 
 function setupLogout() {
-  const logoutBtn = document.getElementById("notificationsLogoutBtn");
-
-  logoutBtn.addEventListener("click", function () {
+  document.getElementById("notificationsLogoutBtn").addEventListener("click", function () {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
@@ -53,27 +47,23 @@ function setupLogout() {
 }
 
 function setupModal() {
-  const closeBtn = document.getElementById("closeStudentProfileBtn");
-  const viewBtn = document.getElementById("viewStudentProfileBtn");
-  const acceptBtn = document.getElementById("acceptStudentRequestBtn");
-  const rejectBtn = document.getElementById("rejectStudentRequestBtn");
-  const modal = document.getElementById("studentProfileOverlay");
+  document.getElementById("closeStudentProfileBtn").addEventListener("click", closeStudentProfile);
 
-  closeBtn.addEventListener("click", closeStudentProfile);
-
-  viewBtn.addEventListener("click", function () {
+  document.getElementById("viewStudentProfileBtn").addEventListener("click", function () {
     if (currentStudentRequest) {
       openStudentProfile();
     }
   });
 
-  acceptBtn.addEventListener("click", function () {
-    respondToStudentRequest("accepted");
+  document.getElementById("acceptStudentRequestBtn").addEventListener("click", function () {
+    respondToStudentRequest("ACCEPTED");
   });
 
-  rejectBtn.addEventListener("click", function () {
-    respondToStudentRequest("rejected");
+  document.getElementById("rejectStudentRequestBtn").addEventListener("click", function () {
+    respondToStudentRequest("REJECTED");
   });
+
+  const modal = document.getElementById("studentProfileOverlay");
 
   window.addEventListener("click", function (e) {
     if (e.target === modal) {
@@ -85,243 +75,186 @@ function setupModal() {
 async function loadStudentProfile(token, userId) {
   try {
     const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
-      method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     const result = await response.json();
 
-    if (!response.ok || !result.success) {
-      return;
-    }
+    if (!response.ok || !result.success) return;
 
-    const profile = result.data;
+    const p = result.data;
+
     document.getElementById("notificationsStudentName").textContent =
-      `${profile.firstName} ${profile.lastName}`;
+      `${p.firstName || ""} ${p.lastName || ""}`.trim() || "Student";
+
   } catch (error) {
     console.error("Student profile load error:", error);
   }
 }
 
-async function loadNotifications(token, userId) {
-  const notificationsList = document.getElementById("notificationsList");
-  const notificationsNewCount = document.getElementById("notificationsNewCount");
+/*
+  Üstteki normal notification listesi artık gösterilmiyor.
+  Çünkü alttaki request card zaten notification olarak kullanılıyor.
+*/
+async function loadNotifications(token) {
+  const list = document.getElementById("notificationsList");
+  const count = document.getElementById("notificationsNewCount");
 
-  try {
-    /*
-      Muhtemel endpoint:
-      GET /api/notifications/user/{userId}
-      veya
-      GET /api/notifications/{userId}
-    */
-    const response = await fetch(`${API_BASE}/api/notifications/user/${userId}`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-
-    const text = await response.text();
-    console.log("NOTIFICATIONS STATUS:", response.status);
-    console.log("NOTIFICATIONS RESPONSE:", text);
-
-    if (!response.ok) {
-      notificationsList.innerHTML = `
-        <div class="notification-item">
-          <i class="fa-regular fa-bell notification-icon warning"></i>
-          <span>Could not load notifications.</span>
-        </div>
-      `;
-      notificationsNewCount.textContent = "0 New";
-      return;
-    }
-
-    const result = JSON.parse(text);
-    const notifications = result.data || [];
-
-    if (notifications.length === 0) {
-      notificationsList.innerHTML = `
-        <div class="notification-item">
-          <i class="fa-regular fa-bell notification-icon warning"></i>
-          <span>No notifications found.</span>
-        </div>
-      `;
-      notificationsNewCount.textContent = "0 New";
-      return;
-    }
-
-    const unreadCount = notifications.filter(item => item.read === false || item.isRead === false).length;
-    notificationsNewCount.textContent = `${unreadCount} New`;
-
-    notificationsList.innerHTML = "";
-
-    notifications.forEach(notification => {
-      const item = document.createElement("div");
-      item.className = "notification-item";
-
-      const type = (notification.type || "").toLowerCase();
-      let iconClass = "fa-regular fa-bell";
-      let colorClass = "warning";
-
-      if (type.includes("accept") || type.includes("success")) {
-        iconClass = "fa-solid fa-circle-check";
-        colorClass = "success";
-      } else if (type.includes("reject") || type.includes("danger") || type.includes("decline")) {
-        iconClass = "fa-solid fa-xmark";
-        colorClass = "danger";
-      }
-
-      item.innerHTML = `
-        <i class="${iconClass} notification-icon ${colorClass}"></i>
-        <span>${notification.message || "-"}</span>
-      `;
-
-      notificationsList.appendChild(item);
-    });
-
-  } catch (error) {
-    console.error("Notifications load error:", error);
-    notificationsList.innerHTML = `
-      <div class="notification-item">
-        <i class="fa-regular fa-bell notification-icon warning"></i>
-        <span>Server error while loading notifications.</span>
-      </div>
-    `;
-    notificationsNewCount.textContent = "0 New";
-  }
+  list.innerHTML = "";
+  count.textContent = "0 New";
 }
 
-async function loadIncomingStudentRequest(token, userId) {
-  try {
-    /*
-      Bu bölüm opsiyonel.
-      Eğer backend'de student's own project join requests gibi bir endpoint varsa bağlanır.
-      Muhtemel endpoint:
-      GET /api/projects/student/${userId}/incoming-requests
-      veya
-      GET /api/student-requests/${userId}
-    */
+async function loadIncomingStudentRequest(token) {
+  const card = document.getElementById("studentRequestCard");
+  const list = document.getElementById("notificationsList");
+  const count = document.getElementById("notificationsNewCount");
 
-    const response = await fetch(`${API_BASE}/api/student-requests/${userId}`, {
-      method: "GET",
+  try {
+    const response = await fetch(`${API_BASE}/api/projects/incoming-applications`, {
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     if (!response.ok) {
-      document.getElementById("studentRequestCard").style.display = "none";
+      card.style.display = "none";
+      count.textContent = "0 New";
       return;
     }
 
     const result = await response.json();
+    const requests = result.data || [];
 
-    if (!result.success || !result.data) {
-      document.getElementById("studentRequestCard").style.display = "none";
+    if (!requests.length) {
+      card.style.display = "none";
+      count.textContent = "0 New";
       return;
     }
 
-    currentStudentRequest = result.data;
+    currentStudentRequest = requests[0];
 
-    document.getElementById("studentRequestCard").style.display = "flex";
+    list.innerHTML = "";
+    count.textContent = `${requests.length} New`;
+
+    card.style.display = "flex";
+
+    const status = String(currentStudentRequest.status || "").toUpperCase();
+
+    const studentName =
+      currentStudentRequest.student?.user
+        ? `${currentStudentRequest.student.user.firstName || ""} ${currentStudentRequest.student.user.lastName || ""}`.trim()
+        : "Student";
+
+    const projectTitle = currentStudentRequest.project?.title || "-";
+
     document.getElementById("studentRequestText").innerHTML = `
-      <strong>${currentStudentRequest.studentName || "Student"}</strong>
+      <strong>${studentName}</strong>
       wants to join your project
-      ${currentStudentRequest.projectTitle || "-"}
+      <strong>${projectTitle}</strong>
     `;
+
+    const actions = document.getElementById("studentRequestActions");
+
+    if (status === "ACCEPTED") {
+      actions.innerHTML = `
+        <div class="student-request-final accepted">
+          Accepted
+        </div>
+      `;
+      count.textContent = "0 New";
+    } else if (status === "REJECTED") {
+      actions.innerHTML = `
+        <div class="student-request-final rejected">
+          Rejected
+        </div>
+      `;
+      count.textContent = "0 New";
+    } else {
+      actions.innerHTML = `
+        <button class="accept-btn" id="acceptStudentRequestBtn">Accept</button>
+        <button class="reject-btn" id="rejectStudentRequestBtn">Reject</button>
+      `;
+
+      document.getElementById("acceptStudentRequestBtn").addEventListener("click", function () {
+        respondToStudentRequest("ACCEPTED");
+      });
+
+      document.getElementById("rejectStudentRequestBtn").addEventListener("click", function () {
+        respondToStudentRequest("REJECTED");
+      });
+    }
 
     fillStudentProfileModal(currentStudentRequest);
 
   } catch (error) {
     console.error("Incoming student request load error:", error);
-    document.getElementById("studentRequestCard").style.display = "none";
+    card.style.display = "none";
+    count.textContent = "0 New";
   }
 }
 
-function fillStudentProfileModal(requestData) {
-  document.getElementById("studentProfileTag").textContent =
-    requestData.projectType || "PROJECT";
+function fillStudentProfileModal(data) {
+  const student = data.student;
+  const project = data.project;
 
-  document.getElementById("modalStudentName").textContent =
-    requestData.studentName || "Student Name";
+  const studentName =
+    student?.user
+      ? `${student.user.firstName || ""} ${student.user.lastName || ""}`.trim()
+      : "Student";
 
-  document.getElementById("modalStudentDepartment").textContent =
-    requestData.studentDepartment || "-";
+  const type = project?.category?.name || "PROJECT";
 
-  setListItems("modalRelevantCourses", requestData.relevantCourses);
-  setListItems("modalResearchInterests", requestData.researchInterests);
+  document.getElementById("studentProfileTag").textContent = type;
+  document.getElementById("modalStudentName").textContent = studentName;
+  document.getElementById("modalStudentDepartment").textContent = student?.department || "-";
 
-  const projectsContainer = document.getElementById("modalStudentProjects");
-  const otherProjects = requestData.otherProjects || [];
+  setListItems("modalRelevantCourses", []);
+  setListItems("modalResearchInterests", []);
 
-  if (otherProjects.length === 0) {
-    projectsContainer.innerHTML = `
-      <div class="student-project-card">
-        <div class="student-project-header">
-          <h4>No other projects</h4>
-        </div>
-        <div class="student-project-body">
-          <p><strong>Project:</strong> No data</p>
-        </div>
-        <div class="student-project-footer">
-          <p><strong>Skills:</strong> -</p>
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  projectsContainer.innerHTML = "";
-
-  otherProjects.forEach(project => {
-    const card = document.createElement("div");
-    card.className = "student-project-card";
-
-    card.innerHTML = `
+  document.getElementById("modalStudentProjects").innerHTML = `
+    <div class="student-project-card">
       <div class="student-project-header">
-        <h4>${project.title || "-"}</h4>
-        <span class="student-project-badge ${getProjectBadgeClass(project.projectType)}">
-          ${project.projectType || "PROJECT"}
+        <h4>${project?.title || "-"}</h4>
+        <span class="student-project-badge ${getProjectBadgeClass(type)}">
+          ${type}
         </span>
       </div>
 
       <div class="student-project-body">
-        <p><strong>Project:</strong> ${project.role || "-"}</p>
+        <p><strong>Project:</strong> ${project?.description || "-"}</p>
       </div>
 
       <div class="student-project-footer">
-        <p><strong>Skills:</strong> ${project.skills || "-"}</p>
+        <p><strong>Skills:</strong> ${student?.skills || "-"}</p>
       </div>
-    `;
-
-    projectsContainer.appendChild(card);
-  });
+    </div>
+  `;
 }
 
-function setListItems(listId, items) {
-  const list = document.getElementById(listId);
+function setListItems(id, items) {
+  const list = document.getElementById(id);
 
-  if (!items || items.length === 0) {
-    list.innerHTML = `<li>No data</li>`;
+  if (!items.length) {
+    list.innerHTML = "<li>No data</li>";
     return;
   }
 
   list.innerHTML = "";
 
-  items.forEach(item => {
+  items.forEach(x => {
     const li = document.createElement("li");
-    li.textContent = item;
+    li.textContent = x;
     list.appendChild(li);
   });
 }
 
 function getProjectBadgeClass(type) {
-  const value = String(type || "").toUpperCase();
+  const v = String(type).toUpperCase();
 
-  if (value.includes("TÜBİTAK") || value.includes("TUBITAK")) return "tubitak";
-  if (value.includes("TEKNOFEST")) return "teknofest";
+  if (v.includes("TUBITAK") || v.includes("TÜBİTAK")) return "tubitak";
+  if (v.includes("TEKNOFEST")) return "teknofest";
 
   return "tubitak";
 }
@@ -339,30 +272,25 @@ async function respondToStudentRequest(status) {
 
   const token = localStorage.getItem("token");
   const actions = document.getElementById("studentRequestActions");
+  const count = document.getElementById("notificationsNewCount");
 
   try {
-    /*
-      Muhtemel endpoint:
-      PUT /api/student-requests/{id}/response
-      body: { status: "accepted" } veya { status: "rejected" }
-    */
-    const response = await fetch(`${API_BASE}/api/student-requests/${currentStudentRequest.id}/response`, {
-      method: "PUT",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        status: status.toUpperCase()
-      })
-    });
+    const response = await fetch(
+      `${API_BASE}/api/projects/applications/${currentStudentRequest.id}/respond/${status}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
 
     if (!response.ok) {
       alert("Failed to update student request.");
       return;
     }
 
-    if (status === "accepted") {
+    if (status === "ACCEPTED") {
       actions.innerHTML = `
         <div class="student-request-final accepted">
           Accepted
@@ -376,8 +304,11 @@ async function respondToStudentRequest(status) {
       `;
     }
 
+    count.textContent = "0 New";
+
   } catch (error) {
     console.error("Student request response error:", error);
     alert("Server error while updating request.");
   }
 }
+ 

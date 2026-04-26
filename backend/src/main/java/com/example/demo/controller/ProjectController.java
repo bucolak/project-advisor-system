@@ -52,6 +52,16 @@ public class ProjectController {
         );
     }
 
+    @GetMapping("/joined-projects")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> getJoinedProjects(Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Joined projects listed.", projectService.getJoinedProjects(userId))
+        );
+    }
+
     @GetMapping("/open")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<ApiResponse> getOpenProjects(Authentication auth) {
@@ -72,6 +82,33 @@ public class ProjectController {
 
         return ResponseEntity.ok(
                 ApiResponse.ok("Projeye başvuru gönderildi.", projectService.applyToProject(userId, projectId))
+        );
+    }
+
+    @GetMapping("/incoming-applications")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> getIncomingApplications(Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Incoming applications listed.", projectService.getIncomingApplications(userId))
+        );
+    }
+
+    @PostMapping("/applications/{applicationId}/respond/{status}")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> respondApplication(
+            Authentication auth,
+            @PathVariable Long applicationId,
+            @PathVariable String status
+    ) {
+        Long userId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Application updated.",
+                        projectService.respondApplication(userId, applicationId, status)
+                )
         );
     }
 

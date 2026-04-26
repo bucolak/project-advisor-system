@@ -33,6 +33,7 @@
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/AdminController.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/response/AdvisorProfileResponse.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/request/RegisterAdvisorRequest.java
+/Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/NotificationController.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/AdvisorRequestController.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/response/ApiResponse.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/ProjectCategoryController.java
