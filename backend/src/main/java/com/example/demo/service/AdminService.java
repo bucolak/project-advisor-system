@@ -1,17 +1,24 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.*;
-import com.example.demo.enums.AnnouncementTarget;
-import com.example.demo.enums.Role;
-import com.example.demo.enums.UserStatus;
-import com.example.demo.repository.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import com.example.demo.entity.Announcement;
+import com.example.demo.entity.ProjectCategory;
+import com.example.demo.entity.User;
+import com.example.demo.enums.AnnouncementTarget;
+import com.example.demo.enums.Role;
+import com.example.demo.enums.UserStatus;
+import com.example.demo.repository.AnnouncementRepository;
+import com.example.demo.repository.ProjectCategoryRepository;
+import com.example.demo.repository.ProjectRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class AdminService {
@@ -60,10 +67,36 @@ public class AdminService {
 
     public List<ProjectCategory> getAllCategories() { return categoryRepository.findAll(); }
 
-    public ProjectCategory createCategory(String name) {
-        if (categoryRepository.existsByName(name))
+    public ProjectCategory createCategory(
+            String name,
+            String description,
+            String teamSize,
+            Double budget,
+            Boolean advisorRequired
+    ) {
+        if (name == null || name.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kategori adı boş olamaz.");
+        }
+
+        if (categoryRepository.existsByName(name)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu kategori zaten mevcut.");
-        return categoryRepository.save(ProjectCategory.builder().name(name).build());
+        }
+
+        boolean finalAdvisorRequired = advisorRequired != null ? advisorRequired : true;
+
+        if ("COURSE".equalsIgnoreCase(name)) {
+            finalAdvisorRequired = false;
+        }
+
+        ProjectCategory category = ProjectCategory.builder()
+                .name(name)
+                .description(description)
+                .teamSize(teamSize)
+                .budget(budget)
+                .advisorRequired(finalAdvisorRequired)
+                .build();
+
+        return categoryRepository.save(category);
     }
 
     public void deleteCategory(Long id) { categoryRepository.deleteById(id); }

@@ -1,3 +1,4 @@
+/Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/enums/ApplicationStatus.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/request/CreateProjectRequest.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/enums/UserStatus.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/StudentController.java
@@ -19,6 +20,7 @@
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/service/AdvisorService.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/Notification.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/service/AdminService.java
+/Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/repository/ProjectApplicationRepository.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/response/StudentProfileResponse.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/service/ProjectService.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/controller/ProjectController.java
@@ -45,6 +47,7 @@
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/dto/request/UpdateStatusRequest.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/enums/AdvisingStatus.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/Announcement.java
+/Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/entity/ProjectApplication.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/repository/StudentRepository.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/repository/ProjectRepository.java
 /Users/sudetorun/Desktop/project-advisor-system/backend/src/main/java/com/example/demo/repository/NotificationRepository.java

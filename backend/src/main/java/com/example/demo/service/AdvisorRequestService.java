@@ -18,39 +18,49 @@ import com.example.demo.entity.User;
 import com.example.demo.enums.RequestStatus;
 import com.example.demo.repository.AdvisorRepository;
 import com.example.demo.repository.AdvisorRequestRepository;
+import com.example.demo.repository.StudentRepository;
 
 @Service
 public class AdvisorRequestService {
 
     private final AdvisorRequestRepository advisorRequestRepository;
     private final AdvisorRepository advisorRepository;
+    private final StudentRepository studentRepository;
 
     public AdvisorRequestService(
             AdvisorRequestRepository advisorRequestRepository,
-            AdvisorRepository advisorRepository
+            AdvisorRepository advisorRepository,
+            StudentRepository studentRepository
     ) {
         this.advisorRequestRepository = advisorRequestRepository;
         this.advisorRepository = advisorRepository;
+        this.studentRepository = studentRepository;
     }
 
     public List<Map<String, Object>> getPendingRequestsForAdvisor(Long advisorUserId) {
         Advisor advisor = advisorRepository.findById(advisorUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Advisor not found."));
 
-        List<AdvisorRequest> requests
-                = advisorRequestRepository.findByAdvisorAndStatus(advisor, RequestStatus.PENDING);
+        return advisorRequestRepository
+                .findByAdvisorAndStatus(advisor, RequestStatus.PENDING)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
 
-        return requests.stream()
+    public List<Map<String, Object>> getRequestsForStudent(Long studentUserId) {
+        Student student = studentRepository.findById(studentUserId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found."));
+
+        return advisorRequestRepository
+                .findByProjectStudent(student)
+                .stream()
                 .map(this::toResponse)
                 .toList();
     }
 
     @Transactional
-    public Map<String, Object> updateRequestStatus(
-            Long advisorUserId,
-            Long requestId,
-            RequestStatus status
-    ) {
+    public Map<String, Object> updateRequestStatus(Long advisorUserId, Long requestId, RequestStatus status) {
         Advisor advisor = advisorRepository.findById(advisorUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Advisor not found."));
 
@@ -73,15 +83,16 @@ public class AdvisorRequestService {
             advisorRepository.save(advisor);
         }
 
-        AdvisorRequest saved = advisorRequestRepository.save(request);
-
-        return toResponse(saved);
+        return toResponse(advisorRequestRepository.save(request));
     }
 
     private Map<String, Object> toResponse(AdvisorRequest request) {
         Project project = request.getProject();
         Student student = project.getStudent();
-        User user = student.getUser();
+        User studentUser = student.getUser();
+
+        Advisor advisor = request.getAdvisor();
+        User advisorUser = advisor.getUser();
 
         Map<String, Object> map = new HashMap<>();
 
@@ -95,14 +106,15 @@ public class AdvisorRequestService {
         map.put("projectDescription", project.getDescription());
         map.put("projectType", project.getCategory() != null ? project.getCategory().getName() : "PROJECT");
 
-        map.put("studentId", user.getId());
-        map.put("firstName", user.getFirstName());
-        map.put("lastName", user.getLastName());
-        map.put("studentName", user.getFirstName() + " " + user.getLastName());
-        map.put("department", student.getDepartment());
+        map.put("studentId", studentUser.getId());
+        map.put("studentName", studentUser.getFirstName() + " " + studentUser.getLastName());
         map.put("studentDepartment", student.getDepartment());
-        map.put("skills", student.getSkills());
         map.put("studentSkills", student.getSkills());
+
+        map.put("advisorId", advisorUser.getId());
+        map.put("advisorName", advisorUser.getFirstName() + " " + advisorUser.getLastName());
+        map.put("advisorDepartment", advisor.getDepartment());
+        map.put("advisorTitle", advisor.getTitle());
 
         return map;
     }

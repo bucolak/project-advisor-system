@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.example.demo.entity.Advisor;
 import com.example.demo.entity.ProjectCategory;
@@ -26,11 +27,12 @@ public class DataInitializer {
             StudentRepository studentRepository,
             AdvisorRepository advisorRepository,
             ProjectCategoryRepository projectCategoryRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            TransactionTemplate transactionTemplate
     ) {
-        return args -> {
+        return args -> transactionTemplate.executeWithoutResult(status -> {
 
-            User studentUser = userRepository.findByEmail("sude@uskudar.com")
+            User sudeUser = userRepository.findByEmail("sude@uskudar.com")
                     .orElseGet(() -> userRepository.save(
                     User.builder()
                             .email("sude@uskudar.com")
@@ -43,10 +45,10 @@ public class DataInitializer {
                             .build()
             ));
 
-            if (!studentRepository.existsById(studentUser.getId())) {
+            if (!studentRepository.existsById(sudeUser.getId())) {
                 studentRepository.save(
                         Student.builder()
-                                .user(studentUser)
+                                .user(sudeUser)
                                 .department("Software Engineering")
                                 .year(3)
                                 .gpa(3.66)
@@ -57,7 +59,34 @@ public class DataInitializer {
                 );
             }
 
-            User advisorUser = userRepository.findByEmail("zeynep@uskudar.com")
+            User nidaUser = userRepository.findByEmail("nida@uskudar.com")
+                    .orElseGet(() -> userRepository.save(
+                    User.builder()
+                            .email("nida@uskudar.com")
+                            .passwordHash(passwordEncoder.encode("1234"))
+                            .role(Role.STUDENT)
+                            .firstName("Nida")
+                            .lastName("Çamlıca")
+                            .status(UserStatus.ACTIVE)
+                            .isDeleted(false)
+                            .build()
+            ));
+
+            if (!studentRepository.existsById(nidaUser.getId())) {
+                studentRepository.save(
+                        Student.builder()
+                                .user(nidaUser)
+                                .department("Software Engineering")
+                                .year(2)
+                                .gpa(3.20)
+                                .skills("Java, Spring Boot, SQL, Web Development")
+                                .githubLink("")
+                                .linkedinLink("")
+                                .build()
+                );
+            }
+
+            User zeynepUser = userRepository.findByEmail("zeynep@uskudar.com")
                     .orElseGet(() -> userRepository.save(
                     User.builder()
                             .email("zeynep@uskudar.com")
@@ -70,10 +99,10 @@ public class DataInitializer {
                             .build()
             ));
 
-            if (!advisorRepository.existsById(advisorUser.getId())) {
+            if (!advisorRepository.existsById(zeynepUser.getId())) {
                 advisorRepository.save(
                         Advisor.builder()
-                                .user(advisorUser)
+                                .user(zeynepUser)
                                 .title("Assistant Professor")
                                 .department("Software Engineering")
                                 .areasOfExpertise("Web Development, NLP, Embedded Systems")
@@ -123,6 +152,6 @@ public class DataInitializer {
                                 .build()
                 );
             }
-        };
+        });
     }
 }

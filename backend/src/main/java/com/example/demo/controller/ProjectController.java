@@ -38,10 +38,7 @@ public class ProjectController {
         Long userId = (Long) auth.getPrincipal();
 
         return ResponseEntity.ok(
-                ApiResponse.ok(
-                        "Proje oluşturuldu.",
-                        projectService.createProject(userId, req)
-                )
+                ApiResponse.ok("Proje oluşturuldu.", projectService.createProject(userId, req))
         );
     }
 
@@ -51,10 +48,30 @@ public class ProjectController {
         Long userId = (Long) auth.getPrincipal();
 
         return ResponseEntity.ok(
-                ApiResponse.ok(
-                        "Projeleriniz.",
-                        projectService.getMyProjects(userId)
-                )
+                ApiResponse.ok("Projeleriniz.", projectService.getMyProjects(userId))
+        );
+    }
+
+    @GetMapping("/open")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> getOpenProjects(Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Açık projeler listelendi.", projectService.getOpenProjectsForStudent(userId))
+        );
+    }
+
+    @PostMapping("/{projectId}/apply")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> applyToProject(
+            Authentication auth,
+            @PathVariable Long projectId
+    ) {
+        Long userId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Projeye başvuru gönderildi.", projectService.applyToProject(userId, projectId))
         );
     }
 
@@ -68,10 +85,7 @@ public class ProjectController {
         Long userId = (Long) auth.getPrincipal();
 
         return ResponseEntity.ok(
-                ApiResponse.ok(
-                        "Danışman isteği gönderildi.",
-                        projectService.requestAdvisor(userId, projectId, advisorId)
-                )
+                ApiResponse.ok("Danışman isteği gönderildi.", projectService.requestAdvisor(userId, projectId, advisorId))
         );
     }
 }

@@ -1,180 +1,114 @@
-const API_BASE="http://localhost:8080";
+const API_BASE = "http://localhost:8080";
 
-let needsAdvisor=true;
+let advisorRequired = true;
 
-document.addEventListener("DOMContentLoaded",async()=>{
+document.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  const role = localStorage.getItem("role");
 
-const token=localStorage.getItem("token");
-const userId=localStorage.getItem("userId");
-const role=localStorage.getItem("role");
+  if (!token || !userId || role !== "ADMIN") {
+    alert("Unauthorized");
+    window.location.href = "../../index.html";
+    return;
+  }
 
-if(!token || !userId || role!=="ADMIN"){
-alert("Unauthorized");
-window.location.href="../../index.html";
-return;
-}
+  await loadAdminInfo(token, userId);
+  setupAdvisorToggle();
 
-await loadAdminInfo(token,userId);
-
-setupAdvisorToggle();
-
-document
-.getElementById("createCategoryForm")
-.addEventListener(
-"submit",
-submitCategory
-);
-
+  document
+    .getElementById("createCategoryForm")
+    .addEventListener("submit", submitCategory);
 });
 
+async function loadAdminInfo(token, userId) {
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-async function loadAdminInfo(token,userId){
+    if (!response.ok) return;
 
-try{
+    const result = await response.json();
+    const users = result.data || result || [];
 
-const response=await fetch(
-`${API_BASE}/api/admin/users`,
-{
-headers:{
-Authorization:`Bearer ${token}`
-}
-}
-);
+    const admin = users.find(
+      u =>
+        String(u.id) === String(userId) ||
+        String(u.userId) === String(userId)
+    );
 
-if(!response.ok) return;
+    if (!admin) return;
 
-const result=await response.json();
+    const fullName = `${admin.firstName || ""} ${admin.lastName || ""}`.trim();
 
-const users=result.data||result||[];
-
-const admin=users.find(
-u=>
-String(u.id)===String(userId)||
-String(u.userId)===String(userId)
-);
-
-if(!admin) return;
-
-const fullName=
-`${admin.firstName||""} ${admin.lastName||""}`.trim();
-
-document.getElementById(
-"adminTopName"
-).textContent=fullName || "Admin";
-
-}
-catch(e){
-console.error(e);
+    document.getElementById("adminTopName").textContent = fullName || "Admin";
+  } catch (e) {
+    console.error(e);
+  }
 }
 
+function setupAdvisorToggle() {
+  const yes = document.getElementById("advisorYes");
+  const no = document.getElementById("advisorNo");
+
+  yes.addEventListener("click", () => {
+    advisorRequired = true;
+    yes.classList.add("active");
+    no.classList.remove("active");
+  });
+
+  no.addEventListener("click", () => {
+    advisorRequired = false;
+    no.classList.add("active");
+    yes.classList.remove("active");
+  });
 }
 
+async function submitCategory(e) {
+  e.preventDefault();
 
+  const token = localStorage.getItem("token");
 
-function setupAdvisorToggle(){
+  const payload = {
+    name: document.getElementById("categoryName").value.trim(),
+    description: document.getElementById("categoryDescription").value.trim(),
+    teamSize: document.getElementById("teamSize").value.trim(),
+    budget: Number(document.getElementById("budget").value || 0),
+    advisorRequired: advisorRequired
+  };
 
-const yes=
-document.getElementById(
-"advisorYes"
-);
+  if (!payload.name) {
+    alert("Category name required.");
+    return;
+  }
 
-const no=
-document.getElementById(
-"advisorNo"
-);
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/categories`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
 
-yes.addEventListener("click",()=>{
-needsAdvisor=true;
+    const text = await response.text();
 
-yes.classList.add("active");
-no.classList.remove("active");
-});
+    console.log("CREATE CATEGORY STATUS:", response.status);
+    console.log("CREATE CATEGORY RESPONSE:", text);
 
+    if (!response.ok) {
+      alert("Category creation failed.");
+      return;
+    }
 
-no.addEventListener("click",()=>{
-needsAdvisor=false;
-
-no.classList.add("active");
-yes.classList.remove("active");
-});
-
-}
-
-
-
-async function submitCategory(e){
-
-e.preventDefault();
-
-const token=
-localStorage.getItem("token");
-
-const payload={
-
-name:
-document.getElementById(
-"categoryName"
-).value.trim(),
-
-description:
-document.getElementById(
-"categoryDescription"
-).value.trim(),
-
-teamSize:
-document.getElementById(
-"teamSize"
-).value.trim(),
-
-budget:
-document.getElementById(
-"budget"
-).value || 0,
-
-needsAdvisor:
-needsAdvisor
-
-};
-
-
-if(!payload.name){
-alert("Category name required.");
-return;
-}
-
-
-try{
-
-const response=
-await fetch(
-`${API_BASE}/api/admin/categories`,
-{
-method:"POST",
-
-headers:{
-"Content-Type":"application/json",
-Authorization:`Bearer ${token}`
-},
-
-body:JSON.stringify(payload)
-}
-);
-
-
-if(!response.ok){
-alert("Category creation failed.");
-return;
-}
-
-alert("Category created successfully.");
-
-window.location.href=
-"ad-projectcat.html";
-
-}
-catch(error){
-console.error(error);
-alert("Server error.");
-}
-
+    alert("Category created successfully.");
+    window.location.href = "ad-projectcat.html";
+  } catch (error) {
+    console.error(error);
+    alert("Server error.");
+  }
 }

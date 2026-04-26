@@ -83,9 +83,26 @@ public class AdminController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<ApiResponse> createCategory(@RequestBody Map<String, String> body) {
+    public ResponseEntity<ApiResponse> createCategory(@RequestBody Map<String, Object> body) {
+        String name = body.get("name") != null ? body.get("name").toString() : null;
+        String description = body.get("description") != null ? body.get("description").toString() : null;
+        String teamSize = body.get("teamSize") != null ? body.get("teamSize").toString() : null;
+
+        Double budget = 0.0;
+        if (body.get("budget") != null && !body.get("budget").toString().isBlank()) {
+            budget = Double.parseDouble(body.get("budget").toString());
+        }
+
+        Boolean advisorRequired = true;
+        if (body.get("advisorRequired") != null) {
+            advisorRequired = Boolean.parseBoolean(body.get("advisorRequired").toString());
+        }
+
         return ResponseEntity.ok(
-                ApiResponse.ok("Kategori oluşturuldu.", adminService.createCategory(body.get("name")))
+                ApiResponse.ok(
+                        "Kategori oluşturuldu.",
+                        adminService.createCategory(name, description, teamSize, budget, advisorRequired)
+                )
         );
     }
 

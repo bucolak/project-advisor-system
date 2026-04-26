@@ -1,3 +1,4 @@
+com/example/demo/enums/ApplicationStatus.class
 com/example/demo/entity/Announcement.class
 com/example/demo/entity/Advisor$AdvisorBuilder.class
 com/example/demo/enums/ProjectStatus.class
@@ -7,6 +8,7 @@ com/example/demo/repository/AdvisorRequestRepository.class
 com/example/demo/entity/User.class
 com/example/demo/security/JwtUtil.class
 com/example/demo/config/SecurityConfig.class
+com/example/demo/repository/ProjectApplicationRepository.class
 com/example/demo/dto/response/AuthResponse.class
 com/example/demo/security/JwtAuthFilter.class
 com/example/demo/entity/Advisor.class
@@ -30,6 +32,7 @@ com/example/demo/dto/request/CreateProjectRequest.class
 com/example/demo/controller/AuthController.class
 com/example/demo/service/NotificationService.class
 com/example/demo/service/StudentService.class
+com/example/demo/entity/ProjectApplication.class
 com/example/demo/ProjectManagementApplication.class
 com/example/demo/repository/ProjectRepository.class
 com/example/demo/entity/Project.class
@@ -51,6 +54,7 @@ com/example/demo/service/AuthService.class
 com/example/demo/entity/Project$ProjectBuilder.class
 com/example/demo/entity/AdvisorRequest.class
 com/example/demo/entity/AdvisorRequest$AdvisorRequestBuilder.class
+com/example/demo/entity/ProjectApplication$ProjectApplicationBuilder.class
 com/example/demo/controller/ProjectController.class
 com/example/demo/dto/response/AdvisorProfileResponse.class
 com/example/demo/entity/Notification$NotificationBuilder.class

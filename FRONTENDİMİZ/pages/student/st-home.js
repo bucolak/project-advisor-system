@@ -5,10 +5,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "STUDENT") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -16,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   await loadStudentProfile(token, userId);
+  await loadOpenProjects(token);
 });
 
 async function loadStudentProfile(token, userId) {
@@ -23,28 +20,16 @@ async function loadStudentProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
-
-    console.log("PROFILE STATUS:", response.status);
-
-    const text = await response.text();
-    console.log("RAW PROFILE RESPONSE:", text);
 
     if (!response.ok) {
       alert(`Failed to load student data. Status: ${response.status}`);
       return;
     }
 
-    let result = {};
-    try {
-      result = JSON.parse(text);
-    } catch (error) {
-      console.error("JSON parse error:", error);
-      alert("Invalid server response.");
-      return;
-    }
+    const result = await response.json();
 
     if (!result.success) {
       alert(result.message || "Failed to load student data.");
@@ -52,10 +37,6 @@ async function loadStudentProfile(token, userId) {
     }
 
     const profile = result.data;
-    if (!profile) {
-      alert("Student profile data not found.");
-      return;
-    }
 
     const firstName = profile.firstName || "";
     const lastName = profile.lastName || "";
@@ -66,8 +47,129 @@ async function loadStudentProfile(token, userId) {
     document.getElementById("welcomeText").textContent = `Welcome, ${firstName || "Student"} 👋`;
     document.getElementById("studentDepartment").textContent = profile.department || "-";
     document.getElementById("studentYear").textContent = profile.year ?? "-";
+
   } catch (error) {
     console.error("Student home load error:", error);
     alert("Server error while loading home page.");
+  }
+}
+
+async function loadOpenProjects(token) {
+  const container = document.getElementById("openProjectsList");
+
+  try {
+    const response = await fetch(`${API_BASE}/api/projects/open`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const text = await response.text();
+
+    if (!response.ok) {
+      container.innerHTML = `
+        <div class="project-card">
+          <h4>Could not load open projects</h4>
+          <p>Please check backend endpoint.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const result = JSON.parse(text);
+    const projects = result.data || result || [];
+
+    if (!projects.length) {
+      container.innerHTML = `
+        <div class="project-card">
+          <h4>No open projects yet</h4>
+          <p>Other students' projects will appear here.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = "";
+
+    projects.forEach(project => {
+      const categoryName =
+        project.category?.name ||
+        project.categoryName ||
+        "PROJECT";
+
+      const studentName =
+        project.student?.user
+          ? `${project.student.user.firstName || ""} ${project.student.user.lastName || ""}`.trim()
+          : "Student";
+
+      const card = document.createElement("div");
+      card.className = "project-card";
+
+      card.innerHTML = `
+        <h4>${project.title || "Untitled Project"}</h4>
+        <p><strong>Owner:</strong> ${studentName}</p>
+        <p><strong>Category:</strong> ${categoryName}</p>
+        <p>${project.description || "No description available."}</p>
+        <p><strong>Skills:</strong> ${project.requiredSkills || "-"}</p>
+        <p><strong>Team Size:</strong> ${project.teamSize || "-"}</p>
+
+        <div class="open-project-actions">
+          <button type="button" class="open-project-view-btn" data-project-id="${project.id}">
+            View
+          </button>
+
+          <button type="button" class="open-project-apply-btn" data-project-id="${project.id}">
+            Apply
+          </button>
+        </div>
+      `;
+
+      card.querySelector(".open-project-view-btn").addEventListener("click", function () {
+        alert(`Project details will open for project ID: ${project.id}`);
+      });
+
+      card.querySelector(".open-project-apply-btn").addEventListener("click", async function () {
+        try {
+          const response = await fetch(`${API_BASE}/api/projects/${project.id}/apply`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+
+          const text = await response.text();
+
+          console.log("APPLY STATUS:", response.status);
+          console.log("APPLY RESPONSE:", text);
+
+          if (!response.ok) {
+            alert("Application failed. You may have already applied.");
+            return;
+          }
+
+          alert("Application sent successfully!");
+
+          this.textContent = "Applied";
+          this.disabled = true;
+
+        } catch (error) {
+          console.error("Apply error:", error);
+          alert("Server error while applying.");
+        }
+      });
+
+      container.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("Open projects load error:", error);
+
+    container.innerHTML = `
+      <div class="project-card">
+        <h4>Server error</h4>
+        <p>Could not load open projects.</p>
+      </div>
+    `;
   }
 }

@@ -86,7 +86,7 @@ async function loadAdvisorRequests(token, userId) {
         */
 
         const response = await fetch(
-            `${API_BASE}/api/advisor-requests/student/${userId}`,
+            `${API_BASE}/api/advisor-requests/my-requests`,
             {
                 method: "GET",
                 headers: {

@@ -39,6 +39,19 @@ public class AdvisorRequestController {
         );
     }
 
+    @GetMapping("/my-requests")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> getMyAdvisorRequests(Authentication auth) {
+        Long studentUserId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Student advisor requests fetched.",
+                        advisorRequestService.getRequestsForStudent(studentUserId)
+                )
+        );
+    }
+
     @PutMapping("/{requestId}/status")
     @PreAuthorize("hasAuthority('ROLE_ADVISOR')")
     public ResponseEntity<ApiResponse> updateRequestStatus(
