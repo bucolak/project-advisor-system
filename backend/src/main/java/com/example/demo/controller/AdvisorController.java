@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.response.AdvisorProfileResponse;
 import com.example.demo.dto.response.ApiResponse;
@@ -29,12 +28,53 @@ public class AdvisorController {
         );
     }
 
+    @GetMapping("/active")
+    @PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse> getActiveAdvisors() {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Active advisors fetched.", advisorService.getActiveAdvisors())
+        );
+    }
+
     @GetMapping("/{userId}/profile")
     public ResponseEntity<ApiResponse> getAdvisorProfile(@PathVariable Long userId) {
         AdvisorProfileResponse profile = advisorService.getAdvisorProfile(userId);
 
         return ResponseEntity.ok(
                 ApiResponse.ok("Advisor profile fetched.", profile)
+        );
+    }
+
+    @PutMapping("/profile")
+    @PreAuthorize("hasAuthority('ROLE_ADVISOR')")
+    public ResponseEntity<ApiResponse> updateMyProfile(
+            Authentication auth,
+            @RequestBody Map<String, Object> body
+    ) {
+        Long advisorUserId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Advisor profile updated.",
+                        advisorService.updateAdvisorProfile(advisorUserId, body)
+                )
+        );
+    }
+
+    @PutMapping("/status")
+    @PreAuthorize("hasAuthority('ROLE_ADVISOR')")
+    public ResponseEntity<ApiResponse> updateMyAdvisingStatus(
+            Authentication auth,
+            @RequestBody Map<String, String> body
+    ) {
+        Long advisorUserId = (Long) auth.getPrincipal();
+        String status = body.get("status");
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Advisor status updated.",
+                        advisorService.updateAdvisingStatus(advisorUserId, status)
+                )
         );
     }
 

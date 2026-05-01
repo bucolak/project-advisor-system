@@ -3,16 +3,10 @@ package com.example.demo.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.dto.request.CreateProjectRequest;
 import com.example.demo.dto.response.ApiResponse;
-import com.example.demo.service.AdvisorService;
 import com.example.demo.service.ProjectService;
 
 import jakarta.validation.Valid;
@@ -22,11 +16,9 @@ import jakarta.validation.Valid;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final AdvisorService advisorService;
 
-    public ProjectController(ProjectService projectService, AdvisorService advisorService) {
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.advisorService = advisorService;
     }
 
     @PostMapping
@@ -39,6 +31,14 @@ public class ProjectController {
 
         return ResponseEntity.ok(
                 ApiResponse.ok("Proje oluşturuldu.", projectService.createProject(userId, req))
+        );
+    }
+
+    @GetMapping("/{projectId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADVISOR', 'ROLE_ADMIN')")
+    public ResponseEntity<ApiResponse> getProjectDetail(@PathVariable Long projectId) {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Project detail fetched.", projectService.getProjectDetail(projectId))
         );
     }
 

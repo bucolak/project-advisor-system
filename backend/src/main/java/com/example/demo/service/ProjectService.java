@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -78,6 +80,51 @@ public class ProjectService {
                 .build();
 
         return projectRepository.save(project);
+    }
+
+    public Map<String, Object> getProjectDetail(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proje bulunamadı."));
+
+        if (project.getIsDeleted()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proje bulunamadı.");
+        }
+
+        Student owner = project.getStudent();
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("id", project.getId());
+        map.put("title", project.getTitle());
+        map.put("description", project.getDescription());
+        map.put("requiredSkills", project.getRequiredSkills());
+        map.put("teamSize", project.getTeamSize());
+        map.put("rolesNeeded", project.getRolesNeeded());
+        map.put("status", project.getStatus().name());
+        map.put("createdAt", project.getCreatedAt());
+
+        if (project.getCategory() != null) {
+            map.put("categoryId", project.getCategory().getId());
+            map.put("categoryName", project.getCategory().getName());
+            map.put("categoryDescription", project.getCategory().getDescription());
+            map.put("categoryBudget", project.getCategory().getBudget());
+            map.put("advisorRequired", project.getCategory().getAdvisorRequired());
+        } else {
+            map.put("categoryId", null);
+            map.put("categoryName", null);
+            map.put("categoryDescription", null);
+            map.put("categoryBudget", null);
+            map.put("advisorRequired", null);
+        }
+
+        map.put("ownerId", owner.getUser().getId());
+        map.put("ownerName", owner.getUser().getFirstName() + " " + owner.getUser().getLastName());
+        map.put("ownerEmail", owner.getUser().getEmail());
+        map.put("ownerDepartment", owner.getDepartment());
+        map.put("ownerYear", owner.getYear());
+        map.put("ownerSkills", owner.getSkills());
+
+        return map;
     }
 
     public List<Project> getMyProjects(Long userId) {

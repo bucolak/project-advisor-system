@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,7 +28,7 @@ public class StudentService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
 
         Student student = studentRepository.findById(userId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student profile not found."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student profile not found."));
 
         return new StudentProfileResponse(
                 user.getId(),
@@ -40,5 +42,54 @@ public class StudentService {
                 student.getGithubLink(),
                 student.getLinkedinLink()
         );
+    }
+
+    public StudentProfileResponse updateStudentProfile(Long userId, Map<String, Object> body) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student profile not found."));
+
+        if (body.get("firstName") != null) {
+            user.setFirstName(body.get("firstName").toString());
+        }
+
+        if (body.get("lastName") != null) {
+            user.setLastName(body.get("lastName").toString());
+        }
+
+        if (body.get("email") != null) {
+            user.setEmail(body.get("email").toString());
+        }
+
+        if (body.get("department") != null) {
+            student.setDepartment(body.get("department").toString());
+        }
+
+        if (body.get("year") != null && !body.get("year").toString().isBlank()) {
+            student.setYear(Integer.parseInt(body.get("year").toString()));
+        }
+
+        if (body.get("gpa") != null && !body.get("gpa").toString().isBlank()) {
+            student.setGpa(Double.parseDouble(body.get("gpa").toString()));
+        }
+
+        if (body.get("skills") != null) {
+            student.setSkills(body.get("skills").toString());
+        }
+
+        if (body.get("githubLink") != null) {
+            student.setGithubLink(body.get("githubLink").toString());
+        }
+
+        if (body.get("linkedinLink") != null) {
+            student.setLinkedinLink(body.get("linkedinLink").toString());
+        }
+
+        userRepository.save(user);
+        studentRepository.save(student);
+
+        return getStudentProfile(userId);
     }
 }
