@@ -18,54 +18,13 @@
             </div>
 
             <ul class="student-profile-edit-menu">
-                <li>
-                    <a href="st-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-projects.html">
-                        <i class="fa-solid fa-briefcase"></i>
-                        <span>My Projects</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-createprojects.html">
-                        <i class="fa-regular fa-square-plus"></i>
-                        <span>Create Project</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-advisorrequests.html">
-                        <i class="fa-regular fa-rectangle-list"></i>
-                        <span>Advisor Requests</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-advisors.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Advisors</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-notifications.html">
-                        <i class="fa-regular fa-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-profile.html" class="active">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
+                <li><a href="st-home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="st-projects.html"><i class="fa-solid fa-briefcase"></i><span>My Projects</span></a></li>
+                <li><a href="st-createprojects.html"><i class="fa-regular fa-square-plus"></i><span>Create Project</span></a></li>
+                <li><a href="st-advisorrequests.html"><i class="fa-regular fa-rectangle-list"></i><span>Advisor Requests</span></a></li>
+                <li><a href="st-advisors.html"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
+                <li><a href="st-notifications.html"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="st-profile.html" class="active"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
             </ul>
         </aside>
 
@@ -84,8 +43,7 @@
                     </div>
 
                     <div class="student-profile-edit-dropdown-menu" id="studentProfileEditDropdown">
-                        <a href="../../index.html" class="student-profile-edit-logout-btn"
-                            id="studentProfileEditLogoutBtn">
+                        <a href="../../index.html" class="student-profile-edit-logout-btn" id="studentProfileEditLogoutBtn">
                             Log Out
                         </a>
                     </div>
@@ -96,9 +54,6 @@
 
             <div class="student-profile-edit-card">
                 <div class="student-profile-edit-header">
-                    <div class="student-profile-edit-photo-box">
-                        <i class="fa-regular fa-camera"></i>
-                    </div>
 
                     <div class="student-profile-edit-maininfo">
                         <h2 id="studentDisplayName">Student</h2>
@@ -119,6 +74,7 @@
                             <i class="fa-regular fa-pen-to-square"></i>
                             Save Changes
                         </button>
+
                         <a href="st-profile.html" class="student-cancel-btn">Cancel</a>
                     </div>
                 </div>
@@ -156,12 +112,22 @@
                     <label>Technical Skills:</label>
 
                     <div class="student-profile-edit-skills" id="studentSkillsContainer">
-                        <span class="student-no-skill-text">No skills found.</span>
+                        <span class="skill-tag" data-skill="SQL">SQL</span>
+                        <span class="skill-tag" data-skill="AI">AI</span>
+                        <span class="skill-tag" data-skill="Python">Python</span>
+                        <span class="skill-tag" data-skill="Java">Java</span>
+                        <span class="skill-tag" data-skill="JavaScript">JavaScript</span>
+                        <span class="skill-tag" data-skill="C#">C#</span>
+                        <span class="skill-tag" data-skill="HTML">HTML</span>
+                        <span class="skill-tag" data-skill="CSS">CSS</span>
+                        <span class="skill-tag" data-skill="React">React</span>
+                        <span class="skill-tag" data-skill="Node.js">Node.js</span>
+                        <span class="skill-tag" data-skill="Spring Boot">Spring Boot</span>
+                        <span class="skill-tag" data-skill="Database">Database</span>
+                        <span class="skill-tag" data-skill="Machine Learning">Machine Learning</span>
+                        <span class="skill-tag" data-skill="UI/UX">UI/UX</span>
+                        <span class="skill-tag" data-skill="Communication">Communication</span>
                     </div>
-
-                    <button type="button" class="student-add-skill-btn" id="studentAddSkillBtn">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
                 </div>
             </div>
         </main>

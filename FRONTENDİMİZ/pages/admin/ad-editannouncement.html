@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Add New Announcement</title>
+  <title>Edit Announcement</title>
 
   <link rel="stylesheet" href="../../css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -40,9 +40,9 @@
         </div>
       </div>
 
-      <h1 class="admin-addann-title">Add New Announcement</h1>
+      <h1 class="admin-addann-title">Edit The Announcement</h1>
 
-      <form class="admin-addann-form" id="announcementForm">
+      <form class="admin-addann-form" id="editAnnouncementForm">
 
         <div class="admin-addann-field full">
           <label>Title <span>*</span></label>
@@ -88,7 +88,10 @@
 
         <div class="admin-addann-actions">
           <a href="ad-announce.html" class="admin-addann-cancel">Cancel</a>
-          <button type="submit" class="admin-addann-publish">Publish Announcement</button>
+
+          <button type="submit" class="admin-addann-publish">
+            Save Changes
+          </button>
         </div>
 
       </form>
@@ -97,7 +100,7 @@
 
   </div>
 
-  <script src="ad-addannouncement.js"></script>
+  <script src="ad-editannouncement.js"></script>
 
 </body>
 

@@ -3716,10 +3716,13 @@ body {
   font-weight: 600;
 }
 
-.admin-user-role.admin,
-.admin-user-role.instructor {
-  background: #dcdcf8;
-  color: #2847e8;
+.admin-user-role.admin{
+  background: #74f5b2;
+  color: #138156;
+}
+.admin-user-role.advisor {
+  background: #92afe8;
+  color: #1534ce;
 }
 
 .admin-user-role.student {
@@ -3943,7 +3946,7 @@ body {
   min-width: 70px;
   height: 28px;
   border: none;
-  background: #f8f8f8;
+  background: #fdfbfb;
   color: #333;
   cursor: pointer;
   font-size: 14px;
@@ -3951,7 +3954,7 @@ body {
 }
 
 .admin-addcat-toggle button.active {
-  background: #ffffff;
+  background: #908888;
 }
 
 .admin-addcat-actions {
@@ -4180,7 +4183,7 @@ body {
 }
 
 .admin-editcat-toggle button.active {
-  background: #ffffff;
+  background: #877b7b;
 }
 
 .admin-editcat-actions {
@@ -7200,5 +7203,25 @@ body {
   color: white;
 }
 
+.student-profile-edit-skills .skill-tag {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 6px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    background-color: #eee;
+    cursor: pointer;
+    user-select: none;
+}
 
+.student-profile-edit-skills .skill-tag:hover {
+    background-color: #dbeafe;
+    border-color: #60a5fa;
+}
+
+.student-profile-edit-skills .skill-tag.selected {
+    background-color: #2196f3;
+    color: white;
+    border-color: #2196f3;
+}
 

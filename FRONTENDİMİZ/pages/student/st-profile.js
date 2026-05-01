@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "STUDENT") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -56,28 +52,18 @@ async function loadStudentProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
-    console.log("PROFILE STATUS:", response.status);
-
     const text = await response.text();
-    console.log("RAW PROFILE RESPONSE:", text);
 
     if (!response.ok) {
       alert(`Failed to load profile. Status: ${response.status}`);
       return;
     }
 
-    let result = {};
-    try {
-      result = JSON.parse(text);
-    } catch (error) {
-      console.error("JSON parse error:", error);
-      alert("Invalid server response.");
-      return;
-    }
+    const result = JSON.parse(text);
 
     if (!result.success) {
       alert(result.message || "Failed to load profile.");
@@ -85,11 +71,6 @@ async function loadStudentProfile(token, userId) {
     }
 
     const profile = result.data;
-
-    if (!profile) {
-      alert("Profile data not found.");
-      return;
-    }
 
     const firstName = profile.firstName || "";
     const lastName = profile.lastName || "";
@@ -136,7 +117,7 @@ function renderSkills(skillsValue) {
     .map(skill => skill.trim())
     .filter(Boolean);
 
-  if (skills.length === 0) {
+  if (!skills.length) {
     skillsContainer.innerHTML = `<span class="skill-tag">No skills found</span>`;
     return;
   }

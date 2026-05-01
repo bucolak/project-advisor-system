@@ -4,15 +4,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   setupDropdown();
   setupLogout();
   setupSaveButton();
-  setupSkillAdder();
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
-
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
 
   if (!token || !userId || role !== "STUDENT") {
     alert("Unauthorized access.");
@@ -21,6 +16,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   await loadStudentProfile(token, userId);
+
+  // Skills HTML'de hazır olduğu için burada garanti bağlanıyor
+  setupSkillSelection();
 });
 
 function setupDropdown() {
@@ -53,32 +51,26 @@ function setupLogout() {
   });
 }
 
+function setupSkillSelection() {
+  const skillTags = document.querySelectorAll("#studentSkillsContainer .skill-tag");
+
+  skillTags.forEach(tag => {
+    tag.onclick = function () {
+      tag.classList.toggle("selected");
+    };
+  });
+}
+
 function setupSaveButton() {
   const saveBtn = document.getElementById("studentSaveBtn");
 
   if (!saveBtn) return;
 
-  saveBtn.addEventListener("click", function () {
-    alert("Student update endpoint is not connected yet. The form is now showing real data only.");
-  });
-}
+  saveBtn.addEventListener("click", async function () {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
-function setupSkillAdder() {
-  const addBtn = document.getElementById("studentAddSkillBtn");
-  const container = document.getElementById("studentSkillsContainer");
-
-  if (!addBtn || !container) return;
-
-  addBtn.addEventListener("click", function () {
-    const noSkillText = container.querySelector(".student-no-skill-text");
-    if (noSkillText) {
-      container.innerHTML = "";
-    }
-
-    const tag = document.createElement("span");
-    tag.contentEditable = "true";
-    tag.textContent = "New Skill";
-    container.appendChild(tag);
+    await updateStudentProfile(token, userId);
   });
 }
 
@@ -87,13 +79,11 @@ async function loadStudentProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     const text = await response.text();
-    console.log("STUDENT PROFILE STATUS:", response.status);
-    console.log("STUDENT PROFILE RESPONSE:", text);
 
     if (!response.ok) {
       alert(`Failed to load student profile. Status: ${response.status}`);
@@ -108,6 +98,7 @@ async function loadStudentProfile(token, userId) {
     }
 
     const student = result.data;
+
     const firstName = student.firstName || "";
     const lastName = student.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
@@ -124,7 +115,7 @@ async function loadStudentProfile(token, userId) {
     document.getElementById("studentLinkedin").value = student.linkedinLink || "";
     document.getElementById("studentBio").value = student.shortBio || student.bio || "";
 
-    renderSkills(student.skills);
+    markSelectedSkills(student.skills);
 
   } catch (error) {
     console.error("Student edit profile load error:", error);
@@ -132,30 +123,74 @@ async function loadStudentProfile(token, userId) {
   }
 }
 
-function renderSkills(skillsValue) {
-  const container = document.getElementById("studentSkillsContainer");
-  if (!container) return;
+function markSelectedSkills(skillsValue) {
+  document.querySelectorAll("#studentSkillsContainer .skill-tag").forEach(tag => {
+    tag.classList.remove("selected");
+  });
 
-  container.innerHTML = "";
+  if (!skillsValue) return;
 
-  if (!skillsValue) {
-    container.innerHTML = `<span class="student-no-skill-text">No skills found.</span>`;
-    return;
-  }
-
-  const skills = String(skillsValue)
+  const selectedSkills = String(skillsValue)
     .split(",")
-    .map(skill => skill.trim())
+    .map(skill => skill.trim().toLowerCase())
     .filter(Boolean);
 
-  if (!skills.length) {
-    container.innerHTML = `<span class="student-no-skill-text">No skills found.</span>`;
-    return;
-  }
+  document.querySelectorAll("#studentSkillsContainer .skill-tag").forEach(tag => {
+    const skillName = String(tag.dataset.skill || tag.textContent)
+      .trim()
+      .toLowerCase();
 
-  skills.forEach(skill => {
-    const span = document.createElement("span");
-    span.textContent = skill;
-    container.appendChild(span);
+    if (selectedSkills.includes(skillName)) {
+      tag.classList.add("selected");
+    }
   });
+}
+
+function getSelectedSkillsText() {
+  const selectedSkills = Array.from(
+    document.querySelectorAll("#studentSkillsContainer .skill-tag.selected")
+  ).map(tag => String(tag.dataset.skill || tag.textContent).trim());
+
+  return selectedSkills.join(", ");
+}
+
+async function updateStudentProfile(token, userId) {
+  const payload = {
+    department: document.getElementById("studentDepartment").value.trim(),
+    year: Number(document.getElementById("studentYear").value),
+    email: document.getElementById("studentEmail").value.trim(),
+    interests: document.getElementById("studentInterests").value.trim(),
+    githubLink: document.getElementById("studentGithub").value.trim(),
+    linkedinLink: document.getElementById("studentLinkedin").value.trim(),
+    shortBio: document.getElementById("studentBio").value.trim(),
+    skills: getSelectedSkillsText()
+  };
+
+  try {
+    const response = await fetch(`${API_BASE}/api/students/${userId}/profile`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const text = await response.text();
+
+    console.log("UPDATE STUDENT PROFILE STATUS:", response.status);
+    console.log("UPDATE STUDENT PROFILE RESPONSE:", text);
+
+    if (!response.ok) {
+      alert("Profile could not be updated. Backend update endpoint may not be connected.");
+      return;
+    }
+
+    alert("Profile updated successfully.");
+    window.location.href = "st-profile.html";
+
+  } catch (error) {
+    console.error("Student profile update error:", error);
+    alert("Server error while updating profile.");
+  }
 }

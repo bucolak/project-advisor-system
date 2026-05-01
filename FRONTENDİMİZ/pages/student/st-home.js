@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   await loadStudentProfile(token, userId);
   await loadOpenProjects(token);
+  await loadAnnouncements(token);
 });
 
 async function loadStudentProfile(token, userId) {
@@ -172,4 +173,70 @@ async function loadOpenProjects(token) {
       </div>
     `;
   }
+
+}
+async function loadAnnouncements(token) {
+  const list = document.getElementById("announcementsList");
+
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/announcements`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const text = await response.text();
+
+    console.log("STUDENT ANNOUNCEMENTS STATUS:", response.status);
+    console.log("STUDENT ANNOUNCEMENTS RESPONSE:", text);
+
+    if (!response.ok) {
+      list.innerHTML = `<li>Announcements could not be loaded.</li>`;
+      return;
+    }
+
+    const result = JSON.parse(text);
+    const announcements = result.data || result || [];
+
+    if (!announcements.length) {
+      list.innerHTML = `<li>No announcements yet.</li>`;
+      return;
+    }
+
+    list.innerHTML = "";
+
+    announcements.slice(0, 3).forEach(item => {
+      const li = document.createElement("li");
+
+      const deadline = item.deadline
+        ? ` - ${formatAnnouncementDate(item.deadline)}`
+        : "";
+
+      li.innerHTML = `
+        <strong>${item.title || "Announcement"}</strong>
+        ${deadline}
+      `;
+
+      list.appendChild(li);
+    });
+
+  } catch (error) {
+    console.error("Student announcements load error:", error);
+    list.innerHTML = `<li>Server error while loading announcements.</li>`;
+  }
+}
+
+function formatAnnouncementDate(dateValue) {
+  const date = new Date(dateValue);
+
+  if (Number.isNaN(date.getTime())) {
+    return dateValue;
+  }
+
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
 }

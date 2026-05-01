@@ -1,5 +1,7 @@
 const API_BASE = "http://localhost:8080";
 
+let currentAnnouncementId = null;
+
 document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -11,11 +13,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
+  const params = new URLSearchParams(window.location.search);
+  currentAnnouncementId = params.get("id");
+
+  if (!currentAnnouncementId) {
+    alert("Announcement id not found.");
+    window.location.href = "ad-announce.html";
+    return;
+  }
+
   await loadAdminInfo(token, userId);
   await loadCategories(token);
   await loadAnnouncementTypes(token);
+  await loadAnnouncementDetail(token, currentAnnouncementId);
 
-  setupAnnouncementForm(token);
+  setupEditAnnouncementForm(token);
 });
 
 async function loadAdminInfo(token, userId) {
@@ -117,8 +129,56 @@ async function loadAnnouncementTypes(token) {
   }
 }
 
-function setupAnnouncementForm(token) {
-  const form = document.getElementById("announcementForm");
+async function loadAnnouncementDetail(token, id) {
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/announcements/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const text = await response.text();
+
+    console.log("EDIT ANN DETAIL STATUS:", response.status);
+    console.log("EDIT ANN DETAIL RESPONSE:", text);
+
+    if (!response.ok) {
+      alert("Announcement detail could not be loaded.");
+      window.location.href = "ad-announce.html";
+      return;
+    }
+
+    const result = JSON.parse(text);
+    const announcement = result.data || result;
+
+    fillEditForm(announcement);
+
+  } catch (error) {
+    console.error("Announcement detail load error:", error);
+    alert("Server error while loading announcement detail.");
+  }
+}
+
+function fillEditForm(announcement) {
+  document.getElementById("announcementTitle").value =
+    announcement.title || "";
+
+  document.getElementById("announcementCategory").value =
+    announcement.category || "";
+
+  document.getElementById("announcementDeadline").value =
+    formatDateForInput(announcement.deadline);
+
+  document.getElementById("announcementType").value =
+    announcement.type || "";
+
+  document.getElementById("announcementDescription").value =
+    announcement.description || "";
+}
+
+function setupEditAnnouncementForm(token) {
+  const form = document.getElementById("editAnnouncementForm");
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -135,8 +195,8 @@ function setupAnnouncementForm(token) {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/api/admin/announcements`, {
-        method: "POST",
+      const response = await fetch(`${API_BASE}/api/admin/announcements/${currentAnnouncementId}`, {
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -152,20 +212,32 @@ function setupAnnouncementForm(token) {
 
       const text = await response.text();
 
-      console.log("ADD ANNOUNCEMENT STATUS:", response.status);
-      console.log("ADD ANNOUNCEMENT RESPONSE:", text);
+      console.log("UPDATE ANNOUNCEMENT STATUS:", response.status);
+      console.log("UPDATE ANNOUNCEMENT RESPONSE:", text);
 
       if (!response.ok) {
-        alert("Failed to publish announcement.");
+        alert("Announcement could not be updated.");
         return;
       }
 
-      alert("Announcement published successfully.");
+      alert("Announcement updated successfully.");
       window.location.href = "ad-announce.html";
 
     } catch (error) {
-      console.error("Add announcement error:", error);
-      alert("Server error while publishing announcement.");
+      console.error("Announcement update error:", error);
+      alert("Server error while updating announcement.");
     }
   });
+}
+
+function formatDateForInput(dateValue) {
+  if (!dateValue) return "";
+
+  const date = new Date(dateValue);
+
+  if (Number.isNaN(date.getTime())) {
+    return String(dateValue).slice(0, 10);
+  }
+
+  return date.toISOString().slice(0, 10);
 }
