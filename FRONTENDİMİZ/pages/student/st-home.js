@@ -115,18 +115,18 @@ async function loadOpenProjects(token) {
         <p><strong>Team Size:</strong> ${project.teamSize || "-"}</p>
 
         <div class="open-project-actions">
-          <button type="button" class="open-project-view-btn" data-project-id="${project.id}">
-            View
+          <button type="button" class="open-project-view-btn">
+            View Details
           </button>
 
-          <button type="button" class="open-project-apply-btn" data-project-id="${project.id}">
+          <button type="button" class="open-project-apply-btn">
             Apply
           </button>
         </div>
       `;
 
       card.querySelector(".open-project-view-btn").addEventListener("click", function () {
-        alert(`Project details will open for project ID: ${project.id}`);
+        window.location.href = `../common/project-details.html?projectId=${project.id}`;
       });
 
       card.querySelector(".open-project-apply-btn").addEventListener("click", async function () {

@@ -1,6 +1,7 @@
 const API_BASE = "http://localhost:8080";
 
 let selectedAdvisorRequired = true;
+let courseCategoryId = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
@@ -65,6 +66,13 @@ async function loadProjectCategories(token) {
 
     const result = await response.json();
     const categories = result.data || result || [];
+
+    const courseCategory = categories.find(category => {
+      const name = String(category.name || "").toUpperCase();
+      return name === "COURSE";
+    });
+
+    courseCategoryId = courseCategory ? courseCategory.id : null;
 
     const otherCategories = categories.filter(category => {
       const name = String(category.name || "").toUpperCase();
@@ -164,9 +172,14 @@ function setupForms(token, userId) {
 async function createCourseProject(token, userId) {
   const selectedSkills = getSelectedSkills("courseProject");
 
+  if (!courseCategoryId) {
+    alert("Course category could not be found. Please check database default categories.");
+    return;
+  }
+
   const payload = {
     title: document.getElementById("courseTitle").value.trim(),
-    categoryId: null,
+    categoryId: Number(courseCategoryId),
     studentId: Number(userId),
     requiredSkills: selectedSkills.join(", "),
     teamSize: Number(document.getElementById("courseTeamSize").value),

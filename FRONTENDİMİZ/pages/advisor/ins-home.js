@@ -62,6 +62,7 @@ async function loadAdvisorInfo(token, userId) {
     });
 
     const text = await response.text();
+
     console.log("ADVISOR PROFILE STATUS:", response.status);
     console.log("ADVISOR PROFILE RESPONSE:", text);
 
@@ -132,6 +133,7 @@ async function loadAdvisorStudents(token) {
     });
 
     const text = await response.text();
+
     console.log("MY STUDENTS STATUS:", response.status);
     console.log("MY STUDENTS RESPONSE:", text);
 
@@ -170,14 +172,32 @@ async function loadAdvisorStudents(token) {
         "Student";
 
       card.innerHTML = `
-        <h4>${student.projectTitle || "Student Project"} 
+        <h4>
+          ${student.projectTitle || "Student Project"}
           <span class="tag red">${student.projectType || "PROJECT"}</span>
         </h4>
+
         <p>Student: ${studentName}</p>
         <p>Department: ${student.department || "-"}</p>
         <p>Skills: ${student.skills || "-"}</p>
-        <a href="#" class="view-details-btn">View Details</a>
+
+        <a href="#" class="view-details-btn" data-project-id="${student.projectId}">
+          View Details
+        </a>
       `;
+
+      card.querySelector(".view-details-btn").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const projectId = this.dataset.projectId;
+
+        if (!projectId || projectId === "undefined") {
+          alert("Project id not found.");
+          return;
+        }
+
+        window.location.href = `../common/project-details.html?projectId=${projectId}`;
+      });
 
       container.appendChild(card);
     });
