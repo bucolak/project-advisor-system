@@ -10,10 +10,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "ADVISOR") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -57,6 +53,8 @@ function setupInterestAdder() {
   const addInterestBtn = document.getElementById("addInterestBtn");
   const list = document.getElementById("researchInterestList");
 
+  if (!addInterestBtn || !list) return;
+
   addInterestBtn.addEventListener("click", function () {
     const li = document.createElement("li");
     li.innerHTML = `<input type="text" placeholder="Enter new research interest" />`;
@@ -67,8 +65,13 @@ function setupInterestAdder() {
 function setupSaveButton() {
   const saveBtn = document.getElementById("advisorSaveBtn");
 
-  saveBtn.addEventListener("click", function () {
-    alert("Advisor update endpoint is not connected yet. The form is now showing real data only.");
+  if (!saveBtn) return;
+
+  saveBtn.addEventListener("click", async function () {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+
+    await updateAdvisorProfile(token, userId);
   });
 }
 
@@ -77,11 +80,12 @@ async function loadAdvisorProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     const text = await response.text();
+
     console.log("ADVISOR PROFILE STATUS:", response.status);
     console.log("ADVISOR PROFILE RESPONSE:", text);
 
@@ -101,12 +105,13 @@ async function loadAdvisorProfile(token, userId) {
 
     const firstName = advisor.firstName || "";
     const lastName = advisor.lastName || "";
-    const fullName = `Dr. ${`${firstName} ${lastName}`.trim()}`.trim();
+    const fullNameWithoutTitle = `${firstName} ${lastName}`.trim();
+    const fullName = `Dr. ${fullNameWithoutTitle}`.trim();
 
-    document.getElementById("advisorTopName").textContent = fullName;
-    document.getElementById("advisorDisplayName").textContent = fullName;
+    document.getElementById("advisorTopName").textContent = fullName || "Advisor";
+    document.getElementById("advisorDisplayName").textContent = fullName || "Advisor";
 
-    document.getElementById("fullName").value = `${firstName} ${lastName}`.trim();
+    document.getElementById("fullName").value = fullNameWithoutTitle;
     document.getElementById("email").value = advisor.email || "";
     document.getElementById("department").value = advisor.department || "";
     document.getElementById("title").value = advisor.title || "";
@@ -117,6 +122,52 @@ async function loadAdvisorProfile(token, userId) {
   } catch (error) {
     console.error("Advisor edit profile load error:", error);
     alert("Server error while loading advisor profile.");
+  }
+}
+
+async function updateAdvisorProfile(token, userId) {
+  const fullName = document.getElementById("fullName").value.trim();
+  const nameParts = fullName.split(" ").filter(Boolean);
+
+  const firstName = nameParts[0] || "";
+  const lastName = nameParts.slice(1).join(" ");
+
+  const payload = {
+    firstName: firstName,
+    lastName: lastName,
+    email: document.getElementById("email").value.trim(),
+    department: document.getElementById("department").value.trim(),
+    title: document.getElementById("title").value.trim(),
+    areasOfExpertise: document.getElementById("areasOfExpertise").value.trim(),
+    researchInterests: getResearchInterestsText()
+  };
+
+  try {
+    const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const text = await response.text();
+
+    console.log("UPDATE ADVISOR PROFILE STATUS:", response.status);
+    console.log("UPDATE ADVISOR PROFILE RESPONSE:", text);
+
+    if (!response.ok) {
+      alert("Advisor profile could not be updated. Backend PUT endpoint may not be connected.");
+      return;
+    }
+
+    alert("Advisor profile updated successfully.");
+    window.location.href = "ins-profile.html";
+
+  } catch (error) {
+    console.error("Advisor profile update error:", error);
+    alert("Server error while updating advisor profile.");
   }
 }
 
@@ -136,7 +187,7 @@ function renderResearchInterests(researchValue) {
   }
 
   if (!researchItems.length) {
-    list.innerHTML = `<li><input type="text" placeholder="No research interest found" /></li>`;
+    list.innerHTML = `<li><input type="text" placeholder="Enter research interest" /></li>`;
     return;
   }
 
@@ -145,6 +196,15 @@ function renderResearchInterests(researchValue) {
     li.innerHTML = `<input type="text" value="${escapeHtml(item)}" />`;
     list.appendChild(li);
   });
+}
+
+function getResearchInterestsText() {
+  const inputs = document.querySelectorAll("#researchInterestList input");
+
+  return Array.from(inputs)
+    .map(input => input.value.trim())
+    .filter(Boolean)
+    .join(", ");
 }
 
 function escapeHtml(text) {

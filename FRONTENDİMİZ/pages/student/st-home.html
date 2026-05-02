@@ -75,7 +75,18 @@
             </div>
 
             <div class="card">
-                <h3>Open Projects</h3>
+                <div class="open-projects-header">
+                    <h3>Open Projects</h3>
+
+                    <div class="open-projects-filter">
+                        <label for="projectCategoryFilter">Project Type:</label>
+
+                        <select id="projectCategoryFilter">
+                            <option value="ALL">All</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="project-grid" id="openProjectsList">
                     <div class="project-card">
                         <h4>No open projects yet</h4>

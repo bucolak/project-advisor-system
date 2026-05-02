@@ -1,8 +1,12 @@
 const API_BASE = "http://localhost:8080";
 
+let advisorProjectCount = 0;
+let currentAdvisorStatus = "ACTIVE";
+
 document.addEventListener("DOMContentLoaded", async function () {
   setupDropdown();
   setupLogout();
+  setupStatusButtons();
 
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -49,6 +53,26 @@ function setupLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
+  });
+}
+
+function setupStatusButtons() {
+  const activeBtn = document.getElementById("advisorActiveBtn");
+  const inactiveBtn = document.getElementById("advisorInactiveBtn");
+
+  if (!activeBtn || !inactiveBtn) return;
+
+  activeBtn.addEventListener("click", function () {
+    setAdvisorStatus("ACTIVE");
+  });
+
+  inactiveBtn.addEventListener("click", function () {
+    if (advisorProjectCount < 5) {
+      alert("You cannot become inactive yet. You must have 5 projects first.");
+      return;
+    }
+
+    setAdvisorStatus("INACTIVE");
   });
 }
 
@@ -110,9 +134,10 @@ function setAdvisorStatus(status) {
   activeBtn.classList.remove("selected");
   inactiveBtn.classList.remove("selected");
 
-  const currentStatus = String(status).toUpperCase();
+  currentAdvisorStatus = String(status).toUpperCase();
+  localStorage.setItem("advisorStatus", currentAdvisorStatus);
 
-  if (currentStatus === "ACTIVE") {
+  if (currentAdvisorStatus === "ACTIVE") {
     activeBtn.classList.add("selected");
     statusText.textContent = "You are currently available for advising students";
   } else {
@@ -144,11 +169,14 @@ async function loadAdvisorStudents(token) {
           <p>Please check backend response.</p>
         </div>
       `;
+      advisorProjectCount = 0;
       return;
     }
 
     const result = JSON.parse(text);
     const students = result.data || result || [];
+
+    advisorProjectCount = students.length;
 
     if (!students.length) {
       container.innerHTML = `
@@ -196,7 +224,7 @@ async function loadAdvisorStudents(token) {
           return;
         }
 
-        window.location.href = `../common/project-details.html?projectId=${projectId}`;
+        window.location.href = `../advisor/project-details1.html?projectId=${projectId}`;
       });
 
       container.appendChild(card);
@@ -204,6 +232,8 @@ async function loadAdvisorStudents(token) {
 
   } catch (error) {
     console.error("Advisor students load error:", error);
+
+    advisorProjectCount = 0;
 
     container.innerHTML = `
       <div class="project-card">

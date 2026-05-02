@@ -146,7 +146,13 @@ function renderAdvisors(advisors) {
       advisor.fullName ||
       `${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
 
-    const status = String(advisor.advisingStatus || "INACTIVE").toUpperCase();
+    const status = String(
+      advisor.advisingStatus ||
+      advisor.status ||
+      advisor.advisorStatus ||
+      "INACTIVE"
+    ).toUpperCase();
+
     const isActive = status === "ACTIVE";
 
     const expertiseHtml = String(advisor.areasOfExpertise || advisor.expertise || "")
@@ -158,7 +164,7 @@ function renderAdvisors(advisors) {
 
     const row = document.createElement("tr");
     row.className = "advisor-row";
-    row.dataset.status = status.toLowerCase();
+    row.dataset.status = isActive ? "active" : "inactive";
 
     row.innerHTML = `
       <td>
@@ -257,27 +263,47 @@ async function loadStudentProjectsForModal(token) {
       }
     });
 
-    if (!response.ok) return;
+    if (!response.ok) {
+      projectSelect.innerHTML = `<option value="">Could not load projects</option>`;
+      return;
+    }
 
     const result = await response.json();
     const projects = result.data || result || [];
 
     projectSelect.innerHTML = `<option value="">Select a project</option>`;
 
-    projects
-      .filter(project => {
-        const advisorRequired = project.category?.advisorRequired;
-        return advisorRequired !== false;
-      })
-      .forEach(project => {
-        const option = document.createElement("option");
-        option.value = project.id;
-        option.textContent = project.title;
-        projectSelect.appendChild(option);
-      });
+    const selectableProjects = projects.filter(project => {
+      const categoryName = String(
+        project.category?.name ||
+        project.categoryName ||
+        project.projectType ||
+        ""
+      ).toUpperCase();
+
+      const advisorRequired =
+        project.advisorRequired ??
+        project.category?.advisorRequired ??
+        true;
+
+      return categoryName !== "COURSE" && advisorRequired !== false;
+    });
+
+    if (!selectableProjects.length) {
+      projectSelect.innerHTML = `<option value="">No advisor-required project found</option>`;
+      return;
+    }
+
+    selectableProjects.forEach(project => {
+      const option = document.createElement("option");
+      option.value = project.id;
+      option.textContent = project.title;
+      projectSelect.appendChild(option);
+    });
 
   } catch (error) {
     console.error("Project list load error:", error);
+    projectSelect.innerHTML = `<option value="">Server error</option>`;
   }
 }
 

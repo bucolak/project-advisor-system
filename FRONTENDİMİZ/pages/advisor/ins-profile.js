@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "ADVISOR") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -56,13 +52,11 @@ async function loadAdvisorProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     const text = await response.text();
-    console.log("ADVISOR PROFILE STATUS:", response.status);
-    console.log("ADVISOR PROFILE RESPONSE:", text);
 
     if (!response.ok) {
       alert(`Failed to load advisor profile. Status: ${response.status}`);
@@ -90,12 +84,54 @@ async function loadAdvisorProfile(token, userId) {
 
     renderExpertise(advisor.areasOfExpertise);
     renderResearch(advisor.researchInterests);
-    renderProjectTypes(advisor.previouslySupervisedProjectTypes);
-    renderStatus(advisor.advisingStatus);
+
+    await loadPreviouslySupervisedProjectTypes(token);
+
+    const savedStatus = localStorage.getItem("advisorStatus");
+    renderStatus(savedStatus || advisor.advisingStatus);
 
   } catch (error) {
     console.error("Advisor profile load error:", error);
     alert("Server error while loading advisor profile.");
+  }
+}
+
+async function loadPreviouslySupervisedProjectTypes(token) {
+  try {
+    const response = await fetch(`${API_BASE}/api/advisors/my-students`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const text = await response.text();
+
+    if (!response.ok) {
+      renderProjectTypes([]);
+      return;
+    }
+
+    const result = JSON.parse(text);
+    const projects = result.data || result || [];
+
+    const projectTypes = projects
+      .map(item =>
+        item.projectType ||
+        item.category ||
+        item.categoryName ||
+        item.projectCategory ||
+        "PROJECT"
+      )
+      .filter(Boolean);
+
+    const uniqueTypes = [...new Set(projectTypes)];
+
+    renderProjectTypes(uniqueTypes);
+
+  } catch (error) {
+    console.error("Previously supervised project types load error:", error);
+    renderProjectTypes([]);
   }
 }
 
@@ -161,7 +197,7 @@ function renderProjectTypes(projectTypesValue) {
   const container = document.getElementById("advisorProjectTypes");
   container.innerHTML = "";
 
-  if (!projectTypesValue) {
+  if (!projectTypesValue || !projectTypesValue.length) {
     container.innerHTML = `
       <div class="project-type-row">
         <span class="type-badge tubitak">-</span>
@@ -232,6 +268,7 @@ function getProjectTypeBadgeClass(type) {
 
   if (value.includes("TEKNOFEST")) return "teknofest";
   if (value.includes("TÜBİTAK") || value.includes("TUBITAK")) return "tubitak";
+  if (value.includes("COURSE")) return "course";
 
   return "tubitak";
 }

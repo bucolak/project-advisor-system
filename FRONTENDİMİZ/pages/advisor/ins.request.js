@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   await loadAdvisorProfile(token, userId);
   await loadAdvisorRequests(token);
+
+  highlightTargetRequest();
 });
 
 function setupDropdown() {
@@ -56,19 +58,29 @@ function setupLogout() {
 }
 
 function setupModal() {
-  document.getElementById("modalCloseBtn").addEventListener("click", closeStudentModal);
+  const closeBtn = document.getElementById("modalCloseBtn");
+  const acceptBtn = document.getElementById("modalAcceptBtn");
+  const rejectBtn = document.getElementById("modalRejectBtn");
 
-  document.getElementById("modalAcceptBtn").addEventListener("click", async function () {
-    if (!currentRequest) return;
-    await updateRequestStatus(currentRequest.id, "ACCEPTED");
-    closeStudentModal();
-  });
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeStudentModal);
+  }
 
-  document.getElementById("modalRejectBtn").addEventListener("click", async function () {
-    if (!currentRequest) return;
-    await updateRequestStatus(currentRequest.id, "REJECTED");
-    closeStudentModal();
-  });
+  if (acceptBtn) {
+    acceptBtn.addEventListener("click", async function () {
+      if (!currentRequest) return;
+      await updateRequestStatus(currentRequest.id, "ACCEPTED");
+      closeStudentModal();
+    });
+  }
+
+  if (rejectBtn) {
+    rejectBtn.addEventListener("click", async function () {
+      if (!currentRequest) return;
+      await updateRequestStatus(currentRequest.id, "REJECTED");
+      closeStudentModal();
+    });
+  }
 }
 
 async function loadAdvisorProfile(token, userId) {
@@ -128,8 +140,8 @@ async function loadAdvisorRequests(token) {
     const result = JSON.parse(text);
     const requests = result.data || result || [];
 
-    const pendingRequests = requests.filter(request =>
-      String(request.status || "").toUpperCase() === "PENDING"
+    const pendingRequests = requests.filter(
+      request => String(request.status).toUpperCase() === "PENDING"
     );
 
     pendingCount.textContent = `${pendingRequests.length} Pending Requests`;
@@ -182,33 +194,6 @@ function renderRequests(requests) {
     const badgeClass = getProjectTagClass(projectType);
     const status = String(request.status || "PENDING").toUpperCase();
 
-    let actionsHtml = "";
-
-    if (status === "PENDING") {
-      actionsHtml = `
-        <button class="accept-btn" data-request-id="${request.id}">Accept</button>
-        <button class="reject-btn" data-request-id="${request.id}">Reject</button>
-      `;
-    } else if (status === "ACCEPTED") {
-      actionsHtml = `
-        <div class="request-final-status accepted-status">
-          Accepted
-        </div>
-      `;
-    } else if (status === "REJECTED") {
-      actionsHtml = `
-        <div class="request-final-status rejected-status">
-          Rejected
-        </div>
-      `;
-    } else {
-      actionsHtml = `
-        <div class="request-final-status">
-          ${status}
-        </div>
-      `;
-    }
-
     const card = document.createElement("div");
     card.className = "request-card";
     card.id = requestCardId;
@@ -223,7 +208,6 @@ function renderRequests(requests) {
         <div class="request-info-line"><strong>Student:</strong> ${studentName}</div>
         <div class="request-info-line"><strong>Department:</strong> ${request.studentDepartment || request.department || "-"}</div>
         <div class="request-info-line"><strong>Skill:</strong> ${request.studentSkills || request.skills || "-"}</div>
-        <div class="request-info-line"><strong>Status:</strong> ${status}</div>
 
         <button class="view-profile-btn" data-request-id="${request.id}">
           view student profile
@@ -232,7 +216,18 @@ function renderRequests(requests) {
 
       <div class="request-card-right">
         <div class="request-actions" id="${requestCardId}-actions">
-          ${actionsHtml}
+          ${
+            status === "PENDING"
+              ? `
+                <button class="accept-btn" data-request-id="${request.id}">Accept</button>
+                <button class="reject-btn" data-request-id="${request.id}">Reject</button>
+              `
+              : `
+                <div class="request-final-status ${status === "ACCEPTED" ? "accepted-status" : "rejected-status"}">
+                  ${status === "ACCEPTED" ? "Accepted" : "Rejected"}
+                </div>
+              `
+          }
         </div>
       </div>
     `;
@@ -290,7 +285,21 @@ async function updateRequestStatus(requestId, status) {
       return;
     }
 
-    await loadAdvisorRequests(token);
+    const card = document.getElementById(`request-${requestId}`);
+    const actions = card?.querySelector(".request-actions");
+
+    if (actions) {
+      actions.innerHTML = `
+        <div class="request-final-status ${status === "ACCEPTED" ? "accepted-status" : "rejected-status"}">
+          ${status === "ACCEPTED" ? "Accepted" : "Rejected"}
+        </div>
+      `;
+    }
+
+    const countEl = document.getElementById("pendingRequestCount");
+    const currentCount = parseInt(countEl.textContent, 10) || 0;
+    const nextCount = Math.max(0, currentCount - 1);
+    countEl.textContent = `${nextCount} Pending Requests`;
 
   } catch (error) {
     console.error("Update request status error:", error);
@@ -298,10 +307,32 @@ async function updateRequestStatus(requestId, status) {
   }
 }
 
+function highlightTargetRequest() {
+  const params = new URLSearchParams(window.location.search);
+  const targetId = params.get("target");
+
+  if (!targetId) return;
+
+  setTimeout(() => {
+    const targetElement = document.getElementById(targetId);
+
+    if (!targetElement) return;
+
+    targetElement.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    targetElement.classList.add("highlight-request");
+
+    setTimeout(() => {
+      targetElement.classList.remove("highlight-request");
+    }, 3000);
+  }, 300);
+}
+
 function openStudentModal(request) {
   currentRequest = request;
-
-  const status = String(request.status || "PENDING").toUpperCase();
 
   document.getElementById("modalStudentName").textContent =
     request.studentName ||
@@ -318,17 +349,6 @@ function openStudentModal(request) {
   setList("modalResearchInterests", []);
   setOtherProjects([]);
 
-  const modalAcceptBtn = document.getElementById("modalAcceptBtn");
-  const modalRejectBtn = document.getElementById("modalRejectBtn");
-
-  if (status === "PENDING") {
-    modalAcceptBtn.style.display = "inline-block";
-    modalRejectBtn.style.display = "inline-block";
-  } else {
-    modalAcceptBtn.style.display = "none";
-    modalRejectBtn.style.display = "none";
-  }
-
   document.getElementById("studentModal").classList.add("active");
 }
 
@@ -339,6 +359,8 @@ function closeStudentModal() {
 
 function setList(elementId, items) {
   const ul = document.getElementById(elementId);
+
+  if (!ul) return;
 
   if (!items || !items.length) {
     ul.innerHTML = "<li>No data</li>";
@@ -357,6 +379,8 @@ function setList(elementId, items) {
 function setOtherProjects(projects) {
   const container = document.getElementById("modalOtherProjects");
 
+  if (!container) return;
+
   if (!projects || !projects.length) {
     container.innerHTML = `
       <div class="other-project-card">
@@ -367,21 +391,6 @@ function setOtherProjects(projects) {
     `;
     return;
   }
-
-  container.innerHTML = "";
-
-  projects.forEach(project => {
-    const card = document.createElement("div");
-    card.className = "other-project-card";
-
-    card.innerHTML = `
-      <h4>${project.title || "-"}</h4>
-      <p><strong>Project:</strong> ${project.description || "-"}</p>
-      <p><strong>Skills:</strong> ${project.skills || "-"}</p>
-    `;
-
-    container.appendChild(card);
-  });
 }
 
 function getProjectTagClass(projectType) {

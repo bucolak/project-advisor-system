@@ -8,10 +8,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
 
-  console.log("TOKEN:", token);
-  console.log("USER ID:", userId);
-  console.log("ROLE:", role);
-
   if (!token || !userId || role !== "ADVISOR") {
     alert("Unauthorized access.");
     window.location.href = "../../index.html";
@@ -57,20 +53,15 @@ async function loadAdvisorProfile(token, userId) {
     const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
-    const text = await response.text();
-    console.log("ADVISOR PROFILE STATUS:", response.status);
-    console.log("ADVISOR PROFILE RESPONSE:", text);
-
     if (!response.ok) return;
 
-    const result = JSON.parse(text);
-    if (!result.success || !result.data) return;
+    const result = await response.json();
+    const advisor = result.data || result;
 
-    const advisor = result.data;
     document.getElementById("advisorTopName").textContent =
       `Dr. ${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
 
@@ -87,11 +78,12 @@ async function loadAdvisorNotifications(token) {
     const response = await fetch(`${API_BASE}/api/advisor-requests/pending`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     const text = await response.text();
+
     console.log("PENDING REQUESTS STATUS:", response.status);
     console.log("PENDING REQUESTS RESPONSE:", text);
 
@@ -112,7 +104,7 @@ async function loadAdvisorNotifications(token) {
     }
 
     const result = JSON.parse(text);
-    const requests = result.data || [];
+    const requests = result.data || result || [];
 
     countEl.textContent = `${requests.length} New`;
 
@@ -142,7 +134,9 @@ async function loadAdvisorNotifications(token) {
       const projectTitle = item.projectTitle || "Project";
       const projectType = item.projectType || "PROJECT";
       const badgeClass = getNotifTagClass(projectType);
-      const targetId = `request-${item.id || index}`;
+
+      const requestId = item.id;
+      const targetId = `request-${requestId || index}`;
 
       const card = document.createElement("div");
       card.className = "advisor-notif-card";
@@ -161,7 +155,9 @@ async function loadAdvisorNotifications(token) {
         </div>
 
         <div class="advisor-notif-card-right">
-          <a href="ins.request.html?target=${targetId}" class="advisor-notif-view-btn">view</a>
+          <a href="ins.request.html?target=${targetId}" class="advisor-notif-view-btn">
+            view
+          </a>
         </div>
       `;
 
@@ -170,6 +166,7 @@ async function loadAdvisorNotifications(token) {
 
   } catch (error) {
     console.error("Advisor notifications load error:", error);
+
     container.innerHTML = `
       <div class="advisor-notif-card">
         <div class="advisor-notif-card-left">
@@ -181,6 +178,7 @@ async function loadAdvisorNotifications(token) {
         <div class="advisor-notif-card-right"></div>
       </div>
     `;
+
     countEl.textContent = "0 New";
   }
 }

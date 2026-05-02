@@ -17,33 +17,10 @@
             </div>
 
             <ul class="advisor-edit-profile-menu">
-                <li>
-                    <a href="ins-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ins.request.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Requests</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ins-notification.html">
-                        <i class="fa-regular fa-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ins-profile-edit.html" class="active">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
+                <li><a href="ins-home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
+                <li><a href="ins.request.html"><i class="fa-regular fa-user"></i><span>Requests</span></a></li>
+                <li><a href="ins-notification.html"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
+                <li><a href="ins-profile-edit.html" class="active"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
             </ul>
         </aside>
 
@@ -53,7 +30,7 @@
                     <div class="advisor-user-box" id="advisorUserBox">
                         <i class="fa-regular fa-circle-user"></i>
                         <div>
-                            <div id="advisorTopName">Advisor</div>
+                            <div id="advisorTopName">Loading...</div>
                             <small>Advisor</small>
                         </div>
                         <i class="fa-solid fa-chevron-down"></i>
@@ -75,12 +52,8 @@
             </div>
 
             <div class="advisor-edit-profile-name-row">
-                <div class="advisor-edit-profile-main-left">
-                    <i class="fa-regular fa-circle-user"></i>
-                </div>
-
                 <div class="advisor-edit-profile-main-right">
-                    <h2 id="advisorDisplayName">Advisor</h2>
+                    <h2 id="advisorDisplayName">Loading...</h2>
                     <p class="advisor-edit-role">Advisor</p>
                 </div>
             </div>
@@ -91,40 +64,30 @@
                         <div class="advisor-edit-form-grid">
                             <div class="advisor-edit-form-group">
                                 <label for="fullName">Full Name</label>
-                                <input type="text" id="fullName" value="" />
+                                <input type="text" id="fullName" />
                             </div>
 
                             <div class="advisor-edit-form-group">
                                 <label for="email">E-mail:</label>
-                                <input type="email" id="email" value="" />
+                                <input type="email" id="email" />
                             </div>
 
                             <div class="advisor-edit-form-group">
                                 <label for="department">Department</label>
-                                <input type="text" id="department" value="" />
+                                <input type="text" id="department" />
                             </div>
 
                             <div class="advisor-edit-form-group">
                                 <label for="title">Academic Title</label>
-                                <input type="text" id="title" value="" />
+                                <input type="text" id="title" />
                             </div>
                         </div>
-                    </div>
-
-                    <div class="advisor-edit-profile-photo-area">
-                        <div class="advisor-edit-photo-box">
-                            <i class="fa-regular fa-camera"></i>
-                        </div>
-                        <button type="button" class="advisor-upload-photo-btn">Upload New Photo</button>
                     </div>
                 </div>
 
                 <div class="advisor-edit-profile-section">
-                    <div class="advisor-edit-section-title-row">
-                        <h3>Area of Expertise</h3>
-                    </div>
-
-                    <input type="text" class="advisor-edit-full-input" id="areasOfExpertise" value=""
+                    <h3>Area of Expertise</h3>
+                    <input type="text" class="advisor-edit-full-input" id="areasOfExpertise"
                         placeholder="Example: Artificial Intelligence, NLP, Machine Learning" />
                 </div>
 
@@ -132,7 +95,7 @@
                     <h3>Research Interests</h3>
 
                     <ul class="advisor-edit-interest-list" id="researchInterestList">
-                        <li><input type="text" placeholder="No research interest found" /></li>
+                        <li><input type="text" placeholder="Loading research interests..." /></li>
                     </ul>
                 </div>
 

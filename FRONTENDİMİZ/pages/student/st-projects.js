@@ -129,7 +129,6 @@ function renderJoinedProjects(containerId, applications) {
 
   applications.forEach(application => {
     const project = application.project;
-
     if (!project) return;
 
     const card = document.createElement("div");
@@ -163,13 +162,8 @@ function renderJoinedProjects(containerId, applications) {
 
       <div class="st-projects-card-footer">
         <span class="assigned">Joined</span>
-        <button type="button" data-project-id="${project.id}">View Details</button>
       </div>
     `;
-
-    card.querySelector("button").addEventListener("click", function () {
-      alert(`Project detail page will open for project ID: ${project.id}`);
-    });
 
     container.appendChild(card);
   });
@@ -215,13 +209,8 @@ function renderProjects(containerId, projects, isCreatedSection) {
 
       <div class="st-projects-card-footer">
         <span class="assigned">Created</span>
-        <button type="button" data-project-id="${project.id}">View Details</button>
       </div>
     `;
-
-    card.querySelector("button").addEventListener("click", function () {
-      alert(`Project detail page will open for project ID: ${project.id}`);
-    });
 
     container.appendChild(card);
   });
@@ -244,8 +233,7 @@ function renderEmptyProjects(containerId, message) {
 function getBadgeClass(type) {
   const value = String(type).toUpperCase();
 
-  if (value.includes("TÜBİTAK")) return "red";
-  if (value.includes("TUBITAK")) return "red";
+  if (value.includes("TÜBİTAK") || value.includes("TUBITAK")) return "red";
   if (value.includes("TEKNOFEST")) return "orange";
   if (value.includes("COURSE")) return "yellow";
 

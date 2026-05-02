@@ -184,7 +184,10 @@ async function createCourseProject(token, userId) {
     requiredSkills: selectedSkills.join(", "),
     teamSize: Number(document.getElementById("courseTeamSize").value),
     rolesNeeded: document.getElementById("courseRoles").value.trim(),
-    description: document.getElementById("courseDescription").value.trim()
+    description: document.getElementById("courseDescription").value.trim(),
+
+    // Course projectlerde advisor olmayacak
+    advisorRequired: false
   };
 
   await submitProject(token, payload);
@@ -194,12 +197,17 @@ async function createOtherProject(token, userId) {
   const selectedSkills = getSelectedSkills("otherProject");
 
   const projectTypeSelect = document.getElementById("projectTypeSelect");
-  const selectedOption = projectTypeSelect.options[projectTypeSelect.selectedIndex];
 
   if (!projectTypeSelect.value) {
     alert("Please select a project type.");
     return;
   }
+
+  const selectedAdvisorButton = document.querySelector("#advisorChoiceBox .toggle-btn.active");
+
+  const advisorRequired = selectedAdvisorRequired
+    ? selectedAdvisorButton?.dataset.advisor === "yes"
+    : false;
 
   const payload = {
     title: document.getElementById("otherTitle").value.trim(),
@@ -208,7 +216,10 @@ async function createOtherProject(token, userId) {
     requiredSkills: selectedSkills.join(", "),
     teamSize: Number(document.getElementById("otherTeamSize").value),
     rolesNeeded: document.getElementById("otherRoles").value.trim(),
-    description: document.getElementById("otherDescription").value.trim()
+    description: document.getElementById("otherDescription").value.trim(),
+
+    // Other projectte Yes ise true, No ise false
+    advisorRequired: advisorRequired
   };
 
   await submitProject(token, payload);
@@ -238,6 +249,7 @@ async function submitProject(token, payload) {
     const text = await response.text();
 
     console.log("CREATE PROJECT STATUS:", response.status);
+    console.log("CREATE PROJECT PAYLOAD:", payload);
     console.log("CREATE PROJECT RESPONSE:", text);
 
     if (!response.ok) {

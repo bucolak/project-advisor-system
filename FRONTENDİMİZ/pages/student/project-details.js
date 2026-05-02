@@ -107,3 +107,28 @@ function renderProjectDetails(project) {
   document.getElementById("studentLinkedin").textContent =
     student?.linkedinLink || "-";
 }
+const backBtn = document.getElementById("backHomeBtn");
+
+if (backBtn) {
+
+  backBtn.addEventListener("click", function () {
+
+    const role = localStorage.getItem("role");
+
+    if (role === "STUDENT") {
+
+      window.location.href = "../student/st-home.html";
+
+    } else if (role === "ADVISOR") {
+
+      window.location.href = "../advisor/ins-home.html";
+
+    } else {
+
+      window.location.href = "../../index.html";
+
+    }
+
+  });
+
+}

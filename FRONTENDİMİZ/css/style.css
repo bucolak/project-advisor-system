@@ -7224,4 +7224,22 @@ body {
     color: white;
     border-color: #2196f3;
 }
+.admin-categories-page {
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto;
+}
+
+.admin-categories-content {
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto;
+  padding-bottom: 60px;
+}
+
+.admin-categories-table-wrap {
+  max-height: none;
+  height: auto;
+  overflow: visible;
+}
 
