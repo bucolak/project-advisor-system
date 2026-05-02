@@ -10,6 +10,7 @@ public class CreateProjectRequest {
     private Integer teamSize;
     private String rolesNeeded;
     private Long categoryId;
+    private Boolean advisorRequired;
 
     public String getTitle() { return title; }
     public String getDescription() { return description; }
@@ -23,4 +24,6 @@ public class CreateProjectRequest {
     public void setTeamSize(Integer v) { this.teamSize = v; }
     public void setRolesNeeded(String v) { this.rolesNeeded = v; }
     public void setCategoryId(Long v) { this.categoryId = v; }
+    public Boolean getAdvisorRequired() { return advisorRequired; }
+    public void setAdvisorRequired(Boolean v) { this.advisorRequired = v; }
 }

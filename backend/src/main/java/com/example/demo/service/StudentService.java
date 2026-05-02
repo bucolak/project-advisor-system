@@ -40,7 +40,9 @@ public class StudentService {
                 student.getGpa(),
                 student.getSkills(),
                 student.getGithubLink(),
-                student.getLinkedinLink()
+                student.getLinkedinLink(),
+                student.getResearchInterests(),
+                student.getRelevantCourses()
         );
     }
 
@@ -85,6 +87,22 @@ public class StudentService {
 
         if (body.get("linkedinLink") != null) {
             student.setLinkedinLink(body.get("linkedinLink").toString());
+        }
+
+        if (body.get("interests") != null) {
+            student.setResearchInterests(body.get("interests").toString());
+        }
+
+        if (body.get("researchInterests") != null) {
+            student.setResearchInterests(body.get("researchInterests").toString());
+        }
+
+        if (body.get("shortBio") != null) {
+            student.setRelevantCourses(body.get("shortBio").toString());
+        }
+
+        if (body.get("relevantCourses") != null) {
+            student.setRelevantCourses(body.get("relevantCourses").toString());
         }
 
         userRepository.save(user);

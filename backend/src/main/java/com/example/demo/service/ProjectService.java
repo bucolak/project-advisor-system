@@ -16,6 +16,8 @@ import com.example.demo.entity.Project;
 import com.example.demo.entity.ProjectApplication;
 import com.example.demo.entity.ProjectCategory;
 import com.example.demo.entity.Student;
+import com.example.demo.entity.User;
+import com.example.demo.enums.AdvisingStatus;
 import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.enums.ProjectStatus;
 import com.example.demo.enums.RequestStatus;
@@ -67,6 +69,9 @@ public class ProjectService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı."));
         }
 
+        Boolean advisorRequired =
+                req.getAdvisorRequired() != null ? req.getAdvisorRequired() : true;
+
         Project project = Project.builder()
                 .student(student)
                 .title(req.getTitle())
@@ -75,6 +80,7 @@ public class ProjectService {
                 .teamSize(req.getTeamSize())
                 .rolesNeeded(req.getRolesNeeded())
                 .category(category)
+                .advisorRequired(advisorRequired)
                 .status(ProjectStatus.OPEN)
                 .isDeleted(false)
                 .build();
@@ -90,7 +96,8 @@ public class ProjectService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Proje bulunamadı.");
         }
 
-        Student owner = project.getStudent();
+        Student student = project.getStudent();
+        User user = student.getUser();
 
         Map<String, Object> map = new HashMap<>();
 
@@ -102,27 +109,49 @@ public class ProjectService {
         map.put("rolesNeeded", project.getRolesNeeded());
         map.put("status", project.getStatus().name());
         map.put("createdAt", project.getCreatedAt());
+        map.put("advisorRequired", project.getAdvisorRequired());
 
         if (project.getCategory() != null) {
             map.put("categoryId", project.getCategory().getId());
             map.put("categoryName", project.getCategory().getName());
             map.put("categoryDescription", project.getCategory().getDescription());
             map.put("categoryBudget", project.getCategory().getBudget());
-            map.put("advisorRequired", project.getCategory().getAdvisorRequired());
+            map.put("categoryAdvisorRequired", project.getCategory().getAdvisorRequired());
         } else {
             map.put("categoryId", null);
-            map.put("categoryName", null);
+            map.put("categoryName", "PROJECT");
             map.put("categoryDescription", null);
             map.put("categoryBudget", null);
-            map.put("advisorRequired", null);
+            map.put("categoryAdvisorRequired", null);
         }
 
-        map.put("ownerId", owner.getUser().getId());
-        map.put("ownerName", owner.getUser().getFirstName() + " " + owner.getUser().getLastName());
-        map.put("ownerEmail", owner.getUser().getEmail());
-        map.put("ownerDepartment", owner.getDepartment());
-        map.put("ownerYear", owner.getYear());
-        map.put("ownerSkills", owner.getSkills());
+        map.put("studentId", user.getId());
+        map.put("studentName", user.getFirstName() + " " + user.getLastName());
+        map.put("studentEmail", user.getEmail());
+        map.put("studentDepartment", student.getDepartment());
+        map.put("studentYear", student.getYear());
+        map.put("studentClass", student.getYear());
+        map.put("studentGpa", student.getGpa());
+        map.put("studentGPA", student.getGpa());
+        map.put("studentSkills", student.getSkills());
+        map.put("studentGithub", student.getGithubLink());
+        map.put("studentGitHub", student.getGithubLink());
+        map.put("studentLinkedin", student.getLinkedinLink());
+
+        map.put("ownerId", user.getId());
+        map.put("ownerName", user.getFirstName() + " " + user.getLastName());
+        map.put("ownerEmail", user.getEmail());
+        map.put("ownerDepartment", student.getDepartment());
+        map.put("ownerYear", student.getYear());
+        map.put("ownerClass", student.getYear());
+        map.put("ownerGpa", student.getGpa());
+        map.put("ownerGPA", student.getGpa());
+        map.put("ownerSkills", student.getSkills());
+        map.put("ownerGithub", student.getGithubLink());
+        map.put("ownerGitHub", student.getGithubLink());
+        map.put("ownerLinkedin", student.getLinkedinLink());
+
+        map.put("student", student);
 
         return map;
     }
@@ -175,10 +204,10 @@ public class ProjectService {
         notificationService.createNotification(
                 project.getStudent().getUser(),
                 applicant.getUser().getFirstName()
-                + " "
-                + applicant.getUser().getLastName()
-                + " wants to join your project "
-                + project.getTitle()
+                        + " "
+                        + applicant.getUser().getLastName()
+                        + " wants to join your project "
+                        + project.getTitle()
         );
 
         return savedApplication;
@@ -222,10 +251,10 @@ public class ProjectService {
         notificationService.createNotification(
                 application.getStudent().getUser(),
                 "Your application for "
-                + application.getProject().getTitle()
-                + " has been "
-                + resultText
-                + "."
+                        + application.getProject().getTitle()
+                        + " has been "
+                        + resultText
+                        + "."
         );
 
         return savedApplication;
@@ -243,11 +272,15 @@ public class ProjectService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu proje size ait değil.");
         }
 
+        if (project.getAdvisorRequired() != null && !project.getAdvisorRequired()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu proje için danışman gerekli değil.");
+        }
+
         Advisor advisor = advisorRepository.findById(advisorId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Danışman bulunamadı."));
 
-        if (advisor.getCurrentQuota() >= advisor.getMaxQuota()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışmanın kotası dolmuştur.");
+        if (advisor.getAdvisingStatus() != AdvisingStatus.ACTIVE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışman şu anda istek kabul etmiyor.");
         }
 
         advisorRequestRepository.findByProjectAndAdvisor(project, advisor).ifPresent(r -> {

@@ -35,18 +35,19 @@ public class DataInitializer {
     ) {
         return args -> transactionTemplate.executeWithoutResult(status -> {
 
+            // ================= Sude =================
             User sudeUser = userRepository.findByEmail("sude@uskudar.com")
                     .orElseGet(() -> userRepository.save(
-                    User.builder()
-                            .email("sude@uskudar.com")
-                            .passwordHash(passwordEncoder.encode("1234"))
-                            .role(Role.STUDENT)
-                            .firstName("Sude")
-                            .lastName("Torun")
-                            .status(UserStatus.ACTIVE)
-                            .isDeleted(false)
-                            .build()
-            ));
+                            User.builder()
+                                    .email("sude@uskudar.com")
+                                    .passwordHash(passwordEncoder.encode("1234"))
+                                    .role(Role.STUDENT)
+                                    .firstName("Sude")
+                                    .lastName("Torun")
+                                    .status(UserStatus.ACTIVE)
+                                    .isDeleted(false)
+                                    .build()
+                    ));
 
             if (!studentRepository.existsById(sudeUser.getId())) {
                 studentRepository.save(
@@ -55,24 +56,28 @@ public class DataInitializer {
                                 .department("Software Engineering")
                                 .year(3)
                                 .gpa(3.66)
+                                .skills("Web Development, Robotics, NLP")
+                                .relevantCourses("Database Systems, Web Programming, OOP")
+                                .researchInterests("AI, Robotics, NLP")
                                 .githubLink("")
                                 .linkedinLink("")
                                 .build()
                 );
             }
 
+            // ================= Nida =================
             User nidaUser = userRepository.findByEmail("nida@uskudar.com")
                     .orElseGet(() -> userRepository.save(
-                    User.builder()
-                            .email("nida@uskudar.com")
-                            .passwordHash(passwordEncoder.encode("1234"))
-                            .role(Role.STUDENT)
-                            .firstName("Nida")
-                            .lastName("Çamlıca")
-                            .status(UserStatus.ACTIVE)
-                            .isDeleted(false)
-                            .build()
-            ));
+                            User.builder()
+                                    .email("nida@uskudar.com")
+                                    .passwordHash(passwordEncoder.encode("1234"))
+                                    .role(Role.STUDENT)
+                                    .firstName("Nida")
+                                    .lastName("Çamlıca")
+                                    .status(UserStatus.ACTIVE)
+                                    .isDeleted(false)
+                                    .build()
+                    ));
 
             if (!studentRepository.existsById(nidaUser.getId())) {
                 studentRepository.save(
@@ -81,24 +86,28 @@ public class DataInitializer {
                                 .department("Software Engineering")
                                 .year(2)
                                 .gpa(3.20)
+                                .skills("Java, Spring Boot, SQL")
+                                .relevantCourses("Java Programming, Databases")
+                                .researchInterests("Backend Development, Web Systems")
                                 .githubLink("")
                                 .linkedinLink("")
                                 .build()
                 );
             }
 
+            // ================= Zeynep Advisor =================
             User zeynepUser = userRepository.findByEmail("zeynep@uskudar.com")
                     .orElseGet(() -> userRepository.save(
-                    User.builder()
-                            .email("zeynep@uskudar.com")
-                            .passwordHash(passwordEncoder.encode("1234"))
-                            .role(Role.ADVISOR)
-                            .firstName("Zeynep")
-                            .lastName("Pınarlı")
-                            .status(UserStatus.ACTIVE)
-                            .isDeleted(false)
-                            .build()
-            ));
+                            User.builder()
+                                    .email("zeynep@uskudar.com")
+                                    .passwordHash(passwordEncoder.encode("1234"))
+                                    .role(Role.ADVISOR)
+                                    .firstName("Zeynep")
+                                    .lastName("Pınarlı")
+                                    .status(UserStatus.ACTIVE)
+                                    .isDeleted(false)
+                                    .build()
+                    ));
 
             if (!advisorRepository.existsById(zeynepUser.getId())) {
                 advisorRepository.save(
@@ -114,19 +123,49 @@ public class DataInitializer {
                 );
             }
 
+            // ================= Ayşe Advisor =================
+            User ayseUser = userRepository.findByEmail("ayse@uskudar.com")
+                    .orElseGet(() -> userRepository.save(
+                            User.builder()
+                                    .email("ayse@uskudar.com")
+                                    .passwordHash(passwordEncoder.encode("1234"))
+                                    .role(Role.ADVISOR)
+                                    .firstName("Ayşe")
+                                    .lastName("Demir")
+                                    .status(UserStatus.ACTIVE)
+                                    .isDeleted(false)
+                                    .build()
+                    ));
+
+            if (!advisorRepository.existsById(ayseUser.getId())) {
+                advisorRepository.save(
+                        Advisor.builder()
+                                .user(ayseUser)
+                                .title("Assistant Professor")
+                                .department("Software Engineering")
+                                .areasOfExpertise("Artificial Intelligence, Machine Learning, Data Science")
+                                .currentQuota(0)
+                                .maxQuota(5)
+                                .advisingStatus(AdvisingStatus.ACTIVE)
+                                .build()
+                );
+            }
+
+            // ================= Admin =================
             userRepository.findByEmail("buket@uskudar.com")
                     .orElseGet(() -> userRepository.save(
-                    User.builder()
-                            .email("buket@uskudar.com")
-                            .passwordHash(passwordEncoder.encode("1234"))
-                            .role(Role.ADMIN)
-                            .firstName("Buket")
-                            .lastName("Çolak")
-                            .status(UserStatus.ACTIVE)
-                            .isDeleted(false)
-                            .build()
-            ));
+                            User.builder()
+                                    .email("buket@uskudar.com")
+                                    .passwordHash(passwordEncoder.encode("1234"))
+                                    .role(Role.ADMIN)
+                                    .firstName("Buket")
+                                    .lastName("Çolak")
+                                    .status(UserStatus.ACTIVE)
+                                    .isDeleted(false)
+                                    .build()
+                    ));
 
+            // ================= Categories =================
             if (!projectCategoryRepository.existsByName("TÜBİTAK")) {
                 projectCategoryRepository.save(
                         ProjectCategory.builder()
@@ -154,6 +193,7 @@ public class DataInitializer {
                 );
             }
 
+            // ================= Announcement Types =================
             if (!announcementTypeRepository.existsByName("TÜBİTAK Application Deadlines")) {
                 announcementTypeRepository.save(
                         AnnouncementType.builder()
@@ -185,6 +225,7 @@ public class DataInitializer {
                                 .build()
                 );
             }
+
         });
     }
 }

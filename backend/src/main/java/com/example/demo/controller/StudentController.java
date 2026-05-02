@@ -45,4 +45,27 @@ public class StudentController {
                 )
         );
     }
+
+    @PutMapping("/{userId}/profile")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> updateStudentProfileById(
+            Authentication auth,
+            @PathVariable Long userId,
+            @RequestBody Map<String, Object> body
+    ) {
+        Long loggedUserId = (Long) auth.getPrincipal();
+
+        if (!loggedUserId.equals(userId)) {
+            return ResponseEntity.status(403).body(
+                    ApiResponse.error("You can only update your own profile.")
+            );
+        }
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Student profile updated.",
+                        studentService.updateStudentProfile(userId, body)
+                )
+        );
+    }
 }

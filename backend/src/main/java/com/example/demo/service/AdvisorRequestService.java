@@ -98,6 +98,29 @@ public class AdvisorRequestService {
         return toResponse(advisorRequestRepository.save(request));
     }
 
+    @Transactional
+public Map<String, Object> withdrawRequest(Long studentUserId, Long requestId) {
+    Student student = studentRepository.findById(studentUserId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found."));
+
+    AdvisorRequest request = advisorRequestRepository.findById(requestId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Request not found."));
+
+    if (!request.getProject().getStudent().getUserId().equals(student.getUserId())) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This request does not belong to you.");
+    }
+
+    if (request.getStatus() != RequestStatus.PENDING) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only pending requests can be withdrawn.");
+    }
+
+    Map<String, Object> response = toResponse(request);
+
+    advisorRequestRepository.delete(request);
+
+    return response;
+}
+
     private Map<String, Object> toResponse(AdvisorRequest request) {
         Project project = request.getProject();
         Student student = project.getStudent();

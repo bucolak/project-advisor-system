@@ -24,6 +24,8 @@ public class Student {
     private String skills;
     private String githubLink;
     private String linkedinLink;
+    private String relevantCourses;
+    private String researchInterests;
 
     public Student() {}
 
@@ -39,6 +41,8 @@ public class Student {
         private String skills;
         private String githubLink;
         private String linkedinLink;
+        private String relevantCourses;
+        private String researchInterests;
 
         public StudentBuilder user(User v) {
             this.user = v;
@@ -75,6 +79,17 @@ public class Student {
             return this;
         }
 
+        // 🔥 YENİ EKLENENLER
+        public StudentBuilder relevantCourses(String v) {
+            this.relevantCourses = v;
+            return this;
+        }
+
+        public StudentBuilder researchInterests(String v) {
+            this.researchInterests = v;
+            return this;
+        }
+
         public Student build() {
             Student s = new Student();
             s.user = this.user;
@@ -84,6 +99,11 @@ public class Student {
             s.skills = this.skills;
             s.githubLink = this.githubLink;
             s.linkedinLink = this.linkedinLink;
+
+            // 🔥 KRİTİK SATIRLAR
+            s.relevantCourses = this.relevantCourses;
+            s.researchInterests = this.researchInterests;
+
             return s;
         }
     }
@@ -120,6 +140,14 @@ public class Student {
         return linkedinLink;
     }
 
+    public String getRelevantCourses() {
+        return relevantCourses;
+    }
+
+    public String getResearchInterests() {
+        return researchInterests;
+    }
+
     public void setUser(User v) {
         this.user = v;
     }
@@ -146,5 +174,13 @@ public class Student {
 
     public void setLinkedinLink(String v) {
         this.linkedinLink = v;
+    }
+
+    public void setRelevantCourses(String v) {
+        this.relevantCourses = v;
+    }
+
+    public void setResearchInterests(String v) {
+        this.researchInterests = v;
     }
 }

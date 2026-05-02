@@ -1,0 +1,102 @@
+BİZ: iyi de databasei sıfırlamadan önce gayet çalışıyodu, senin dediğin o create update yaptım böyle oldu. Önceden çalışıyodu. Sana dedim ki bi yeri düzeltirken diğer yeri bozma bu bütün bi proje
+
+CHATGPT: Haklısın. Burada bozulan şey backend değil; DB reset sonrası eski çalışan veri/state gitti, üstüne frontend’de zaten var olan token scope hatası şimdi görünür oldu.
+
+Şu an tek satırlık güvenli fix:
+
+renderOpenProjects() içindeki bunu:
+
+await applyToProject(project.id, token, this);
+
+şununla değiştir:
+
+await applyToProject(project.id, localStorage.getItem("token"), this);
+
+Başka hiçbir yere dokunma.
+
+Sonra sayfayı refresh et, tekrar Apply dene.
+Bu düzeltme sadece Apply butonuna token verir; diğer fonksiyonları bozmaz.
+
+BİZ: iyi de eskiden çalışan frontend şimdi naısl çalışmaz oldu?
+
+CHATGPT: Çünkü create yapınca database sıfırlandı; eski projeler, başvurular, bazı kayıt durumları gitti. Bu yüzden sayfa ilk kez “temiz veriyle” bazı yolları tekrar çalıştırdı ve JS’teki gizli hata ortaya çıktı.
+
+Ama doğru söylüyorsun: Bu seni uğraştırmamalıydı. Şu an bozulma frontend dosyasının komple bozulması değil, tek satırdaki token kapsam hatası.
+
+Düzeltilecek tek yer:
+
+await applyToProject(project.id, token, this);
+
+şunu yap:
+
+await applyToProject(project.id, localStorage.getItem("token"), this);
+
+Bitti. Başka dosyaya dokunma.
+
+Sonra refresh + Apply.
+
+BİZ: hangi dosya?
+
+CHATGPT: Net söyleyeyim 👇
+
+📄 Dosya:
+
+st-home.js
+
+📍 İçinde:
+renderOpenProjects() fonksiyonu
+
+📍 Bulacağın satır:
+
+await applyToProject(project.id, token, this);
+
+📍 Değiştir:
+
+await applyToProject(project.id, localStorage.getItem("token"), this);
+
+💡 Neden burası?
+Çünkü token sadece DOMContentLoaded içinde tanımlı.
+Ama sen burada (render içinde) kullanıyorsun → scope dışında → hata.
+
+Hiçbir başka dosyaya dokunma.
+Sadece bu satırı değiştir → refresh → Apply tekrar dene.
+
+-------------------------------------
+
+SORUN: student homeda neden announcement ksımında could not be loaded diyo?
+BİZ: bu yaptığımız şey doğru mu çok yapmak için yapıyo gibi konuştun
+
+CHATGPT: Haklısın, o çözüm çalıştırmak için hızlı yoldu, ama mimari olarak en doğru yol değil.
+
+Doğru yapı şu:
+
+Admin sayfası → GET /api/admin/announcements
+Student home → GET /api/announcements/my
+Advisor home → GET /api/announcements/my
+
+Yani student’ın /api/admin/... endpoint’ine gitmesi temiz değil. Doğru çözüm frontend’de Home sayfasındaki endpoint’i değiştirmek olur:
+
+`${API_BASE}/api/admin/announcements`
+
+yerine:
+
+`${API_BASE}/api/announcements/my`
+
+Backend’de AnnouncementController zaten bunun için var.
+
+Ama sen “backend kısmıyla ilgileniyorum, frontend’e dokunamam” dediğin için, frontend’i değiştirmeden çalışsın diye backend tarafında izin açmayı söyledim. Bu geçici uyumluluk çözümü olur.
+
+En doğru karar:
+
+Frontend’e müdahale edebiliyorsanız: endpoint’i /api/announcements/my yapın.
+Frontend’e şu an dokunamıyorsanız: geçici olarak /api/admin/announcements student’a açılabilir ama isim olarak doğru değil.
+
+Ben olsam kalıcı çözümde frontend endpoint’ini düzeltirdim.
+
+----------
+
+BİZ: mesela yine homeda advisor requests varya sana attım ekte orası bende boş gözüküyo
+
+(arada istediği backend ve frontend dosyaları chate atıyorum bu arada incelemesi için)
+
+CHATGPT: Evet, sorun burada backend değil, st-home.js içinde Home’daki kutuları dolduran fonksiyon yok. Backend’de öğrenci requestlerini dönen metod var: getRequestsForStudent() → /api/advisor-requests/my-requests tarafı kullanılabilir. Ama st-home.js şu an sadece profile, category, open projects ve announcements yüklüyor; advisor requestlerini hiç çağırmıyor.
