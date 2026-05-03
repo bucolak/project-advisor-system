@@ -21,6 +21,7 @@ import com.example.demo.enums.AdvisingStatus;
 import com.example.demo.enums.ApplicationStatus;
 import com.example.demo.enums.ProjectStatus;
 import com.example.demo.enums.RequestStatus;
+import com.example.demo.enums.UserStatus;
 import com.example.demo.repository.AdvisorRepository;
 import com.example.demo.repository.AdvisorRequestRepository;
 import com.example.demo.repository.ProjectApplicationRepository;
@@ -151,7 +152,24 @@ public class ProjectService {
         map.put("ownerGitHub", student.getGithubLink());
         map.put("ownerLinkedin", student.getLinkedinLink());
 
-        map.put("student", student);
+        Map<String, Object> studentMap = new HashMap<>();
+        studentMap.put("userId", user.getId());
+        studentMap.put("department", student.getDepartment());
+        studentMap.put("year", student.getYear());
+        studentMap.put("gpa", student.getGpa());
+        studentMap.put("skills", student.getSkills());
+        studentMap.put("githubLink", student.getGithubLink());
+        studentMap.put("linkedinLink", student.getLinkedinLink());
+
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("id", user.getId());
+        userMap.put("firstName", user.getFirstName());
+        userMap.put("lastName", user.getLastName());
+        userMap.put("email", user.getEmail());
+
+        studentMap.put("user", userMap);
+
+        map.put("student", studentMap);
 
         return map;
     }
@@ -283,6 +301,10 @@ public class ProjectService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışman şu anda istek kabul etmiyor.");
         }
 
+        if (advisor.getUser().getStatus() != UserStatus.ACTIVE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışman şu anda aktif değil.");
+        }
+
         advisorRequestRepository.findByProjectAndAdvisor(project, advisor).ifPresent(r -> {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu danışmana zaten istek gönderdiniz.");
         });
@@ -299,4 +321,14 @@ public class ProjectService {
     public List<Project> getAllProjects() {
         return projectRepository.findByIsDeletedFalse();
     }
+
+    public List<Project> getProjectsByCategory(Long categoryId) {
+    ProjectCategory category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı."));
+
+    return projectRepository.findByCategoryAndStatusAndIsDeletedFalse(
+            category,
+            ProjectStatus.OPEN
+    );
+}
 }

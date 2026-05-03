@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,6 +47,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/students/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADMIN")
                 .requestMatchers("/api/advisors/**").hasAnyAuthority("ROLE_ADVISOR", "ROLE_ADMIN", "ROLE_STUDENT")
                 .requestMatchers("/api/advisor-requests/**").hasAnyAuthority("ROLE_ADVISOR", "ROLE_STUDENT")
+                .requestMatchers(HttpMethod.GET, "/api/projects/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADVISOR", "ROLE_ADMIN")
                 .requestMatchers("/api/projects/**").hasAuthority("ROLE_STUDENT")
                 .requestMatchers("/api/categories/**").authenticated()
                 .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")

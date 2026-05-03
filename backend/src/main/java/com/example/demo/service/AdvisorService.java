@@ -17,6 +17,7 @@ import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
 import com.example.demo.enums.AdvisingStatus;
 import com.example.demo.enums.RequestStatus;
+import com.example.demo.enums.UserStatus;
 import com.example.demo.repository.AdvisorRepository;
 import com.example.demo.repository.AdvisorRequestRepository;
 import com.example.demo.repository.UserRepository;
@@ -46,11 +47,12 @@ public class AdvisorService {
     }
 
     public List<AdvisorProfileResponse> getActiveAdvisors() {
-        return advisorRepository.findByAdvisingStatus(AdvisingStatus.ACTIVE)
-                .stream()
-                .map(this::toProfileResponse)
-                .toList();
-    }
+    return advisorRepository.findByAdvisingStatus(AdvisingStatus.ACTIVE)
+            .stream()
+            .filter(advisor -> advisor.getUser().getStatus() == UserStatus.ACTIVE)
+            .map(this::toProfileResponse)
+            .toList();
+}
 
     public AdvisorProfileResponse getAdvisorProfile(Long userId) {
         User user = userRepository.findById(userId)

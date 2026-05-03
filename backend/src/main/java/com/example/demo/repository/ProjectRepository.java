@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.demo.entity.Project;
+import com.example.demo.entity.ProjectCategory;
 import com.example.demo.entity.Student;
 import com.example.demo.enums.ProjectStatus;
 
@@ -17,6 +18,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findByIsDeletedFalse();
 
     long countByIsDeletedFalse();
+
+    long countByCategoryAndStatusAndIsDeletedFalse(ProjectCategory category, ProjectStatus status);
+
+    List<Project> findByCategoryAndStatusAndIsDeletedFalse(ProjectCategory category, ProjectStatus status);
 
     @Query("""
            SELECT p

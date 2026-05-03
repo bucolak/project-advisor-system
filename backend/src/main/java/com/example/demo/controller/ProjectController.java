@@ -3,7 +3,12 @@ package com.example.demo.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.request.CreateProjectRequest;
 import com.example.demo.dto.response.ApiResponse;
@@ -34,6 +39,14 @@ public class ProjectController {
         );
     }
 
+    @GetMapping("/category/{categoryId}")
+        @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+        public ResponseEntity<ApiResponse> getProjectsByCategory(@PathVariable Long categoryId) {
+            return ResponseEntity.ok(
+            ApiResponse.ok("Kategoriye ait projeler.", projectService.getProjectsByCategory(categoryId))
+    );
+        }
+    
     @GetMapping("/{projectId}")
     @PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADVISOR', 'ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> getProjectDetail(@PathVariable Long projectId) {

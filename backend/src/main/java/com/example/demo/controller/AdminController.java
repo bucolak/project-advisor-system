@@ -159,6 +159,23 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.ok("Duyurular.", adminService.getAllAnnouncements()));
     }
 
+    @GetMapping("/announcements/{id}")
+public ResponseEntity<ApiResponse> getAnnouncementById(@PathVariable Long id) {
+    return ResponseEntity.ok(
+            ApiResponse.ok("Duyuru bulundu.", adminService.getAnnouncementById(id))
+    );
+}
+
+@PutMapping("/announcements/{id}")
+public ResponseEntity<ApiResponse> updateAnnouncement(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> body
+) {
+    return ResponseEntity.ok(
+            ApiResponse.ok("Duyuru güncellendi.", adminService.updateAnnouncement(id, body))
+    );
+}
+
     @PostMapping("/announcements")
     public ResponseEntity<ApiResponse> createAnnouncement(
             Authentication auth,
