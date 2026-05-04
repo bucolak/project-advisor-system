@@ -1,9 +1,6 @@
 const API_BASE = "http://localhost:8080";
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupDropdown();
-  setupLogout();
-
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
@@ -13,39 +10,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   await loadStudentProfile(token, userId);
 });
-
-function setupDropdown() {
-  const box = document.getElementById("studentProfileUserBox");
-  const dropdown = document.getElementById("studentProfileDropdown");
-
-  if (!box || !dropdown) return;
-
-  box.addEventListener("click", function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", function (e) {
-    if (!box.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-}
-
-function setupLogout() {
-  const logoutBtn = document.getElementById("studentProfileLogoutBtn");
-
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
 
 async function loadStudentProfile(token, userId) {
   try {
@@ -76,9 +43,9 @@ async function loadStudentProfile(token, userId) {
     const lastName = profile.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
 
-    document.getElementById("topProfileName").textContent = fullName || "Student";
-    document.getElementById("profileFullName").textContent = fullName || "Student";
+    renderTopbar("topbarArea", fullName || "Student", "Student");
 
+    document.getElementById("profileFullName").textContent = fullName || "Student";
     document.getElementById("profileDepartment").textContent = profile.department || "-";
     document.getElementById("profileYear").textContent = profile.year ?? "-";
     document.getElementById("profileEmail").textContent = profile.email || "-";

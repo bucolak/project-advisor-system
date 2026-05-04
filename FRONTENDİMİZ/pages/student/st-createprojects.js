@@ -14,10 +14,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
+  renderSidebar(role);
   setupTabs();
   setupSkillTags();
   setupAdvisorToggle();
   setupForms(token, userId);
+
 
   await loadStudentInfo(token, userId);
   await loadProjectCategories(token);
@@ -39,10 +41,7 @@ async function loadStudentInfo(token, userId) {
 
     const fullName = `${student.firstName || ""} ${student.lastName || ""}`.trim();
 
-    if (fullName) {
-      document.getElementById("studentTopName").textContent = fullName;
-    }
-
+    renderTopbar("topbarArea", fullName, "Student");
   } catch (error) {
     console.error("Student info load error:", error);
   }
@@ -185,8 +184,6 @@ async function createCourseProject(token, userId) {
     teamSize: Number(document.getElementById("courseTeamSize").value),
     rolesNeeded: document.getElementById("courseRoles").value.trim(),
     description: document.getElementById("courseDescription").value.trim(),
-
-    // Course projectlerde advisor olmayacak
     advisorRequired: false
   };
 
@@ -217,8 +214,6 @@ async function createOtherProject(token, userId) {
     teamSize: Number(document.getElementById("otherTeamSize").value),
     rolesNeeded: document.getElementById("otherRoles").value.trim(),
     description: document.getElementById("otherDescription").value.trim(),
-
-    // Other projectte Yes ise true, No ise false
     advisorRequired: advisorRequired
   };
 

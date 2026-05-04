@@ -11,58 +11,11 @@
 </head>
 
 <body>
-    <div class="admin-home-page">
+    <div id="sidebarArea"></div>
 
-        <aside class="admin-home-sidebar">
-            <div class="admin-home-sidebar-icon">
-                <i class="fa-solid fa-up-down-left-right"></i>
-            </div>
+<main class="page-content">
 
-            <ul class="admin-home-menu">
-                <li>
-                    <a href="ad-home.html" class="active">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-projectcat.html">
-                        <i class="fa-regular fa-folder-open"></i>
-                        <span>Project Categories</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-announce.html">
-                        <i class="fa-regular fa-flag"></i>
-                        <span>Announcements <br>& Dates</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-user.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>User Management</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="admin-home-content">
-
-            <div class="admin-home-topbar">
-                <div class="admin-home-userbox" id="adminUserBox">
-                    <i class="fa-regular fa-circle-user"></i>
-
-                    <div class="admin-home-userinfo">
-                        <span id="adminTopName">Loading...</span>
-                        <small>Admin</small>
-                    </div>
-
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
-            </div>
+         <div id="topbarArea"></div>   
 
             <div class="admin-home-upper">
                 <div class="admin-home-welcome-card">
@@ -141,8 +94,8 @@
             </div>
 
         </main>
-    </div>
-
+    <script src="../../components/sidebar.js"></script>
+    <script src="../../components/topbar.js"></script>
     <script src="ad-home.js"></script>
 </body>
 

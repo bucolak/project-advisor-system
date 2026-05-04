@@ -11,56 +11,10 @@
 </head>
 
 <body>
-  <div class="admin-user-page">
-    <aside class="admin-user-sidebar">
-      <div class="admin-user-sidebar-icon">
-        <i class="fa-solid fa-up-down-left-right"></i>
-      </div>
+  <div id="sidebarArea"></div>
 
-      <ul class="admin-user-menu">
-        <li>
-          <a href="ad-home.html">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="ad-projectcat.html">
-            <i class="fa-regular fa-folder-open"></i>
-            <span>Project Categories</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="ad-announce.html">
-            <i class="fa-regular fa-flag"></i>
-            <span>Announcements<br>& Dates</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="ad-user.html" class="active">
-            <i class="fa-regular fa-user"></i>
-            <span>User Management</span>
-          </a>
-        </li>
-      </ul>
-    </aside>
-
-    <main class="admin-user-content">
-      <div class="admin-user-topbar">
-        <div class="admin-user-userbox">
-          <i class="fa-regular fa-circle-user"></i>
-
-          <div class="admin-user-userinfo">
-            <span id="adminTopName">Admin</span>
-            <small>Admin</small>
-          </div>
-
-          <i class="fa-solid fa-chevron-down"></i>
-        </div>
-      </div>
+<main class="page-content">
+      <div id="topbarArea"></div>
 
       <h1 class="admin-user-title">User Management</h1>
 
@@ -102,8 +56,8 @@
         </table>
       </div>
     </main>
-  </div>
-
+  <script src="../../components/sidebar.js"></script>
+  <script src="../../components/topbar.js"></script>
   <script src="ad-user.js"></script>
 </body>
 

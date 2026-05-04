@@ -3,8 +3,6 @@ const API_BASE = "http://localhost:8080";
 let currentAdvisorId = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupDropdown();
-  setupLogout();
   setupSearch();
   setupModal();
 
@@ -17,41 +15,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   await loadStudentProfile(token, userId);
   await loadAdvisors(token);
   await loadStudentProjectsForModal(token);
 });
-
-function setupDropdown() {
-  const box = document.getElementById("advisorsStudentBox");
-  const dropdown = document.getElementById("advisorProfileDropdown");
-
-  if (!box || !dropdown) return;
-
-  box.addEventListener("click", function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", function (e) {
-    if (!box.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-}
-
-function setupLogout() {
-  const logoutBtn = document.getElementById("advisorsLogoutBtn");
-
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
 
 function setupSearch() {
   const searchInput = document.getElementById("advisorSearch");
@@ -93,7 +61,7 @@ async function loadStudentProfile(token, userId) {
 
     const fullName = `${profile.firstName || ""} ${profile.lastName || ""}`.trim();
 
-    document.getElementById("advisorsStudentName").textContent = fullName || "Student";
+    renderTopbar("topbarArea", fullName || "Student", "Student");
 
   } catch (error) {
     console.error("Student profile load error:", error);

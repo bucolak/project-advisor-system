@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "ad-projectcat.html";
     return;
   }
-
+renderSidebar(role);
   setupAdvisorToggle();
 
   await loadAdminInfo(token, userId);
@@ -56,6 +56,7 @@ async function loadAdminInfo(token, userId) {
     const fullName = `${admin.firstName || ""} ${admin.lastName || ""}`.trim();
 
     if (fullName) {
+      renderTopbar("topbarArea", fullName, "Admin");
       document.getElementById("adminTopName").textContent = fullName;
     }
 

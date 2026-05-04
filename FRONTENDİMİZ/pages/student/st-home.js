@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
+renderSidebar(role);
 
   await loadStudentProfile(token, userId);
   await loadProjectCategoryFilter(token);
@@ -46,7 +47,7 @@ async function loadStudentProfile(token, userId) {
     const firstName = profile.firstName || "";
     const lastName = profile.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
-
+    renderTopbar("topbarArea", fullName, "Student");
     document.getElementById("topProfileName").textContent = fullName || "Student";
     document.getElementById("topProfileRole").textContent = "Student";
     document.getElementById("welcomeText").textContent = `Welcome, ${firstName || "Student"} 👋`;

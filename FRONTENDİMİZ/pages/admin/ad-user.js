@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   document.getElementById("userSearchInput").addEventListener("input", renderFilteredUsers);
   document.getElementById("roleSelect").addEventListener("change", renderFilteredUsers);
 
@@ -25,13 +25,11 @@ async function loadUsers(token) {
     const response = await fetch(`${API_BASE}/api/admin/users`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 
     const text = await response.text();
-    console.log("USERS STATUS:", response.status);
-    console.log("USERS RESPONSE:", text);
 
     if (!response.ok) {
       tbody.innerHTML = `<tr><td colspan="5">Could not load users.</td></tr>`;
@@ -40,6 +38,17 @@ async function loadUsers(token) {
 
     const result = JSON.parse(text);
     allUsers = result.data || result || [];
+
+    const userId = localStorage.getItem("userId");
+
+    const admin = allUsers.find(user =>
+      String(user.id) === String(userId) ||
+      String(user.userId) === String(userId)
+    );
+
+    const adminName = admin ? getFullName(admin) : "Admin";
+
+    renderTopbar("topbarArea", adminName, "Admin");
 
     renderFilteredUsers();
 
@@ -125,17 +134,11 @@ function setupStatusButtons() {
       const currentActive = this.classList.contains("active");
       const newStatus = currentActive ? "INACTIVE" : "ACTIVE";
 
-      /*
-        Eğer backend'de status update endpoint yoksa bu fetch'i silebiliriz.
-        Muhtemel endpoint:
-        PUT /api/admin/users/{userId}/status
-      */
-
       try {
         const response = await fetch(`${API_BASE}/api/admin/users/${userId}/status`, {
           method: "PUT",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({

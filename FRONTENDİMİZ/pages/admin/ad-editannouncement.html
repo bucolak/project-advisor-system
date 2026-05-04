@@ -11,34 +11,11 @@
 </head>
 
 <body>
+<div id="sidebarArea"></div>
 
-  <div class="admin-addann-page">
+<main class="page-content">
 
-    <aside class="admin-addann-sidebar">
-      <div class="admin-addann-sidebar-icon">
-        <i class="fa-solid fa-up-down-left-right"></i>
-      </div>
-
-      <ul class="admin-addann-menu">
-        <li><a href="ad-home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-        <li><a href="ad-projectcat.html"><i class="fa-regular fa-folder-open"></i><span>Project Categories</span></a></li>
-        <li><a href="ad-announce.html" class="active"><i class="fa-regular fa-flag"></i><span>Announcements <br>& Dates</span></a></li>
-        <li><a href="ad-user.html"><i class="fa-regular fa-user"></i><span>User Management</span></a></li>
-      </ul>
-    </aside>
-
-    <main class="admin-addann-content">
-
-      <div class="admin-addann-topbar">
-        <div class="admin-addann-userbox">
-          <i class="fa-regular fa-circle-user"></i>
-          <div class="admin-addann-userinfo">
-            <span id="adminTopName">Loading...</span>
-            <small>Admin</small>
-          </div>
-          <i class="fa-solid fa-chevron-down"></i>
-        </div>
-      </div>
+      <div id="topbarArea"></div>
 
       <h1 class="admin-addann-title">Edit The Announcement</h1>
 
@@ -98,8 +75,8 @@
 
     </main>
 
-  </div>
-
+  <script src="../../components/sidebar.js"></script>
+  <script src="../../components/topbar.js"></script>
   <script src="ad-editannouncement.js"></script>
 
 </body>

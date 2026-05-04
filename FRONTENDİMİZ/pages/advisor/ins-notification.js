@@ -1,9 +1,6 @@
 const API_BASE = "http://localhost:8080";
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupDropdown();
-  setupLogout();
-
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
@@ -13,40 +10,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   await loadAdvisorProfile(token, userId);
   await loadAdvisorNotifications(token);
 });
-
-function setupDropdown() {
-  const userBox = document.getElementById("advisorUserBox");
-  const dropdown = document.getElementById("profileDropdown");
-
-  if (!userBox || !dropdown) return;
-
-  userBox.addEventListener("click", function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", function (e) {
-    if (!userBox.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-}
-
-function setupLogout() {
-  const logoutBtn = document.getElementById("advisorLogoutBtn");
-
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
 
 async function loadAdvisorProfile(token, userId) {
   try {
@@ -62,8 +29,11 @@ async function loadAdvisorProfile(token, userId) {
     const result = await response.json();
     const advisor = result.data || result;
 
-    document.getElementById("advisorTopName").textContent =
-      `Dr. ${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
+    const firstName = advisor.firstName || "";
+    const lastName = advisor.lastName || "";
+    const fullName = `Dr. ${`${firstName} ${lastName}`.trim()}`.trim();
+
+    renderTopbar("topbarArea", fullName, "Advisor");
 
   } catch (error) {
     console.error("Advisor profile load error:", error);
@@ -83,9 +53,6 @@ async function loadAdvisorNotifications(token) {
     });
 
     const text = await response.text();
-
-    console.log("PENDING REQUESTS STATUS:", response.status);
-    console.log("PENDING REQUESTS RESPONSE:", text);
 
     if (!response.ok) {
       container.innerHTML = `

@@ -11,83 +11,11 @@
 </head>
 
 <body>
-    <div class="notifications-page">
-        <aside class="notifications-sidebar">
-            <div class="notifications-sidebar-icon">
-                <i class="fa-solid fa-up-down-left-right"></i>
-            </div>
+    <div id="sidebarArea"></div>
 
-            <ul class="notifications-sidebar-menu">
-                <li>
-                    <a href="st-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
+<main class="page-content">
 
-                <li>
-                    <a href="st-projects.html">
-                        <i class="fa-solid fa-briefcase"></i>
-                        <span>My Projects</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-createprojects.html">
-                        <i class="fa-regular fa-square-plus"></i>
-                        <span>Create Project</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-advisorrequests.html">
-                        <i class="fa-regular fa-rectangle-list"></i>
-                        <span>Advisor Requests</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-advisors.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Advisors</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-notifications.html" class="active">
-                        <i class="fa-regular fa-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-profile.html">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="notifications-content">
-            <div class="notifications-topbar">
-                <div class="student-notification-user-dropdown">
-                    <div class="notifications-student-box" id="notificationsStudentBox">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <div class="notifications-student-info">
-                            <span class="notifications-student-name" id="notificationsStudentName">Student Name</span>
-                            <span class="notifications-student-role">Student</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-
-                    <div class="student-notification-dropdown-menu" id="notificationProfileDropdown">
-                        <a href="../../index.html" class="student-notification-logout-btn" id="notificationsLogoutBtn">
-                            Log Out
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <div id="topbarArea"></div>
 
             <div class="notifications-header">
                 <h1 class="notifications-title">Notifications</h1>
@@ -126,7 +54,7 @@
                 </div>
             </div>
         </main>
-    </div>
+    
 
     <div class="student-profile-overlay" id="studentProfileOverlay">
         <div class="student-profile-modal">
@@ -187,7 +115,8 @@
             </div>
         </div>
     </div>
-
+    <script src="../../components/sidebar.js"></script>
+<script src="../../components/topbar.js"></script>
     <script src="st-notifications.js"></script>
 </body>
 

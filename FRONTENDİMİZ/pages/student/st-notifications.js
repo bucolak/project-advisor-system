@@ -3,8 +3,6 @@ const API_BASE = "http://localhost:8080";
 let currentStudentRequest = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupDropdown();
-  setupLogout();
   setupModal();
 
   const token = localStorage.getItem("token");
@@ -16,52 +14,27 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   await loadStudentProfile(token, userId);
   await loadNotifications(token);
   await loadIncomingStudentRequest(token);
 });
 
-function setupDropdown() {
-  const box = document.getElementById("notificationsStudentBox");
-  const dropdown = document.getElementById("notificationProfileDropdown");
-
-  box.addEventListener("click", function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", function (e) {
-    if (!box.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-}
-
-function setupLogout() {
-  document.getElementById("notificationsLogoutBtn").addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
-
 function setupModal() {
-  document.getElementById("closeStudentProfileBtn").addEventListener("click", closeStudentProfile);
+  const closeBtn = document.getElementById("closeStudentProfileBtn");
+  const viewBtn = document.getElementById("viewStudentProfileBtn");
 
-  document.getElementById("viewStudentProfileBtn").addEventListener("click", function () {
-    if (currentStudentRequest) {
-      openStudentProfile();
-    }
-  });
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeStudentProfile);
+  }
 
-  document.getElementById("acceptStudentRequestBtn").addEventListener("click", function () {
-    respondToStudentRequest("ACCEPTED");
-  });
-
-  document.getElementById("rejectStudentRequestBtn").addEventListener("click", function () {
-    respondToStudentRequest("REJECTED");
-  });
+  if (viewBtn) {
+    viewBtn.addEventListener("click", function () {
+      if (currentStudentRequest) {
+        openStudentProfile();
+      }
+    });
+  }
 
   const modal = document.getElementById("studentProfileOverlay");
 
@@ -86,18 +59,16 @@ async function loadStudentProfile(token, userId) {
 
     const p = result.data;
 
-    document.getElementById("notificationsStudentName").textContent =
+    const fullName =
       `${p.firstName || ""} ${p.lastName || ""}`.trim() || "Student";
+
+    renderTopbar("topbarArea", fullName, "Student");
 
   } catch (error) {
     console.error("Student profile load error:", error);
   }
 }
 
-/*
-  Üstteki normal notification listesi artık gösterilmiyor.
-  Çünkü alttaki request card zaten notification olarak kullanılıyor.
-*/
 async function loadNotifications(token) {
   const list = document.getElementById("notificationsList");
   const count = document.getElementById("notificationsNewCount");
@@ -158,18 +129,10 @@ async function loadIncomingStudentRequest(token) {
     const actions = document.getElementById("studentRequestActions");
 
     if (status === "ACCEPTED") {
-      actions.innerHTML = `
-        <div class="student-request-final accepted">
-          Accepted
-        </div>
-      `;
+      actions.innerHTML = `<div class="student-request-final accepted">Accepted</div>`;
       count.textContent = "0 New";
     } else if (status === "REJECTED") {
-      actions.innerHTML = `
-        <div class="student-request-final rejected">
-          Rejected
-        </div>
-      `;
+      actions.innerHTML = `<div class="student-request-final rejected">Rejected</div>`;
       count.textContent = "0 New";
     } else {
       actions.innerHTML = `
@@ -291,17 +254,9 @@ async function respondToStudentRequest(status) {
     }
 
     if (status === "ACCEPTED") {
-      actions.innerHTML = `
-        <div class="student-request-final accepted">
-          Accepted
-        </div>
-      `;
+      actions.innerHTML = `<div class="student-request-final accepted">Accepted</div>`;
     } else {
-      actions.innerHTML = `
-        <div class="student-request-final rejected">
-          Rejected
-        </div>
-      `;
+      actions.innerHTML = `<div class="student-request-final rejected">Rejected</div>`;
     }
 
     count.textContent = "0 New";
@@ -311,4 +266,3 @@ async function respondToStudentRequest(status) {
     alert("Server error while updating request.");
   }
 }
- 

@@ -11,44 +11,10 @@
 </head>
 
 <body>
-    <div class="student-profile-edit-page">
-        <aside class="student-profile-edit-sidebar">
-            <div class="student-profile-edit-sidebar-icon">
-                <i class="fa-solid fa-up-down-left-right"></i>
-            </div>
+    <div id="sidebarArea"></div>
 
-            <ul class="student-profile-edit-menu">
-                <li><a href="st-home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-                <li><a href="st-projects.html"><i class="fa-solid fa-briefcase"></i><span>My Projects</span></a></li>
-                <li><a href="st-createprojects.html"><i class="fa-regular fa-square-plus"></i><span>Create Project</span></a></li>
-                <li><a href="st-advisorrequests.html"><i class="fa-regular fa-rectangle-list"></i><span>Advisor Requests</span></a></li>
-                <li><a href="st-advisors.html"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
-                <li><a href="st-notifications.html"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
-                <li><a href="st-profile.html" class="active"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
-            </ul>
-        </aside>
-
-        <main class="student-profile-edit-content">
-            <div class="student-profile-edit-topbar">
-                <div class="student-profile-edit-user-dropdown">
-                    <div class="student-profile-edit-userbox" id="studentProfileEditUserBox">
-                        <i class="fa-regular fa-circle-user"></i>
-
-                        <div class="student-profile-edit-userinfo">
-                            <span id="studentTopName">Student</span>
-                            <small>Student</small>
-                        </div>
-
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-
-                    <div class="student-profile-edit-dropdown-menu" id="studentProfileEditDropdown">
-                        <a href="../../index.html" class="student-profile-edit-logout-btn" id="studentProfileEditLogoutBtn">
-                            Log Out
-                        </a>
-                    </div>
-                </div>
-            </div>
+<main class="page-content main">
+            <div id="topbarArea"></div>
 
             <h1 class="student-profile-edit-title">Profile</h1>
 
@@ -131,8 +97,8 @@
                 </div>
             </div>
         </main>
-    </div>
-
+    <script src="../../components/sidebar.js"></script>
+<script src="../../components/topbar.js"></script>
     <script src="student-profile-edit.js"></script>
 </body>
 

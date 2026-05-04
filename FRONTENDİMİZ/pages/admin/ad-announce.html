@@ -11,58 +11,11 @@
 </head>
 
 <body>
-    <div class="admin-ann-page">
+    
+<div id="sidebarArea"></div>
 
-        <aside class="admin-ann-sidebar">
-            <div class="admin-ann-sidebar-icon">
-                <i class="fa-solid fa-up-down-left-right"></i>
-            </div>
-
-            <ul class="admin-ann-menu">
-                <li>
-                    <a href="ad-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-projectcat.html">
-                        <i class="fa-regular fa-folder-open"></i>
-                        <span>Project Categories</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-announce.html" class="active">
-                        <i class="fa-regular fa-flag"></i>
-                        <span>Announcements<br>& Dates</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-user.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>User Management</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="admin-ann-content">
-
-            <div class="admin-ann-topbar">
-                <div class="admin-ann-userbox">
-                    <i class="fa-regular fa-circle-user"></i>
-
-                    <div class="admin-ann-userinfo">
-                        <span id="adminTopName">Loading...</span>
-                        <small>Admin</small>
-                    </div>
-
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
-            </div>
+<main class="page-content">
+            <div id="topbarArea"></div>
 
             <div class="admin-ann-header">
                 <h1>Announcements & Dates</h1>
@@ -79,8 +32,9 @@
             </div>
 
         </main>
-    </div>
-
+    
+    <script src="../../components/sidebar.js"></script>
+    <script src="../../components/topbar.js"></script>
     <script src="ad-announce.js"></script>
 </body>
 

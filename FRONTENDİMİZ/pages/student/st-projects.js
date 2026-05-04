@@ -1,9 +1,6 @@
 const API_BASE = "http://localhost:8080";
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupUserDropdown();
-  setupLogout();
-
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const role = localStorage.getItem("role");
@@ -13,43 +10,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
+renderSidebar(role);
 
   await loadStudentProfile(token, userId);
   await loadStudentProjects(token);
 });
-
-function setupUserDropdown() {
-  const studentUserBox = document.getElementById("studentUserBox");
-  const studentLogoutMenu = document.getElementById("studentLogoutMenu");
-  const studentUserArrow = document.getElementById("studentUserArrow");
-
-  if (!studentUserBox || !studentLogoutMenu || !studentUserArrow) return;
-
-  studentUserBox.addEventListener("click", function (e) {
-    e.stopPropagation();
-    studentLogoutMenu.classList.toggle("show");
-    studentUserArrow.classList.toggle("rotate");
-  });
-
-  document.addEventListener("click", function (e) {
-    if (!studentUserBox.contains(e.target) && !studentLogoutMenu.contains(e.target)) {
-      studentLogoutMenu.classList.remove("show");
-      studentUserArrow.classList.remove("rotate");
-    }
-  });
-}
-
-function setupLogout() {
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
 
 async function loadStudentProfile(token, userId) {
   try {
@@ -69,8 +34,7 @@ async function loadStudentProfile(token, userId) {
     const profile = result.data;
     const fullName = `${profile.firstName || ""} ${profile.lastName || ""}`.trim();
 
-    document.getElementById("studentTopName").textContent = fullName || "Student";
-    document.getElementById("studentTopRole").textContent = "Student";
+    renderTopbar("topbarArea", fullName || "Student", "Student");
 
   } catch (error) {
     console.error("Profile load error:", error);

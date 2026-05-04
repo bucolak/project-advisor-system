@@ -1,8 +1,6 @@
 const API_BASE = "http://localhost:8080";
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupDropdown();
-  setupLogout();
   setupInterestAdder();
   setupSaveButton();
 
@@ -15,39 +13,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+  renderSidebar(role);
   await loadAdvisorProfile(token, userId);
 });
-
-function setupDropdown() {
-  const userBox = document.getElementById("advisorUserBox");
-  const dropdown = document.getElementById("profileDropdown");
-
-  if (!userBox || !dropdown) return;
-
-  userBox.addEventListener("click", function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", function (e) {
-    if (!userBox.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-}
-
-function setupLogout() {
-  const logoutBtn = document.getElementById("advisorLogoutBtn");
-
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
 
 function setupInterestAdder() {
   const addInterestBtn = document.getElementById("addInterestBtn");
@@ -86,9 +54,6 @@ async function loadAdvisorProfile(token, userId) {
 
     const text = await response.text();
 
-    console.log("ADVISOR PROFILE STATUS:", response.status);
-    console.log("ADVISOR PROFILE RESPONSE:", text);
-
     if (!response.ok) {
       alert(`Failed to load advisor profile. Status: ${response.status}`);
       return;
@@ -108,7 +73,8 @@ async function loadAdvisorProfile(token, userId) {
     const fullNameWithoutTitle = `${firstName} ${lastName}`.trim();
     const fullName = `Dr. ${fullNameWithoutTitle}`.trim();
 
-    document.getElementById("advisorTopName").textContent = fullName || "Advisor";
+    renderTopbar("topbarArea", fullName || "Advisor", "Advisor");
+
     document.getElementById("advisorDisplayName").textContent = fullName || "Advisor";
 
     document.getElementById("fullName").value = fullNameWithoutTitle;
@@ -158,7 +124,7 @@ async function updateAdvisorProfile(token, userId) {
     console.log("UPDATE ADVISOR PROFILE RESPONSE:", text);
 
     if (!response.ok) {
-      alert("Advisor profile could not be updated. Backend PUT endpoint may not be connected.");
+      alert("Advisor profile could not be updated.");
       return;
     }
 

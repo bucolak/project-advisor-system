@@ -11,85 +11,10 @@
 </head>
 
 <body>
-    <div class="profile-page">
-        <aside class="profile-sidebar">
-            <div class="profile-sidebar-icon">
-                <i class="fa-solid fa-up-down-left-right"></i>
-            </div>
+    <div id="sidebarArea"></div>
 
-            <ul class="profile-sidebar-menu">
-                <li>
-                    <a href="st-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-projects.html">
-                        <i class="fa-solid fa-briefcase"></i>
-                        <span>My Projects</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-createprojects.html">
-                        <i class="fa-regular fa-square-plus"></i>
-                        <span>Create Project</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-advisorrequests.html">
-                        <i class="fa-regular fa-rectangle-list"></i>
-                        <span>Advisor Requests</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-advisors.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Advisors</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-notifications.html">
-                        <i class="fa-regular fa-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="st-profile.html" class="active">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="profile-content">
-            <div class="profile-topbar">
-                <div class="student-profile-user-dropdown">
-                    <div class="student-profile-userbox" id="studentProfileUserBox">
-                        <i class="fa-regular fa-circle-user"></i>
-
-                        <div class="student-profile-userinfo">
-                            <span id="topProfileName">Student Name</span>
-                            <small>Student</small>
-                        </div>
-
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-
-                    <div class="student-profile-dropdown-menu" id="studentProfileDropdown">
-                        <a href="../../index.html" class="student-profile-logout-btn" id="studentProfileLogoutBtn">
-                            Log Out
-                        </a>
-                    </div>
-                </div>
-            </div>
+<main class="page-content main">
+            <div id="topbarArea"></div>
 
             <h1 class="profile-title">Profile</h1>
 
@@ -156,8 +81,8 @@
                 </div>
             </div>
         </main>
-    </div>
-
+  <script src="../../components/sidebar.js"></script>  
+<script src="../../components/topbar.js"></script>
     <script src="st-profile.js"></script>
 </body>
 

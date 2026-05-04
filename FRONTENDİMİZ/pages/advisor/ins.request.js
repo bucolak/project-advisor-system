@@ -3,8 +3,6 @@ const API_BASE = "http://localhost:8080";
 let currentRequest = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupDropdown();
-  setupLogout();
   setupModal();
 
   const token = localStorage.getItem("token");
@@ -16,46 +14,12 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   await loadAdvisorProfile(token, userId);
   await loadAdvisorRequests(token);
 
   highlightTargetRequest();
 });
-
-function setupDropdown() {
-  const userBox = document.getElementById("advisorUserBox");
-  const dropdown = document.getElementById("profileDropdown");
-
-  if (!userBox || !dropdown) return;
-
-  userBox.addEventListener("click", function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", function (e) {
-    const modal = document.getElementById("studentModal");
-
-    if (e.target === modal) closeStudentModal();
-
-    if (!userBox.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-}
-
-function setupLogout() {
-  const logoutBtn = document.getElementById("advisorLogoutBtn");
-
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
 
 function setupModal() {
   const closeBtn = document.getElementById("modalCloseBtn");
@@ -81,6 +45,11 @@ function setupModal() {
       closeStudentModal();
     });
   }
+
+  window.addEventListener("click", function (e) {
+    const modal = document.getElementById("studentModal");
+    if (e.target === modal) closeStudentModal();
+  });
 }
 
 async function loadAdvisorProfile(token, userId) {
@@ -97,8 +66,10 @@ async function loadAdvisorProfile(token, userId) {
     const result = await response.json();
     const advisor = result.data || result;
 
-    document.getElementById("advisorTopName").textContent =
+    const fullName =
       `Dr. ${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
+
+    renderTopbar("topbarArea", fullName, "Advisor");
 
   } catch (error) {
     console.error("Advisor profile load error:", error);
@@ -389,7 +360,6 @@ function setOtherProjects(projects) {
         <p><strong>Skills:</strong> -</p>
       </div>
     `;
-    return;
   }
 }
 

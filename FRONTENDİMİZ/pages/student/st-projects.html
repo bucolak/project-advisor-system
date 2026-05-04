@@ -10,86 +10,49 @@
 </head>
 
 <body>
-  <div class="st-projects-page">
-    <aside class="st-projects-sidebar">
-      <div class="st-projects-sidebar-icon">
-        <i class="fa-solid fa-up-down-left-right"></i>
+  <div id="sidebarArea"></div>
+
+  <main class="page-content st-projects-content">
+    <div id="topbarArea"></div>
+
+    <section class="st-projects-header">
+      <h1>My Projects</h1>
+      <p>View the details of your own projects</p>
+    </section>
+
+    <section class="st-projects-section">
+      <div class="st-projects-section-title">
+        <i class="fa-regular fa-folder-open"></i>
+        <span>The projects that I joined,</span>
       </div>
 
-      <ul class="st-projects-menu">
-        <li><a href="st-home.html"><i class="fa-solid fa-house"></i><span>Home</span></a></li>
-        <li><a href="st-projects.html" class="active"><i class="fa-regular fa-folder-open"></i><span>My
-              Projects</span></a></li>
-        <li><a href="st-createprojects.html"><i class="fa-regular fa-file-lines"></i><span>Create Project</span></a>
-        </li>
-        <li><a href="st-advisorrequests.html"><i class="fa-regular fa-envelope-open"></i><span>Advisor
-              Requests</span></a></li>
-        <li><a href="st-advisors.html"><i class="fa-regular fa-user"></i><span>Advisors</span></a></li>
-        <li><a href="st-notifications.html"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
-        <li><a href="st-profile.html"><i class="fa-regular fa-circle-user"></i><span>Profile</span></a></li>
-      </ul>
-    </aside>
-
-    <main class="st-projects-content">
-      <div class="st-projects-topbar">
-        <div class="st-projects-user-dropdown">
-          <div class="st-projects-userbox" id="studentUserBox">
-            <i class="fa-regular fa-circle-user"></i>
-
-            <div class="st-projects-userinfo">
-              <span id="studentTopName">Loading...</span>
-              <small id="studentTopRole">Student</small>
-            </div>
-
-            <i class="fa-solid fa-chevron-down st-projects-userbox-arrow" id="studentUserArrow"></i>
-          </div>
-
-          <div class="st-projects-logout-menu" id="studentLogoutMenu">
-            <a href="../../index.html" class="st-projects-logout-btn" id="logoutBtn">
-              <i class="fa-solid fa-right-from-bracket"></i>
-              <span>Log Out</span>
-            </a>
+      <div class="st-projects-cards" id="joinedProjectsContainer">
+        <div class="st-projects-card">
+          <div class="st-projects-card-header">
+            <h3>Loading joined projects...</h3>
           </div>
         </div>
       </div>
+    </section>
 
-      <section class="st-projects-header">
-        <h1>My Projects</h1>
-        <p>View the details of your own projects</p>
-      </section>
+    <section class="st-projects-section st-projects-section-bottom">
+      <div class="st-projects-section-title">
+        <i class="fa-regular fa-folder-open"></i>
+        <span>The projects that I created,</span>
+      </div>
 
-      <section class="st-projects-section">
-        <div class="st-projects-section-title">
-          <i class="fa-regular fa-folder-open"></i>
-          <span>The projects that I joined,</span>
-        </div>
-
-        <div class="st-projects-cards" id="joinedProjectsContainer">
-          <div class="st-projects-card">
-            <div class="st-projects-card-header">
-              <h3>Loading joined projects...</h3>
-            </div>
+      <div class="st-projects-cards" id="createdProjectsContainer">
+        <div class="st-projects-card">
+          <div class="st-projects-card-header">
+            <h3>Loading created projects...</h3>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  </main>
 
-      <section class="st-projects-section st-projects-section-bottom">
-        <div class="st-projects-section-title">
-          <i class="fa-regular fa-folder-open"></i>
-          <span>The projects that I created,</span>
-        </div>
-
-        <div class="st-projects-cards" id="createdProjectsContainer">
-          <div class="st-projects-card">
-            <div class="st-projects-card-header">
-              <h3>Loading created projects...</h3>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
+  <script src="../../components/sidebar.js"></script>
+  <script src="../../components/topbar.js"></script>
   <script src="st-projects.js"></script>
 </body>
 

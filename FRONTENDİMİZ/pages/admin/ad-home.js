@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   setupModal();
 
   await loadAdminInfo(token, userId);
@@ -43,7 +43,7 @@ async function loadAdminInfo(token, userId) {
     const fullName = `${admin.firstName || ""} ${admin.lastName || ""}`.trim();
 
     if (!fullName) return;
-
+    renderTopbar("topbarArea", fullName, "Admin");
     document.getElementById("adminTopName").textContent = fullName;
     document.getElementById("adminWelcomeText").textContent = `Welcome, ${fullName} 👋`;
 

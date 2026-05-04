@@ -12,63 +12,11 @@
 
 <body>
 
-  <div class="admin-addcat-page">
+  <div id="sidebarArea"></div>
 
-    <aside class="admin-addcat-sidebar">
-      <div class="admin-addcat-sidebar-icon">
-        <i class="fa-solid fa-up-down-left-right"></i>
-      </div>
+<main class="page-content">
 
-      <ul class="admin-addcat-menu">
-        <li>
-          <a href="ad-home.html">
-            <i class="fa-solid fa-house"></i>
-            <span>Home</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="ad-projectcat.html" class="active">
-            <i class="fa-regular fa-folder-open"></i>
-            <span>Project Categories</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="ad-announce.html">
-            <i class="fa-regular fa-flag"></i>
-            <span>Announcements <br>& Dates</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="ad-user.html">
-            <i class="fa-regular fa-user"></i>
-            <span>User Management</span>
-          </a>
-        </li>
-      </ul>
-
-    </aside>
-
-
-
-    <main class="admin-addcat-content">
-
-      <div class="admin-addcat-topbar">
-        <div class="admin-addcat-userbox">
-
-          <i class="fa-regular fa-circle-user"></i>
-
-          <div class="admin-addcat-userinfo">
-            <span id="adminTopName">Loading...</span>
-            <small>Admin</small>
-          </div>
-
-          <i class="fa-solid fa-chevron-down"></i>
-
-        </div>
-      </div>
+      <div id="topbarArea"></div>
 
 
       <h1 class="admin-addcat-title">
@@ -162,9 +110,9 @@
       </form>
 
     </main>
-  </div>
-
-
+  
+<script src="../../components/sidebar.js"></script>
+<script src="../../components/topbar.js"></script>
   <script src="ad-addcategory.js"></script>
 
 </body>

@@ -1,8 +1,6 @@
 const API_BASE = "http://localhost:8080";
 
 document.addEventListener("DOMContentLoaded", async function () {
-  setupDropdown();
-  setupLogout();
   setupSaveButton();
 
   const token = localStorage.getItem("token");
@@ -14,42 +12,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+renderSidebar(role);
   await loadStudentProfile(token, userId);
-
-  // Skills HTML'de hazır olduğu için burada garanti bağlanıyor
   setupSkillSelection();
 });
-
-function setupDropdown() {
-  const box = document.getElementById("studentProfileEditUserBox");
-  const dropdown = document.getElementById("studentProfileEditDropdown");
-
-  if (!box || !dropdown) return;
-
-  box.addEventListener("click", function (e) {
-    e.stopPropagation();
-    dropdown.classList.toggle("show");
-  });
-
-  window.addEventListener("click", function (e) {
-    if (!box.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.remove("show");
-    }
-  });
-}
-
-function setupLogout() {
-  const logoutBtn = document.getElementById("studentProfileEditLogoutBtn");
-
-  if (!logoutBtn) return;
-
-  logoutBtn.addEventListener("click", function () {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-  });
-}
 
 function setupSkillSelection() {
   const skillTags = document.querySelectorAll("#studentSkillsContainer .skill-tag");
@@ -103,9 +69,9 @@ async function loadStudentProfile(token, userId) {
     const lastName = student.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
 
-    document.getElementById("studentTopName").textContent = fullName || "Student";
-    document.getElementById("studentDisplayName").textContent = fullName || "Student";
+    renderTopbar("topbarArea", fullName || "Student", "Student");
 
+    document.getElementById("studentDisplayName").textContent = fullName || "Student";
     document.getElementById("studentDepartment").value = student.department || "";
     document.getElementById("studentYear").value = student.year ?? "";
     document.getElementById("studentEmail").value = student.email || "";
@@ -182,7 +148,7 @@ async function updateStudentProfile(token, userId) {
     console.log("UPDATE STUDENT PROFILE RESPONSE:", text);
 
     if (!response.ok) {
-      alert("Profile could not be updated. Backend update endpoint may not be connected.");
+      alert("Profile could not be updated.");
       return;
     }
 

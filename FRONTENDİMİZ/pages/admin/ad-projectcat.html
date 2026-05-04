@@ -11,54 +11,10 @@
 </head>
 
 <body>
-    <div class="admin-categories-page">
-        <aside class="admin-categories-sidebar">
-            <div class="admin-categories-sidebar-icon">
-                <i class="fa-solid fa-up-down-left-right"></i>
-            </div>
+    <div id="sidebarArea"></div>
 
-            <ul class="admin-categories-menu">
-                <li>
-                    <a href="ad-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-projectcat.html" class="active">
-                        <i class="fa-regular fa-folder-open"></i>
-                        <span>Project Categories</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-announce.html">
-                        <i class="fa-regular fa-flag"></i>
-                        <span>Announcements <br>& Dates</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ad-user.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>User Management</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="admin-categories-content">
-            <div class="admin-categories-topbar">
-                <div class="admin-categories-userbox">
-                    <i class="fa-regular fa-circle-user"></i>
-                    <div class="admin-categories-userinfo">
-                        <span id="adminTopName">Loading...</span>
-                        <small>Admin</small>
-                    </div>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
-            </div>
+<main class="page-content">
+            <div id="topbarArea"></div>
 
             <div class="admin-categories-header">
                 <h1>Project Categories</h1>
@@ -87,8 +43,8 @@
                 </table>
             </div>
         </main>
-    </div>
-
+    <script src="../../components/sidebar.js"></script>
+    <script src="../../components/topbar.js"></script>
     <script src="ad-projectcat.js"></script>
 </body>
 

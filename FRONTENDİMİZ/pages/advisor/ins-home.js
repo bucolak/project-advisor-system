@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-
+  renderSidebar(role);
   await loadAdvisorInfo(token, userId);
   await loadAdvisorStudents(token);
 });
@@ -107,7 +107,7 @@ async function loadAdvisorInfo(token, userId) {
     const firstName = advisor.firstName || "";
     const lastName = advisor.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
-
+    renderTopbar("topbarArea", fullName, "Advisor");
     document.getElementById("advisorTopName").textContent = `Dr. ${fullName}`;
     document.getElementById("advisorWelcomeText").textContent =
       `Welcome, Dr. ${firstName} 👋`;

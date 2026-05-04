@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "ad-announce.html";
     return;
   }
-
+renderSidebar(role);
   await loadAdminInfo(token, userId);
   await loadCategories(token);
   await loadAnnouncementTypes(token);
@@ -52,6 +52,7 @@ async function loadAdminInfo(token, userId) {
     if (!admin) return;
 
     const fullName = `${admin.firstName || ""} ${admin.lastName || ""}`.trim();
+    renderTopbar("topbarArea", fullName, "Admin");
     document.getElementById("adminTopName").textContent = fullName || "Admin";
 
   } catch (error) {

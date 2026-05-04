@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/style.css" />
 </head>
 
@@ -12,36 +13,11 @@
 
     <div class="dashboard-container">
 
-        <aside class="sidebar">
-            <div class="sidebar-top-icons">
-                <div>⌃</div>
-                <div>≪ ≫</div>
-                <div>⌄</div>
-            </div>
-
-            <nav class="sidebar-menu">
-                <a href="st-home.html" class="menu-item active">Home</a>
-                <a href="st-projects.html" class="menu-item">My Projects</a>
-                <a href="st-createprojects.html" class="menu-item">Create Project</a>
-                <a href="st-advisorrequests.html" class="menu-item">Advisor Requests</a>
-                <a href="st-advisors.html" class="menu-item">Advisors</a>
-                <a href="st-notifications.html" class="menu-item">Notifications</a>
-                <a href="st-profile.html" class="menu-item">Profile</a>
-            </nav>
-        </aside>
+        <div id="sidebarArea"></div>
 
         <main class="main-content">
 
-            <div class="top-profile">
-                <div class="profile-box">
-                    <div class="profile-icon">◉</div>
-                    <div class="profile-text">
-                        <div class="profile-name" id="topProfileName">Student Name</div>
-                        <div class="profile-role" id="topProfileRole">Student</div>
-                    </div>
-                    <div class="profile-arrow">⌄</div>
-                </div>
-            </div>
+            <div id="topbarArea"></div>
 
             <div class="row">
                 <div class="card">
@@ -98,8 +74,10 @@
         </main>
 
     </div>
-
+    <script src="../../components/sidebar.js"></script>
+    <script src="../../components/topbar.js"></script>
     <script src="st-home.js"></script>
+
 </body>
 
 </html>

@@ -11,60 +11,10 @@
 </head>
 
 <body>
-    <div class="advisor-notif-page">
-        <aside class="advisor-notif-sidebar">
-            <div class="advisor-notif-sidebar-icon">
-                <i class="fa-solid fa-up-down-left-right"></i>
-            </div>
+    <div id="sidebarArea"></div>
 
-            <ul class="advisor-notif-menu">
-                <li>
-                    <a href="ins-home.html">
-                        <i class="fa-solid fa-house"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ins.request.html">
-                        <i class="fa-regular fa-user"></i>
-                        <span>Requests</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ins-notification.html" class="active">
-                        <i class="fa-regular fa-bell"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="ins-profile.html">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
-
-        <main class="advisor-notif-content">
-            <div class="advisor-notif-topbar">
-                <div class="advisor-user-dropdown">
-                    <div class="advisor-user-box" id="advisorUserBox">
-                        <i class="fa-regular fa-circle-user"></i>
-                        <div>
-                            <div id="advisorTopName">Advisor</div>
-                            <small>Advisor</small>
-                        </div>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-
-                    <div class="advisor-dropdown-menu" id="profileDropdown">
-                        <a href="../../index.html" class="advisor-logout-btn" id="advisorLogoutBtn">Log Out</a>
-                    </div>
-                </div>
-            </div>
+<main class="page-content">
+          <div id="topbarArea"></div>  
 
             <div class="advisor-notif-header">
                 <h1>Notifications</h1>
@@ -85,8 +35,8 @@
                 </div>
             </div>
         </main>
-    </div>
-
+    <script src="../../components/sidebar.js"></script>
+<script src="../../components/topbar.js"></script>
     <script src="ins-notification.js"></script>
 </body>
 
