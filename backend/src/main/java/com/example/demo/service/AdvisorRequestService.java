@@ -18,6 +18,7 @@ import com.example.demo.entity.User;
 import com.example.demo.enums.RequestStatus;
 import com.example.demo.repository.AdvisorRepository;
 import com.example.demo.repository.AdvisorRequestRepository;
+import com.example.demo.repository.ProjectRepository;
 import com.example.demo.repository.StudentRepository;
 
 @Service
@@ -26,15 +27,18 @@ public class AdvisorRequestService {
     private final AdvisorRequestRepository advisorRequestRepository;
     private final AdvisorRepository advisorRepository;
     private final StudentRepository studentRepository;
+    private final ProjectRepository projectRepository;
 
     public AdvisorRequestService(
             AdvisorRequestRepository advisorRequestRepository,
             AdvisorRepository advisorRepository,
-            StudentRepository studentRepository
+            StudentRepository studentRepository,
+            ProjectRepository projectRepository
     ) {
         this.advisorRequestRepository = advisorRequestRepository;
         this.advisorRepository = advisorRepository;
         this.studentRepository = studentRepository;
+        this.projectRepository = projectRepository;
     }
 
     public List<Map<String, Object>> getPendingRequestsForAdvisor(Long advisorUserId) {
@@ -146,10 +150,34 @@ public Map<String, Object> withdrawRequest(Long studentUserId, Long requestId) {
         map.put("studentDepartment", student.getDepartment());
         map.put("studentSkills", student.getSkills());
 
+        map.put("studentResearchInterests", student.getResearchInterests());
+        map.put("studentRelevantCourses", student.getRelevantCourses());
+        map.put("researchInterests", student.getResearchInterests());
+        map.put("interests", student.getResearchInterests());
+
         map.put("advisorId", advisorUser.getId());
         map.put("advisorName", advisorUser.getFirstName() + " " + advisorUser.getLastName());
         map.put("advisorDepartment", advisor.getDepartment());
         map.put("advisorTitle", advisor.getTitle());
+
+        // 🔥 OTHER PROJECTS
+        List<Map<String, Object>> otherProjects = projectRepository
+        .findByStudentAndIsDeletedFalse(student)
+        .stream()
+        .filter(p -> !p.getId().equals(project.getId()))
+        .map(p -> {
+            Map<String, Object> projectMap = new HashMap<>();
+            projectMap.put("id", p.getId());
+            projectMap.put("title", p.getTitle());
+            projectMap.put("description", p.getDescription());
+            projectMap.put("requiredSkills", p.getRequiredSkills());
+            projectMap.put("projectType",
+                    p.getCategory() != null ? p.getCategory().getName() : "PROJECT");
+            return projectMap;
+        })
+        .toList();
+
+    map.put("otherProjects", otherProjects);
 
         return map;
     }
