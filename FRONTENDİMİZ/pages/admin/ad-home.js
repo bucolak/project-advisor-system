@@ -263,6 +263,8 @@ async function openCategoryProjectsModal(categoryId, categoryName, token) {
     list.innerHTML = "";
 
     projects.forEach(project => {
+      const projectId = project.id || project.projectId;
+
       const item = document.createElement("div");
       item.className = "admin-projects-modal-item";
 
@@ -277,6 +279,17 @@ async function openCategoryProjectsModal(categoryId, categoryName, token) {
           View Details
         </button>
       `;
+
+      const detailsBtn = item.querySelector(".admin-projects-detail-btn");
+
+      detailsBtn.addEventListener("click", function () {
+        if (!projectId) {
+          alert("Project id not found.");
+          return;
+        }
+
+        window.location.href = `project-details2.html?projectId=${projectId}`;
+      });
 
       list.appendChild(item);
     });

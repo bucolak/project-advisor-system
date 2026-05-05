@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details (Admin)</title>
+
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="project-details-page">
+
+    <div class="details-header">
+
+        <button class="back-home" id="backHomeBtn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Admin Home
+        </button>
+
+        <div class="project-badge" id="projectCategoryBadge">PROJECT</div>
+    </div>
+
+    <h1 class="details-title" id="detailsPageTitle">Project Details</h1>
+
+    <div class="details-content">
+
+        <!-- PROJECT -->
+        <div class="project-overview-box">
+            <h2>Project Overview</h2>
+
+            <div class="overview-card">
+                <h3 id="projectTitle">Loading...</h3>
+
+                <p class="skills">
+                    <strong>Skills:</strong>
+                    <span id="projectSkills">-</span>
+                </p>
+
+                <div class="description-section">
+                    <h4>Description:</h4>
+                    <p id="projectDescription">-</p>
+                </div>
+
+                <div class="roles-section">
+                    <h4>Roles Needed:</h4>
+                    <p id="projectRoles">-</p>
+                </div>
+
+                <div class="roles-section">
+                    <h4>Team Size:</h4>
+                    <p id="projectTeamSize">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STUDENT -->
+        <div class="student-profile-box">
+
+            <h2>Student Profile</h2>
+
+            <div class="student-card">
+
+                <div class="student-top">
+                    <div class="student-icon">
+                        <i class="fa-regular fa-circle-user"></i>
+                    </div>
+
+                    <div class="student-main-info">
+                        <h3 id="studentName">Student Name</h3>
+                        <p id="studentDepartment">Department</p>
+                        <span id="studentEmail">Email: -</span>
+                    </div>
+                </div>
+
+                <div class="student-info-row">
+                    <p><strong>Class:</strong> <span id="studentYear">-</span></p>
+                    <p><strong>GPA:</strong> <span id="studentGpa">-</span></p>
+                </div>
+
+                <div class="student-section">
+                    <h4>Student Skills:</h4>
+                    <p id="studentSkills">-</p>
+                </div>
+
+                <div class="student-section">
+                    <h4>GitHub:</h4>
+                    <p id="studentGithub">-</p>
+                </div>
+
+                <div class="student-section">
+                    <h4>LinkedIn:</h4>
+                    <p id="studentLinkedin">-</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="project-details2.js"></script>
+
+</body>
+</html>

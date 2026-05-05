@@ -107,14 +107,27 @@ async function loadAdvisorInfo(token, userId) {
     const firstName = advisor.firstName || "";
     const lastName = advisor.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
-    renderTopbar("topbarArea", fullName, "Advisor");
-    document.getElementById("advisorTopName").textContent = `Dr. ${fullName}`;
-    document.getElementById("advisorWelcomeText").textContent =
-      `Welcome, Dr. ${firstName} 👋`;
-    document.getElementById("advisorDepartment").textContent =
-      advisor.department || "-";
-    document.getElementById("advisorTitle").textContent =
-      advisor.title || "-";
+
+    renderTopbar("topbarArea", fullName || "Advisor", "Advisor");
+
+    const advisorTopName = document.getElementById("advisorTopName");
+    const advisorWelcomeText = document.getElementById("advisorWelcomeText");
+    const advisorDepartment = document.getElementById("advisorDepartment");
+    const advisorTitle = document.getElementById("advisorTitle");
+
+    if (advisorTopName) advisorTopName.textContent = `Dr. ${fullName || "Advisor"}`;
+
+    if (advisorWelcomeText) {
+      advisorWelcomeText.textContent = `Welcome, Dr. ${firstName || "Advisor"} 👋`;
+    }
+
+    if (advisorDepartment) {
+      advisorDepartment.textContent = advisor.department || "-";
+    }
+
+    if (advisorTitle) {
+      advisorTitle.textContent = advisor.title || "-";
+    }
 
     setAdvisorStatus(advisor.advisingStatus || "ACTIVE");
 

@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-renderSidebar(role);
+
+  renderSidebar(role);
 
   await loadStudentProfile(token, userId);
   await loadProjectCategoryFilter(token);
@@ -47,12 +48,20 @@ async function loadStudentProfile(token, userId) {
     const firstName = profile.firstName || "";
     const lastName = profile.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
-    renderTopbar("topbarArea", fullName, "Student");
-    document.getElementById("topProfileName").textContent = fullName || "Student";
-    document.getElementById("topProfileRole").textContent = "Student";
-    document.getElementById("welcomeText").textContent = `Welcome, ${firstName || "Student"} 👋`;
-    document.getElementById("studentDepartment").textContent = profile.department || "-";
-    document.getElementById("studentYear").textContent = profile.year ?? "-";
+
+    renderTopbar("topbarArea", fullName || "Student", "Student");
+
+    const topProfileName = document.getElementById("topProfileName");
+    const topProfileRole = document.getElementById("topProfileRole");
+    const welcomeText = document.getElementById("welcomeText");
+    const studentDepartment = document.getElementById("studentDepartment");
+    const studentYear = document.getElementById("studentYear");
+
+    if (topProfileName) topProfileName.textContent = fullName || "Student";
+    if (topProfileRole) topProfileRole.textContent = "Student";
+    if (welcomeText) welcomeText.textContent = `Welcome, ${firstName || "Student"} 👋`;
+    if (studentDepartment) studentDepartment.textContent = profile.department || "-";
+    if (studentYear) studentYear.textContent = profile.year ?? "-";
 
   } catch (error) {
     console.error("Student home load error:", error);
