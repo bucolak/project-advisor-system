@@ -62,27 +62,17 @@ function setupStatusButtons() {
 
   if (!activeBtn || !inactiveBtn) return;
 
-  activeBtn.addEventListener("click", function () {
-    if (currentAdvisorStatus === "INACTIVE") {
-      alert("You cannot become active again after becoming inactive.");
-      return;
-    }
-
-    setAdvisorStatus("ACTIVE");
+  activeBtn.addEventListener("click", async function () {
+    await updateAdvisorStatus("ACTIVE");
   });
 
-  inactiveBtn.addEventListener("click", function () {
-    if (currentAdvisorStatus === "INACTIVE") {
-      alert("You are already inactive.");
-      return;
-    }
-
+  inactiveBtn.addEventListener("click", async function () {
     if (advisorProjectCount < 5) {
       alert("You cannot become inactive yet. You must have 5 projects first.");
       return;
     }
 
-    setAdvisorStatus("INACTIVE");
+    await updateAdvisorStatus("INACTIVE");
   });
 }
 
@@ -118,13 +108,13 @@ async function loadAdvisorInfo(token, userId) {
     const lastName = advisor.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
 
-  
+    renderTopbar("topbarArea", fullName || "Advisor", "Advisor");
 
     const advisorTopName = document.getElementById("advisorTopName");
     const advisorWelcomeText = document.getElementById("advisorWelcomeText");
     const advisorDepartment = document.getElementById("advisorDepartment");
     const advisorTitle = document.getElementById("advisorTitle");
-     renderTopbar("topbarArea", `Dr. ${fullName}` || "Advisor", "Advisor");
+
     if (advisorTopName) advisorTopName.textContent = `Dr. ${fullName || "Advisor"}`;
 
     if (advisorWelcomeText) {
@@ -147,6 +137,48 @@ async function loadAdvisorInfo(token, userId) {
   }
 }
 
+async function updateAdvisorStatus(status) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Unauthorized access.");
+    window.location.href = "../../index.html";
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/advisors/status`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ status })
+    });
+
+    const text = await response.text();
+
+    console.log("UPDATE ADVISOR STATUS:", response.status);
+    console.log("UPDATE ADVISOR STATUS RESPONSE:", text);
+
+    if (!response.ok) {
+      alert("Advisor status could not be updated.");
+      return;
+    }
+
+    const result = text ? JSON.parse(text) : null;
+    const updatedAdvisor = result?.data;
+
+    setAdvisorStatus(updatedAdvisor?.advisingStatus || status);
+
+  } catch (error) {
+    console.error("Advisor status update error:", error);
+    alert("Server error while updating advisor status.");
+  }
+}
+
+
+
 function setAdvisorStatus(status) {
   const activeBtn = document.getElementById("advisorActiveBtn");
   const inactiveBtn = document.getElementById("advisorInactiveBtn");
@@ -154,31 +186,17 @@ function setAdvisorStatus(status) {
 
   if (!activeBtn || !inactiveBtn || !statusText) return;
 
-  currentAdvisorStatus = String(status).toUpperCase();
-  localStorage.setItem("advisorStatus", currentAdvisorStatus);
-
   activeBtn.classList.remove("selected");
   inactiveBtn.classList.remove("selected");
 
+  currentAdvisorStatus = String(status).toUpperCase();
+  
+
   if (currentAdvisorStatus === "ACTIVE") {
     activeBtn.classList.add("selected");
-
-    activeBtn.style.pointerEvents = "auto";
-    activeBtn.style.opacity = "1";
-
-    inactiveBtn.style.pointerEvents = "auto";
-    inactiveBtn.style.opacity = "1";
-
     statusText.textContent = "You are currently available for advising students";
   } else {
     inactiveBtn.classList.add("selected");
-
-    activeBtn.style.pointerEvents = "none";
-    activeBtn.style.opacity = "0.5";
-
-    inactiveBtn.style.pointerEvents = "none";
-    inactiveBtn.style.opacity = "1";
-
     statusText.textContent = "You are currently unavailable for advising students";
   }
 }
@@ -211,11 +229,9 @@ async function loadAdvisorStudents(token) {
     }
 
     const result = JSON.parse(text);
-  const students = result.data || result || [];
+    const students = result.data || result || [];
 
-students.reverse();
-
-advisorProjectCount = students.length;
+    advisorProjectCount = students.length;
 
     if (!students.length) {
       container.innerHTML = `

@@ -1690,7 +1690,7 @@ body {
 /* STATUS */
 .status-box {
   width: 500px;
-  min-height: 310px;
+  min-height: 301px;
   border: 1px solid #555;
   background: #efefef;
   padding: 34px 24px 24px;
@@ -7152,4 +7152,33 @@ body {
 .admin-home-badge.custom-5 {
   background: #475569;
   color: #fff;
+}
+/* Student Home - Open Projects header/filter */
+.open-projects-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.open-projects-header h3 {
+  margin: 0;
+}
+
+.open-projects-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.open-projects-filter label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#projectCategoryFilter {
+  min-width: 160px;
+  height: 34px;
+  padding: 4px 8px;
 }
