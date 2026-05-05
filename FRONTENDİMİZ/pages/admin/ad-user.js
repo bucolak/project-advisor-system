@@ -110,10 +110,14 @@ function renderFilteredUsers() {
       <td>${department}</td>
 
       <td>
-        <button class="admin-user-status-toggle ${status === "ACTIVE" ? "active" : "inactive"}" data-user-id="${user.id || user.userId}">
+  ${
+    role === "admin"
+      ? `<span class="admin-user-status-text active">Active</span>`
+      : `<button class="admin-user-status-toggle ${status === "ACTIVE" ? "active" : "inactive"}" data-user-id="${user.id || user.userId}">
           ${status === "ACTIVE" ? "Active" : "Inactive"}
-        </button>
-      </td>
+        </button>`
+  }
+</td>
 
       <td>${createdAt}</td>
     `;

@@ -3276,6 +3276,10 @@ body {
   background: #f28d32;
 }
 
+.admin-ann-badge.course {
+  background: #d9d323;
+}
+
 .admin-ann-date {
   font-size: 18px;
   color: #555;
@@ -7118,4 +7122,34 @@ body {
   background-color: #eeeeee !important;
   color: #777 !important;
   cursor: not-allowed;
+}
+
+.admin-ann-badge.custom-1,
+.admin-home-badge.custom-1 {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.admin-ann-badge.custom-2,
+.admin-home-badge.custom-2 {
+  background: #0891b2;
+  color: #fff;
+}
+
+.admin-ann-badge.custom-3,
+.admin-home-badge.custom-3 {
+  background: #16a34a;
+  color: #fff;
+}
+
+.admin-ann-badge.custom-4,
+.admin-home-badge.custom-4 {
+  background: #db2777;
+  color: #fff;
+}
+
+.admin-ann-badge.custom-5,
+.admin-home-badge.custom-5 {
+  background: #475569;
+  color: #fff;
 }

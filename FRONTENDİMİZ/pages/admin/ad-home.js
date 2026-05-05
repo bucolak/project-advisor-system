@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-renderSidebar(role);
+
+  renderSidebar(role);
   setupModal();
 
   await loadAdminInfo(token, userId);
@@ -38,14 +39,19 @@ async function loadAdminInfo(token, userId) {
       String(user.userId) === String(userId)
     );
 
-    if (!admin) return;
+    const fullName = admin
+      ? `${admin.firstName || admin.name || ""} ${admin.lastName || ""}`.trim()
+      : "";
 
-    const fullName = `${admin.firstName || ""} ${admin.lastName || ""}`.trim();
+    const safeName = fullName || "Admin";
 
-    if (!fullName) return;
-    renderTopbar("topbarArea", fullName, "Admin");
-    document.getElementById("adminTopName").textContent = fullName;
-    document.getElementById("adminWelcomeText").textContent = `Welcome, ${fullName} 👋`;
+    renderTopbar("topbarArea", safeName, "Admin");
+
+    const topNameEl = document.getElementById("adminTopName");
+    if (topNameEl) topNameEl.textContent = safeName;
+
+    const welcomeEl = document.getElementById("adminWelcomeText");
+    if (welcomeEl) welcomeEl.textContent = `Welcome, ${safeName} 👋`;
 
   } catch (error) {
     console.error("Admin info error:", error);
@@ -54,6 +60,7 @@ async function loadAdminInfo(token, userId) {
 
 async function loadAnnouncements(token) {
   const list = document.getElementById("adminAnnouncementsList");
+  if (!list) return;
 
   try {
     const response = await fetch(`${API_BASE}/api/admin/announcements`, {
@@ -86,6 +93,12 @@ async function loadAnnouncements(token) {
       return;
     }
 
+    announcements.sort((a, b) => {
+      const aId = Number(a.id || a.announcementId || 0);
+      const bId = Number(b.id || b.announcementId || 0);
+      return bId - aId;
+    });
+
     list.innerHTML = "";
 
     announcements.slice(0, 3).forEach(announcement => {
@@ -94,7 +107,7 @@ async function loadAnnouncements(token) {
 
       item.innerHTML = `
         <i class="fa-regular fa-calendar"></i>
-        <span>${announcement.title || announcement.description || "-"}</span>
+        <span>${announcement.title || announcement.description || announcement.content || "-"}</span>
       `;
 
       list.appendChild(item);
@@ -125,9 +138,13 @@ async function loadUsersOverview(token) {
     ).length;
     const inactive = total - active;
 
-    document.getElementById("totalUsersText").textContent = `Total Users: ${total}`;
-    document.getElementById("activeUsersText").textContent = `Active: ${active}`;
-    document.getElementById("inactiveUsersText").textContent = `Deactivated: ${inactive}`;
+    const totalEl = document.getElementById("totalUsersText");
+    const activeEl = document.getElementById("activeUsersText");
+    const inactiveEl = document.getElementById("inactiveUsersText");
+
+    if (totalEl) totalEl.textContent = `Total Users: ${total}`;
+    if (activeEl) activeEl.textContent = `Active: ${active}`;
+    if (inactiveEl) inactiveEl.textContent = `Deactivated: ${inactive}`;
 
   } catch (error) {
     console.error("Users overview error:", error);
@@ -136,6 +153,7 @@ async function loadUsersOverview(token) {
 
 async function loadProjectCategories(token) {
   const wrapper = document.getElementById("adminCategoriesWrapper");
+  if (!wrapper) return;
 
   try {
     const response = await fetch(`${API_BASE}/api/admin/categories`, {
@@ -169,6 +187,12 @@ async function loadProjectCategories(token) {
       `;
       return;
     }
+
+    categories.sort((a, b) => {
+      const aId = Number(a.id || a.categoryId || 0);
+      const bId = Number(b.id || b.categoryId || 0);
+      return bId - aId;
+    });
 
     wrapper.innerHTML = "";
 
@@ -219,6 +243,8 @@ async function openCategoryProjectsModal(categoryId, categoryName, token) {
   const title = document.getElementById("modalCategoryTitle");
   const badge = document.getElementById("modalCategoryBadge");
   const list = document.getElementById("modalProjectsList");
+
+  if (!modal || !title || !badge || !list) return;
 
   title.textContent = `${categoryName} Projects`;
   badge.textContent = categoryName;
@@ -319,17 +345,16 @@ function setupModal() {
 function getCategoryBadgeClass(name) {
   const value = String(name || "").toUpperCase();
 
-  if (value.includes("TUBITAK") || value.includes("TÜBİTAK")) {
-    return "tubitak";
+  if (value.includes("TUBITAK") || value.includes("TÜBİTAK")) return "tubitak";
+  if (value.includes("TEKNOFEST")) return "teknofest";
+  if (value.includes("COURSE")) return "course";
+
+  const customClasses = ["custom-1", "custom-2", "custom-3", "custom-4", "custom-5"];
+
+  let total = 0;
+  for (let i = 0; i < value.length; i++) {
+    total += value.charCodeAt(i);
   }
 
-  if (value.includes("TEKNOFEST")) {
-    return "teknofest";
-  }
-
-  if (value.includes("COURSE")) {
-    return "course";
-  }
-
-  return "course";
+  return customClasses[total % customClasses.length];
 }

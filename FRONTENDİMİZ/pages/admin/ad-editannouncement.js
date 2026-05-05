@@ -1,6 +1,8 @@
 const API_BASE = "http://localhost:8080";
 
 let currentAnnouncementId = null;
+let currentAnnouncement = null;
+let parsedOldAnnouncement = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
@@ -21,7 +23,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "ad-announce.html";
     return;
   }
-renderSidebar(role);
+
+  renderSidebar(role);
+
   await loadAdminInfo(token, userId);
   await loadCategories(token);
   await loadAnnouncementTypes(token);
@@ -52,8 +56,11 @@ async function loadAdminInfo(token, userId) {
     if (!admin) return;
 
     const fullName = `${admin.firstName || ""} ${admin.lastName || ""}`.trim();
-    renderTopbar("topbarArea", fullName, "Admin");
-    document.getElementById("adminTopName").textContent = fullName || "Admin";
+
+    renderTopbar("topbarArea", fullName || "Admin", "Admin");
+
+    const adminTopName = document.getElementById("adminTopName");
+    if (adminTopName) adminTopName.textContent = fullName || "Admin";
 
   } catch (error) {
     console.error("Admin info load error:", error);
@@ -132,7 +139,7 @@ async function loadAnnouncementTypes(token) {
 
 async function loadAnnouncementDetail(token, id) {
   try {
-    const response = await fetch(`${API_BASE}/api/admin/announcements/${id}`, {
+    const response = await fetch(`${API_BASE}/api/admin/announcements`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
@@ -141,8 +148,8 @@ async function loadAnnouncementDetail(token, id) {
 
     const text = await response.text();
 
-    console.log("EDIT ANN DETAIL STATUS:", response.status);
-    console.log("EDIT ANN DETAIL RESPONSE:", text);
+    console.log("EDIT ANN LIST STATUS:", response.status);
+    console.log("EDIT ANN LIST RESPONSE:", text);
 
     if (!response.ok) {
       alert("Announcement detail could not be loaded.");
@@ -151,8 +158,19 @@ async function loadAnnouncementDetail(token, id) {
     }
 
     const result = JSON.parse(text);
-    const announcement = result.data || result;
+    const announcements = result.data || result || [];
 
+    const announcement = announcements.find(item =>
+      String(item.id || item.announcementId) === String(id)
+    );
+
+    if (!announcement) {
+      alert("Announcement not found.");
+      window.location.href = "ad-announce.html";
+      return;
+    }
+
+    currentAnnouncement = announcement;
     fillEditForm(announcement);
 
   } catch (error) {
@@ -162,20 +180,75 @@ async function loadAnnouncementDetail(token, id) {
 }
 
 function fillEditForm(announcement) {
-  document.getElementById("announcementTitle").value =
-    announcement.title || "";
+  parsedOldAnnouncement = parseAnnouncementData(announcement);
 
-  document.getElementById("announcementCategory").value =
-    announcement.category || "";
+  const titleInput = document.getElementById("announcementTitle");
+  const categorySelect = document.getElementById("announcementCategory");
+  const deadlineInput = document.getElementById("announcementDeadline");
+  const typeSelect = document.getElementById("announcementType");
+  const descriptionInput = document.getElementById("announcementDescription");
 
-  document.getElementById("announcementDeadline").value =
-    formatDateForInput(announcement.deadline);
+  titleInput.value = "";
+  titleInput.placeholder = parsedOldAnnouncement.title || "Enter announcement title";
 
-  document.getElementById("announcementType").value =
-    announcement.type || "";
+  descriptionInput.value = "";
+  descriptionInput.placeholder = parsedOldAnnouncement.description || "Enter detailed description";
 
-  document.getElementById("announcementDescription").value =
-    announcement.description || "";
+  deadlineInput.value = formatDateForInput(parsedOldAnnouncement.deadline);
+
+  setSelectByTextOrValue(categorySelect, parsedOldAnnouncement.category);
+  setSelectByTextOrValue(typeSelect, parsedOldAnnouncement.type);
+}
+
+function parseAnnouncementData(announcement) {
+  const rawDescription = announcement.description || announcement.content || "";
+
+  const parsed = {
+    title: announcement.title || "",
+    category: announcement.category || announcement.categoryName || "",
+    deadline: announcement.deadline || "",
+    type: announcement.type || announcement.announcementType || "",
+    description: rawDescription
+  };
+
+  const lines = String(rawDescription).split("\n");
+
+  lines.forEach(line => {
+    const clean = line.trim();
+
+    if (clean.toLowerCase().startsWith("category:")) {
+      parsed.category = clean.replace(/category:/i, "").trim();
+    }
+
+    if (clean.toLowerCase().startsWith("type:")) {
+      parsed.type = clean.replace(/type:/i, "").trim();
+    }
+
+    if (clean.toLowerCase().startsWith("deadline:")) {
+      parsed.deadline = clean.replace(/deadline:/i, "").trim();
+    }
+
+    if (clean.toLowerCase().startsWith("description:")) {
+      parsed.description = clean.replace(/description:/i, "").trim();
+    }
+  });
+
+  return parsed;
+}
+
+function setSelectByTextOrValue(select, value) {
+  if (!select || !value) return;
+
+  const normalizedValue = normalizeText(value);
+
+  const matchedOption = Array.from(select.options).find(option =>
+    normalizeText(option.value) === normalizedValue ||
+    normalizeText(option.textContent) === normalizedValue
+  );
+
+  if (matchedOption) {
+    select.value = matchedOption.value;
+  }
 }
 
 function setupEditAnnouncementForm(token) {
@@ -184,13 +257,26 @@ function setupEditAnnouncementForm(token) {
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const title = document.getElementById("announcementTitle").value.trim();
-    const category = document.getElementById("announcementCategory").value;
-    const deadline = document.getElementById("announcementDeadline").value;
-    const type = document.getElementById("announcementType").value;
-    const description = document.getElementById("announcementDescription").value.trim();
+    if (!currentAnnouncement || !parsedOldAnnouncement) {
+      alert("Announcement data is not loaded yet.");
+      return;
+    }
 
-    if (!title || !category || !deadline || !type || !description) {
+    const titleInput = document.getElementById("announcementTitle").value.trim();
+    const categoryInput = document.getElementById("announcementCategory").value;
+    const deadlineInput = document.getElementById("announcementDeadline").value;
+    const typeInput = document.getElementById("announcementType").value;
+    const descriptionInput = document.getElementById("announcementDescription").value.trim();
+
+    const payload = {
+      title: titleInput || parsedOldAnnouncement.title,
+      category: categoryInput || parsedOldAnnouncement.category,
+      deadline: deadlineInput || parsedOldAnnouncement.deadline,
+      type: typeInput || parsedOldAnnouncement.type,
+      description: descriptionInput || parsedOldAnnouncement.description
+    };
+
+    if (!payload.title || !payload.category || !payload.deadline || !payload.type || !payload.description) {
       alert("Please fill all required fields.");
       return;
     }
@@ -202,13 +288,7 @@ function setupEditAnnouncementForm(token) {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          title,
-          category,
-          deadline,
-          type,
-          description
-        })
+        body: JSON.stringify(payload)
       });
 
       const text = await response.text();
@@ -241,4 +321,16 @@ function formatDateForInput(dateValue) {
   }
 
   return date.toISOString().slice(0, 10);
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace("ü", "u")
+    .replace("ı", "i")
+    .replace("ö", "o")
+    .replace("ğ", "g")
+    .replace("ş", "s")
+    .replace("ç", "c");
 }

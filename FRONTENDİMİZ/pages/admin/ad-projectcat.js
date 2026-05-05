@@ -66,7 +66,7 @@ async function loadCategories(token) {
     if (!response.ok) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="5">Could not load categories.</td>
+          <td colspan="4">Could not load categories.</td>
         </tr>
       `;
       return;
@@ -78,7 +78,7 @@ async function loadCategories(token) {
     if (!categories.length) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="5">No categories found.</td>
+          <td colspan="4">No categories found.</td>
         </tr>
       `;
       return;
@@ -86,12 +86,18 @@ async function loadCategories(token) {
 
     tbody.innerHTML = "";
 
+    categories.sort((a, b) => {
+      const aId = a.id || a.categoryId || 0;
+      const bId = b.id || b.categoryId || 0;
+       return bId - aId;
+});
+
     categories.forEach(category => {
       const categoryId = category.id || category.categoryId;
       const categoryName = category.name || category.categoryName || "-";
       const description = category.description || "-";
       const activeProjects = category.activeProjects ?? category.projectCount ?? 0;
-      const deadlines = category.deadlines ?? category.deadlineCount ?? 0;
+      
 
       const tr = document.createElement("tr");
       tr.className = "category-row";
@@ -100,7 +106,7 @@ async function loadCategories(token) {
         <td>${categoryName}</td>
         <td>${description}</td>
         <td>${activeProjects}</td>
-        <td>${deadlines}</td>
+        
         <td>
           <div class="admin-categories-actions">
             <a href="ad-editcategory.html?id=${categoryId}" class="edit-btn">Edit</a>
@@ -120,7 +126,7 @@ async function loadCategories(token) {
     console.error("Category load error:", error);
     tbody.innerHTML = `
       <tr>
-        <td colspan="5">Server error while loading categories.</td>
+        <td colspan="4">Server error while loading categories.</td>
       </tr>
     `;
   }
