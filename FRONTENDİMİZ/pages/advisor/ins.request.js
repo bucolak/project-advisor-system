@@ -284,22 +284,24 @@ function highlightTargetRequest() {
 
   if (!targetId) return;
 
-  setTimeout(() => {
+  const tryFindElement = setInterval(() => {
     const targetElement = document.getElementById(targetId);
 
-    if (!targetElement) return;
+    if (targetElement) {
+      clearInterval(tryFindElement);
 
-    targetElement.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+      targetElement.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
 
-    targetElement.classList.add("highlight-request");
+      targetElement.classList.add("highlight-request");
 
-    setTimeout(() => {
-      targetElement.classList.remove("highlight-request");
-    }, 3000);
-  }, 300);
+      setTimeout(() => {
+        targetElement.classList.remove("highlight-request");
+      }, 1000);
+    }
+  }, 100);
 }
 
 function openStudentModal(request) {
@@ -316,9 +318,9 @@ function openStudentModal(request) {
   document.getElementById("modalProjectTag").textContent =
     request.projectType || "PROJECT";
 
-  setList("modalRelevantCourses", []);
-  setList("modalResearchInterests", []);
-  setOtherProjects([]);
+setList("modalStudentInterests", request.interests || request.researchInterests || []);
+setList("modalStudentSkills", request.studentSkills || request.skills || []);
+setOtherProjects([]);
 
   document.getElementById("studentModal").classList.add("active");
 }
@@ -333,14 +335,25 @@ function setList(elementId, items) {
 
   if (!ul) return;
 
-  if (!items || !items.length) {
+  let list = [];
+
+  if (Array.isArray(items)) {
+    list = items;
+  } else if (typeof items === "string" && items.trim() !== "") {
+    list = items
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean);
+  }
+
+  if (!list.length) {
     ul.innerHTML = "<li>No data</li>";
     return;
   }
 
   ul.innerHTML = "";
 
-  items.forEach(item => {
+  list.forEach(item => {
     const li = document.createElement("li");
     li.textContent = item;
     ul.appendChild(li);

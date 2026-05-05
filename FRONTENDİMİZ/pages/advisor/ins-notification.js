@@ -69,9 +69,10 @@ async function loadAdvisorNotifications(token) {
       countEl.textContent = "0 New";
       return;
     }
+const result = JSON.parse(text);
+const requests = result.data || result || [];
 
-    const result = JSON.parse(text);
-    const requests = result.data || result || [];
+requests.reverse();
 
     countEl.textContent = `${requests.length} New`;
 

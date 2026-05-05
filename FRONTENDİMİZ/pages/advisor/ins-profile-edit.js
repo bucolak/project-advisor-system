@@ -1,5 +1,11 @@
 const API_BASE = "http://localhost:8080";
 
+let originalFirstName = "";
+let originalLastName = "";
+let originalTitle = "";
+let originalEmail = "";
+let originalDepartment = "";
+
 document.addEventListener("DOMContentLoaded", async function () {
   setupInterestAdder();
   setupSaveButton();
@@ -77,11 +83,38 @@ async function loadAdvisorProfile(token, userId) {
 
     document.getElementById("advisorDisplayName").textContent = fullName || "Advisor";
 
-    document.getElementById("fullName").value = fullNameWithoutTitle;
-    document.getElementById("email").value = advisor.email || "";
-    document.getElementById("department").value = advisor.department || "";
-    document.getElementById("title").value = advisor.title || "";
-    document.getElementById("areasOfExpertise").value = advisor.areasOfExpertise || "";
+    originalFirstName = firstName;
+originalLastName = lastName;
+originalTitle = advisor.title || "";
+originalEmail = advisor.email || "";
+originalDepartment = advisor.department || "";
+
+const fullNameInput = document.getElementById("fullName");
+const titleInput = document.getElementById("title");
+const emailInput = document.getElementById("email");
+const departmentInput = document.getElementById("department");
+
+emailInput.value = originalEmail;
+departmentInput.value = originalDepartment;
+
+emailInput.readOnly = true;
+departmentInput.readOnly = true;
+
+emailInput.classList.add("readonly-field");
+departmentInput.classList.add("readonly-field");
+
+fullNameInput.value = fullNameWithoutTitle;
+titleInput.value = originalTitle;
+
+fullNameInput.readOnly = true;
+titleInput.readOnly = true;
+
+fullNameInput.classList.add("readonly-field");
+titleInput.classList.add("readonly-field");
+
+document.getElementById("email").value = advisor.email || "";
+document.getElementById("department").value = advisor.department || "";
+document.getElementById("areasOfExpertise").value = advisor.areasOfExpertise || "";
 
     renderResearchInterests(advisor.researchInterests);
 
@@ -92,21 +125,17 @@ async function loadAdvisorProfile(token, userId) {
 }
 
 async function updateAdvisorProfile(token, userId) {
-  const fullName = document.getElementById("fullName").value.trim();
-  const nameParts = fullName.split(" ").filter(Boolean);
 
-  const firstName = nameParts[0] || "";
-  const lastName = nameParts.slice(1).join(" ");
 
-  const payload = {
-    firstName: firstName,
-    lastName: lastName,
-    email: document.getElementById("email").value.trim(),
-    department: document.getElementById("department").value.trim(),
-    title: document.getElementById("title").value.trim(),
-    areasOfExpertise: document.getElementById("areasOfExpertise").value.trim(),
-    researchInterests: getResearchInterestsText()
-  };
+const payload = {
+  firstName: originalFirstName,
+  lastName: originalLastName,
+email: originalEmail,
+department: originalDepartment,
+  title: originalTitle,
+  areasOfExpertise: document.getElementById("areasOfExpertise").value.trim(),
+  researchInterests: getResearchInterestsText()
+};
 
   try {
     const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {

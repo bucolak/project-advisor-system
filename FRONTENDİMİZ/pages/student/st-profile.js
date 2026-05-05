@@ -48,7 +48,9 @@ async function loadStudentProfile(token, userId) {
     document.getElementById("profileFullName").textContent = fullName || "Student";
     document.getElementById("profileDepartment").textContent = profile.department || "-";
     document.getElementById("profileYear").textContent = profile.year ?? "-";
+    document.getElementById("profileGpa").textContent = profile.gpa ?? "-";
     document.getElementById("profileEmail").textContent = profile.email || "-";
+   
 
     document.getElementById("profileInterests").textContent =
       profile.interests || profile.researchInterests || "-";

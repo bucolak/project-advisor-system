@@ -63,10 +63,20 @@ function setupStatusButtons() {
   if (!activeBtn || !inactiveBtn) return;
 
   activeBtn.addEventListener("click", function () {
+    if (currentAdvisorStatus === "INACTIVE") {
+      alert("You cannot become active again after becoming inactive.");
+      return;
+    }
+
     setAdvisorStatus("ACTIVE");
   });
 
   inactiveBtn.addEventListener("click", function () {
+    if (currentAdvisorStatus === "INACTIVE") {
+      alert("You are already inactive.");
+      return;
+    }
+
     if (advisorProjectCount < 5) {
       alert("You cannot become inactive yet. You must have 5 projects first.");
       return;
@@ -108,13 +118,13 @@ async function loadAdvisorInfo(token, userId) {
     const lastName = advisor.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
 
-    renderTopbar("topbarArea", fullName || "Advisor", "Advisor");
+  
 
     const advisorTopName = document.getElementById("advisorTopName");
     const advisorWelcomeText = document.getElementById("advisorWelcomeText");
     const advisorDepartment = document.getElementById("advisorDepartment");
     const advisorTitle = document.getElementById("advisorTitle");
-
+     renderTopbar("topbarArea", `Dr. ${fullName}` || "Advisor", "Advisor");
     if (advisorTopName) advisorTopName.textContent = `Dr. ${fullName || "Advisor"}`;
 
     if (advisorWelcomeText) {
@@ -144,17 +154,31 @@ function setAdvisorStatus(status) {
 
   if (!activeBtn || !inactiveBtn || !statusText) return;
 
-  activeBtn.classList.remove("selected");
-  inactiveBtn.classList.remove("selected");
-
   currentAdvisorStatus = String(status).toUpperCase();
   localStorage.setItem("advisorStatus", currentAdvisorStatus);
 
+  activeBtn.classList.remove("selected");
+  inactiveBtn.classList.remove("selected");
+
   if (currentAdvisorStatus === "ACTIVE") {
     activeBtn.classList.add("selected");
+
+    activeBtn.style.pointerEvents = "auto";
+    activeBtn.style.opacity = "1";
+
+    inactiveBtn.style.pointerEvents = "auto";
+    inactiveBtn.style.opacity = "1";
+
     statusText.textContent = "You are currently available for advising students";
   } else {
     inactiveBtn.classList.add("selected");
+
+    activeBtn.style.pointerEvents = "none";
+    activeBtn.style.opacity = "0.5";
+
+    inactiveBtn.style.pointerEvents = "none";
+    inactiveBtn.style.opacity = "1";
+
     statusText.textContent = "You are currently unavailable for advising students";
   }
 }
@@ -187,9 +211,11 @@ async function loadAdvisorStudents(token) {
     }
 
     const result = JSON.parse(text);
-    const students = result.data || result || [];
+  const students = result.data || result || [];
 
-    advisorProjectCount = students.length;
+students.reverse();
+
+advisorProjectCount = students.length;
 
     if (!students.length) {
       container.innerHTML = `

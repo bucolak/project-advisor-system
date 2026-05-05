@@ -7108,4 +7108,14 @@ body {
   margin-left: 0 !important;
 
 }
-
+.highlight-request {
+  background-color: #d9ecff !important;
+  border: 2px solid #4a90e2 !important;
+  box-shadow: 0 0 12px rgba(74, 144, 226, 0.45);
+  transition: all 0.4s ease;
+}
+.readonly-field {
+  background-color: #eeeeee !important;
+  color: #777 !important;
+  cursor: not-allowed;
+}
