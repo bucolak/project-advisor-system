@@ -299,7 +299,6 @@ function closeRequestModal() {
   document.getElementById("requestModal").classList.remove("show");
   currentAdvisorId = null;
 }
-
 async function sendAdvisorRequest() {
   const token = localStorage.getItem("token");
   const selectedProjectId = document.getElementById("projectSelect").value;
@@ -308,6 +307,8 @@ async function sendAdvisorRequest() {
     alert("Please select a project.");
     return;
   }
+
+  const advisorIdToRestore = currentAdvisorId;
 
   try {
     const response = await fetch(
@@ -330,16 +331,39 @@ async function sendAdvisorRequest() {
       return;
     }
 
-    const actionCell = document.getElementById(`action-${currentAdvisorId}`);
-    const projectSelect = document.getElementById("projectSelect");
-    const selectedProjectText = projectSelect.options[projectSelect.selectedIndex].text;
+    const actionCell = document.getElementById(`action-${advisorIdToRestore}`);
 
-    actionCell.innerHTML = `
-      <div class="requested-wrapper">
-        <div class="requested-badge">Requested</div>
-        <div class="requested-project-name">${selectedProjectText}</div>
-      </div>
-    `;
+    const projectSelect = document.getElementById("projectSelect");
+
+    const selectedProjectText =
+      projectSelect.options[projectSelect.selectedIndex].text;
+
+    if (actionCell) {
+      actionCell.innerHTML = `
+        <div class="requested-wrapper">
+          <div class="requested-badge">Requested</div>
+
+          <div class="requested-project-name">
+            ${selectedProjectText}
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        actionCell.innerHTML = `
+          <button class="advisor-request-btn" data-advisor-id="${advisorIdToRestore}">
+            Request
+          </button>
+        `;
+
+        actionCell
+          .querySelector(".advisor-request-btn")
+          .addEventListener("click", function () {
+            openRequestModal(this.dataset.advisorId);
+          });
+
+      }, 2000);
+    }
 
     closeRequestModal();
     alert("Advisor request sent successfully.");

@@ -1,0 +1,130 @@
+.project-details-page {
+    padding: 22px 36px !important;
+    box-sizing: border-box !important;
+    min-height: 100vh !important;
+}
+
+/* üst */
+.details-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 18px !important;
+}
+
+.back-home {
+    font-size: 14px !important;
+    padding: 6px 12px !important;
+}
+
+.project-badge {
+    font-size: 22px !important;
+    padding: 12px 36px !important;
+    border-radius: 18px !important;
+}
+
+/* ana başlık */
+.details-title {
+    font-size: 42px !important;
+    margin: 0 0 18px 0 !important;
+    line-height: 1.1 !important;
+}
+
+/* iki kolon */
+.details-content {
+    display: grid !important;
+    grid-template-columns: 1.6fr 0.9fr !important;
+    gap: 32px !important;
+    align-items: start !important;
+}
+
+/* section başlıkları */
+.project-overview-box h2,
+.student-profile-box h2 {
+    font-size: 28px !important;
+    margin: 0 0 12px 0 !important;
+}
+
+/* kartlar */
+.overview-card,
+.student-card {
+    min-height: 455px !important;
+    height: auto !important;
+
+    padding: 24px 28px !important;
+
+    box-sizing: border-box !important;
+}
+
+/* sol kart */
+.overview-card h3 {
+    font-size: 34px !important;
+    margin: 0 0 18px 0 !important;
+    line-height: 1.15 !important;
+}
+
+.overview-card p {
+    font-size: 17px !important;
+    line-height: 1.35 !important;
+    margin: 8px 0 16px 0 !important;
+}
+
+.overview-card h4 {
+    font-size: 21px !important;
+    margin: 20px 0 8px 0 !important;
+}
+
+/* sağ kart */
+.student-card {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.student-top {
+    display: flex !important;
+    align-items: center !important;
+    gap: 18px !important;
+    padding: 18px 20px !important;
+}
+
+.student-icon i {
+    font-size: 62px !important;
+}
+
+.student-main-info h3 {
+    font-size: 30px !important;
+    margin: 0 0 6px 0 !important;
+}
+
+.student-main-info p {
+    font-size: 18px !important;
+    margin: 0 0 8px 0 !important;
+}
+
+.student-main-info span {
+    font-size: 15px !important;
+}
+
+.student-info-row {
+    padding: 18px 24px !important;
+}
+
+.student-info-row p {
+    font-size: 17px !important;
+    margin: 6px 0 !important;
+}
+
+.student-section {
+    padding: 18px 24px !important;
+    margin: 0 !important;
+}
+
+.student-section h4 {
+    font-size: 22px !important;
+    margin: 0 0 10px 0 !important;
+}
+
+.student-section p {
+    font-size: 16px !important;
+    margin: 0 !important;
+}
