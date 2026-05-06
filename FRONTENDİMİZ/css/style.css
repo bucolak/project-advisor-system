@@ -2202,15 +2202,28 @@ body {
 }
 
 .advisor-notif-view-btn {
-  min-width: 92px;
+  width: 92px;
   height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
   border: 1px solid #555;
   border-radius: 8px;
+
   background: transparent;
   color: #2d9bf0;
+
   font-size: 14px;
   font-weight: 500;
+
   cursor: pointer;
+
+  text-align: center;
+  line-height: 1;
 }
 .advisor-profile-page {
   display: flex;
@@ -4939,7 +4952,7 @@ body {
   background: #cfcaca;
   color: #fff;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 20px;
   font-size: 18px;
   font-weight: 600;
   transition: 0.2s ease;
@@ -7220,4 +7233,136 @@ body {
   font-size: 20px;
   font-weight: 500;
   color: #111;
+}
+
+#notificationsList a,
+#notificationsList button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 110px !important;
+    height: 36px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    text-align: center !important;
+    line-height: 1 !important;
+
+    box-sizing: border-box !important;
+    text-decoration: none !important;
+}
+
+.student-profile-edit-btn {
+
+  width: 180px !important;
+
+  height: 55px !important;
+
+  padding: 0 24px !important;
+
+  display: inline-flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  gap: 10px !important;
+
+  border-radius: 500px !important;
+
+  box-sizing: border-box !important;
+
+}
+
+.profile-skills-box {
+  width: 430px !important;
+  height: 220px !important;
+}
+
+.skills-area {
+  min-height: 130px !important;
+  height: auto !important;
+
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+
+  padding: 24px !important;
+}
+
+.skill-tag {
+  width: auto !important;
+  min-width: unset !important;
+  height: 38px !important;
+
+  padding: 0 18px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.bio-area {
+
+  padding: 18px !important;
+
+  box-sizing: border-box !important;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  line-height: 1.4;
+
+}
+
+.advisor-profile-edit-btn {
+
+  height: 54px !important;
+
+  padding: 0 32px !important;
+
+  border-radius: 100px !important;
+
+  display: inline-flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  gap: 10px !important;
+
+  box-sizing: border-box !important;
+
+  text-decoration: none !important;
+
+}
+
+.profile-info-row .value {
+
+  background: transparent !important;
+
+  border: none !important;
+
+  box-shadow: none !important;
+
+}
+
+.profile-line {
+  margin: 14px 0 !important;
+  font-size: 20px !important;
+}
+
+.profile-line strong {
+  display: inline-block !important;
+  min-width: 150px !important;
+}
+
+.profile-line span {
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }

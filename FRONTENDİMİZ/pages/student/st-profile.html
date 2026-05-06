@@ -11,83 +11,113 @@
 </head>
 
 <body>
+
     <div id="sidebarArea"></div>
 
-<main class="page-content main">
-            <div id="topbarArea"></div>
+    <main class="page-content main">
 
-            <h1 class="profile-title">Profile</h1>
+        <div id="topbarArea"></div>
 
-            <div class="profile-card">
-                <div class="profile-card-top">
-                    <div class="profile-user-area">
-                        <i class="fa-regular fa-circle-user"></i>
+        <h1 class="profile-title">Profile</h1>
 
-                        <div class="profile-main-info">
-                            <h2 id="profileFullName">Student Name</h2>
+        <div class="profile-card">
 
-                            <div class="profile-info-row">
-                                <span class="label">Department:</span>
-                                <span class="value long" id="profileDepartment">-</span>
-                            </div>
+            <div class="profile-card-top">
 
-                            <div class="profile-info-row">
-                                <span class="label">Year:</span>
-                                <span class="value short" id="profileYear">-</span>
-                            </div>
-                            <div class="profile-info-row">
-  <span class="label">GPA:</span>
-  <span class="value short" id="profileGpa">-</span>
-</div>
-                        </div>
+                <div class="profile-user-area">
+
+                    <i class="fa-regular fa-circle-user"></i>
+
+                    <div class="profile-main-info">
+
+                        <h2 id="profileFullName">
+                            Student Name
+                        </h2>
+
+                        <p class="profile-line">
+                            <strong>Department:</strong>
+                            <span id="profileDepartment">-</span>
+                        </p>
+
+                        <p class="profile-line">
+                            <strong>Year:</strong>
+                            <span id="profileYear">-</span>
+                        </p>
+
+                        <p class="profile-line">
+                            <strong>GPA:</strong>
+                            <span id="profileGpa">-</span>
+                        </p>
+
                     </div>
 
-                    <a href="student-profile-edit.html" class="student-profile-edit-btn">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                        Edit Profile
-                    </a>
                 </div>
 
-                <div class="profile-contact-info">
-                    <div class="profile-info-row">
-                        <span class="label">E-mail:</span>
-                        <span class="value email" id="profileEmail">-</span>
-                    </div>
+                <a href="student-profile-edit.html" class="student-profile-edit-btn">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    Edit Profile
+                </a>
 
-                    <div class="profile-info-row">
-                        <span class="label">Interests:</span>
-                        <span class="value" id="profileInterests">-</span>
-                    </div>
-
-                    <div class="profile-info-row">
-                        <span class="label">Git-Hub link:</span>
-                        <span class="value medium" id="profileGithub">-</span>
-                    </div>
-
-                    <div class="profile-info-row">
-                        <span class="label">LinkedIn link:</span>
-                        <span class="value medium" id="profileLinkedin">-</span>
-                    </div>
-                </div>
             </div>
 
-            <div class="profile-bottom-section">
-                <div class="profile-bio-box">
-                    <h3>Short bio:</h3>
-                    <div class="bio-area" id="profileBio">No bio information.</div>
+            <div class="profile-contact-info">
+
+                <p class="profile-line">
+                    <strong>E-mail:</strong>
+                    <span id="profileEmail">-</span>
+                </p>
+
+                <p class="profile-line">
+                    <strong>Interests:</strong>
+                    <span id="profileInterests">-</span>
+                </p>
+
+                <p class="profile-line">
+                    <strong>Git-Hub link:</strong>
+                    <span id="profileGithub">-</span>
+                </p>
+
+                <p class="profile-line">
+                    <strong>LinkedIn link:</strong>
+                    <span id="profileLinkedin">-</span>
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="profile-bottom-section">
+
+            <div class="profile-bio-box">
+
+                <h3>Short bio:</h3>
+
+                <div class="bio-area" id="profileBio">
+                    No bio information.
                 </div>
 
-                <div class="profile-skills-box">
-                    <h3>Technical Skills:</h3>
-                    <div class="skills-area" id="profileSkills">
-                        <span class="skill-tag">No skills found</span>
-                    </div>
-                </div>
             </div>
-        </main>
-  <script src="../../components/sidebar.js"></script>  
-<script src="../../components/topbar.js"></script>
+
+            <div class="profile-skills-box">
+
+                <h3>Technical Skills:</h3>
+
+                <div class="skills-area" id="profileSkills">
+                    <span class="skill-tag">
+                        No skills found
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="../../components/sidebar.js"></script>
+    <script src="../../components/topbar.js"></script>
     <script src="st-profile.js"></script>
+
 </body>
 
 </html>

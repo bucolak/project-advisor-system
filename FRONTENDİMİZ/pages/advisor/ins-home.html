@@ -6,6 +6,7 @@
     <title>Advisor Home</title>
 
     <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/advisor-home-fix.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -13,45 +14,74 @@
 
     <div id="sidebarArea"></div>
 
-<main class="page-content">
+    <main class="page-content advisor-home-page">
 
-         <div id="topbarArea"></div>
+        <div id="topbarArea"></div>
+
+        <div class="top-section">
 
             <div class="welcome-box">
                 <h2 id="advisorWelcomeText">Welcome, Advisor 👋</h2>
-                <p>Department: <span id="advisorDepartment">-</span></p>
-                <p>Title: <span id="advisorTitle">-</span></p>
+
+                <p>
+                    Department:
+                    <span id="advisorDepartment">-</span>
+                </p>
+
+                <p>
+                    Title:
+                    <span id="advisorTitle">-</span>
+                </p>
             </div>
 
-            <div class="top-section">
-                <div class="status-box">
-                    <h3>Advising Status</h3>
+            <div class="status-box">
 
-                    <div class="status-toggle">
-                        <span class="active-status" id="advisorActiveBtn">Active</span>
-                        <span class="inactive-status" id="advisorInactiveBtn">Inactive</span>
-                    </div>
+                <h3>Advising Status</h3>
 
-                    <p class="status-text" id="statusText">
-                        Loading status...
-                    </p>
+                <div class="status-toggle">
+                    <span class="active-status" id="advisorActiveBtn">
+                        Active
+                    </span>
+
+                    <span class="inactive-status" id="advisorInactiveBtn">
+                        Inactive
+                    </span>
                 </div>
-            
 
-            <h2 class="project-title">Projects</h2>
+                <p class="status-text" id="statusText">
+                    Loading status...
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="projects-section">
+
+            <h2 class="project-title">
+                Projects
+            </h2>
 
             <div class="projects" id="advisorProjectsContainer">
+
                 <div class="project-card">
                     <h4>No projects yet</h4>
-                    <p>Advisor projects will appear here.</p>
+
+                    <p>
+                        Advisor projects will appear here.
+                    </p>
                 </div>
+
             </div>
 
-        </main>
-    </div>
+        </div>
+
+    </main>
+
     <script src="../../components/sidebar.js"></script>
     <script src="../../components/topbar.js"></script>
     <script src="ins-home.js"></script>
+
 </body>
 
 </html>

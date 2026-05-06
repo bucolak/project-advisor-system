@@ -1,0 +1,146 @@
+.advisor-home-page {
+    padding: 40px 55px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* üst alan */
+.advisor-home-page .top-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 45px;
+    margin-top: 60px;
+    margin-bottom: 12px;
+}
+
+/* welcome kartı */
+.advisor-home-page .welcome-box {
+    width: 560px;
+    height: 145px;
+    margin: 0;
+    padding: 26px 34px;
+    box-sizing: border-box;
+}
+
+.advisor-home-page .welcome-box h2 {
+    margin-bottom: 18px;
+}
+
+.advisor-home-page .welcome-box p {
+    margin: 10px 0;
+}
+
+/* status kartı */
+.advisor-home-page .status-box {
+
+    width: 320px !important;
+
+    height: 160px !important;
+
+    min-height: 160px !important;
+
+    max-height: 160px !important;
+
+    margin: 0 !important;
+
+    padding: 14px 18px !important;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+}
+
+.advisor-home-page .status-box h3 {
+    margin: 0 0 10px 0;
+    text-align: center;
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+.advisor-home-page .status-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 8px;
+}
+
+.advisor-home-page .active-status,
+.advisor-home-page .inactive-status {
+    min-width: 95px;
+    text-align: center;
+}
+
+.advisor-home-page .status-text {
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.1;
+    margin: 0;
+}
+
+/* projects alanı */
+.advisor-home-page .projects-section {
+    margin-top: 0;
+}
+
+.advisor-home-page .project-title {
+    margin-bottom: 24px;
+}
+
+/* kart grid */
+.advisor-home-page .projects {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+/* proje kartları */
+.advisor-home-page .project-card {
+    width: 100%;
+    min-height: 185px;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.advisor-home-page .project-card h4 {
+    margin: 0 0 12px 0;
+}
+
+.advisor-home-page .project-card p {
+    margin: 8px 0;
+    line-height: 1.2;
+}
+
+.advisor-home-page .view-details-btn {
+    display: inline-block;
+    margin-top: 14px;
+}
+
+@media (max-width: 1250px) {
+
+    .advisor-home-page .top-section {
+        flex-direction: column;
+    }
+
+    .advisor-home-page .projects {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 850px) {
+
+    .advisor-home-page {
+        padding: 24px;
+    }
+
+    .advisor-home-page .welcome-box,
+    .advisor-home-page .status-box {
+        width: 100%;
+        height: auto;
+    }
+
+    .advisor-home-page .projects {
+        grid-template-columns: 1fr;
+    }
+}
