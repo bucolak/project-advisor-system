@@ -67,8 +67,13 @@ async function loadStudentProjects(token) {
 
     if (createdResponse.ok) {
       const createdResult = await createdResponse.json();
-      const createdProjects = createdResult.data || [];
-      renderProjects("createdProjectsContainer", createdProjects, true);
+     const createdProjects = createdResult.data || [];
+
+     createdProjects.sort((a, b) => {
+     return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+});
+
+renderProjects("createdProjectsContainer", createdProjects, true);
     } else {
       renderEmptyProjects("createdProjectsContainer", "No created projects yet.");
     }

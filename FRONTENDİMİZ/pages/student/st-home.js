@@ -154,12 +154,16 @@ async function loadOpenProjects(token) {
       return;
     }
 
-    const result = JSON.parse(text);
-    const projects = result.data || result || [];
+  const result = JSON.parse(text);
+const projects = result.data || result || [];
 
-    allOpenProjects = projects;
+projects.sort((a, b) => {
+  return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+});
 
-    renderOpenProjects(allOpenProjects);
+allOpenProjects = projects;
+
+renderOpenProjects(allOpenProjects);
 
   } catch (error) {
     console.error("Open projects load error:", error);

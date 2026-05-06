@@ -117,22 +117,33 @@ async function loadPreviouslySupervisedProjectTypes(token) {
   if (!container) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/projects/previously-supervised-types`, {
+    const response = await fetch(`${API_BASE}/api/advisors/my-students`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
 
+    const text = await response.text();
+
+    console.log("PREVIOUSLY SUPERVISED TYPES STATUS:", response.status);
+    console.log("PREVIOUSLY SUPERVISED TYPES RESPONSE:", text);
+
     if (!response.ok) {
       renderProjectTypes([]);
       return;
     }
 
-    const result = await response.json();
-    const types = result.data || result || [];
+    const result = JSON.parse(text);
+    const projects = result.data || result || [];
 
-    renderProjectTypes(types);
+    const types = projects
+      .map(project => project.projectType)
+      .filter(type => type && String(type).trim() !== "");
+
+    const uniqueTypes = [...new Set(types)];
+
+    renderProjectTypes(uniqueTypes);
 
   } catch (error) {
     console.error("Previously supervised project types load error:", error);
@@ -147,14 +158,16 @@ function renderProjectTypes(typesData) {
   const types = normalizeToArray(typesData);
 
   if (types.length === 0) {
-    container.innerHTML = `
-      <div class="project-type-row">
-        <span class="type-badge tubitak">-</span>
-        <span class="type-text">No data</span>
-      </div>
-    `;
+    container.innerHTML = `<ul><li>No data</li></ul>`;
     return;
   }
+
+  container.innerHTML = `
+    <ul class="advisor-project-type-list">
+      ${types.map(type => `<li>${type}</li>`).join("")}
+    </ul>
+  `;
+}
 
   container.innerHTML = "";
 
@@ -169,7 +182,7 @@ function renderProjectTypes(typesData) {
 
     container.appendChild(row);
   });
-}
+
 
 function renderStatus(status) {
   const normalizedStatus = String(status || "ACTIVE").toUpperCase();

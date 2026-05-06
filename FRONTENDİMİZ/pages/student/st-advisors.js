@@ -90,6 +90,20 @@ async function loadAdvisors(token) {
     const result = JSON.parse(text);
     const advisors = result.data || result || [];
 
+    advisors.sort((a, b) => {
+   const nameA = (
+    a.fullName ||
+    `${a.firstName || ""} ${a.lastName || ""}`
+  ).trim().toLocaleLowerCase("tr-TR");
+
+   const nameB = (
+    b.fullName ||
+    `${b.firstName || ""} ${b.lastName || ""}`
+  ).trim().toLocaleLowerCase("tr-TR");
+
+  return nameA.localeCompare(nameB, "tr-TR");
+ });
+
     if (!advisors.length) {
       renderEmptyAdvisors("No advisor found.");
       return;

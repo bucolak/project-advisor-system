@@ -72,9 +72,21 @@ async function loadStudentProfile(token, userId) {
     renderTopbar("topbarArea", fullName || "Student", "Student");
 
     document.getElementById("studentDisplayName").textContent = fullName || "Student";
-    document.getElementById("studentDepartment").value = student.department || "";
-    document.getElementById("studentYear").value = student.year ?? "";
-    document.getElementById("studentEmail").value = student.email || "";
+   const departmentInput = document.getElementById("studentDepartment");
+    departmentInput.value = student.department || "";
+    departmentInput.readOnly = true;
+    departmentInput.classList.add("readonly-field");
+    const yearInput = document.getElementById("studentYear");
+    yearInput.value = student.year ?? "";
+    yearInput.readOnly = true;
+    yearInput.classList.add("readonly-field");
+   const emailInput = document.getElementById("studentEmail");
+
+  emailInput.value = student.email || "";
+
+  emailInput.readOnly = true;
+
+  emailInput.classList.add("readonly-field");
     document.getElementById("studentInterests").value =
       student.interests || student.researchInterests || "";
     document.getElementById("studentGithub").value = student.githubLink || "";
@@ -122,9 +134,8 @@ function getSelectedSkillsText() {
 
 async function updateStudentProfile(token, userId) {
   const payload = {
-    department: document.getElementById("studentDepartment").value.trim(),
-    year: Number(document.getElementById("studentYear").value),
-    email: document.getElementById("studentEmail").value.trim(),
+
+   
     interests: document.getElementById("studentInterests").value.trim(),
     githubLink: document.getElementById("studentGithub").value.trim(),
     linkedinLink: document.getElementById("studentLinkedin").value.trim(),

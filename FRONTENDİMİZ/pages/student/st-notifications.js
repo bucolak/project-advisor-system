@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-renderSidebar(role);
+
+  renderSidebar(role);
   await loadStudentProfile(token, userId);
   await loadNotifications(token);
   await loadIncomingStudentRequest(token);
@@ -70,11 +71,23 @@ async function loadStudentProfile(token, userId) {
 }
 
 async function loadNotifications(token) {
+  renderNoNotifications();
+}
+
+function renderNoNotifications() {
   const list = document.getElementById("notificationsList");
   const count = document.getElementById("notificationsNewCount");
 
-  list.innerHTML = "";
-  count.textContent = "0 New";
+  if (count) count.textContent = "0 New";
+
+  if (list) {
+    list.innerHTML = `
+      <div class="notification-item no-notification-box">
+        <i class="fa-regular fa-circle-user"></i>
+        <span>No new notifications.</span>
+      </div>
+    `;
+  }
 }
 
 async function loadIncomingStudentRequest(token) {
@@ -91,7 +104,7 @@ async function loadIncomingStudentRequest(token) {
 
     if (!response.ok) {
       card.style.display = "none";
-      count.textContent = "0 New";
+      renderNoNotifications();
       return;
     }
 
@@ -100,7 +113,7 @@ async function loadIncomingStudentRequest(token) {
 
     if (!requests.length) {
       card.style.display = "none";
-      count.textContent = "0 New";
+      renderNoNotifications();
       return;
     }
 
@@ -154,7 +167,7 @@ async function loadIncomingStudentRequest(token) {
   } catch (error) {
     console.error("Incoming student request load error:", error);
     card.style.display = "none";
-    count.textContent = "0 New";
+    renderNoNotifications();
   }
 }
 

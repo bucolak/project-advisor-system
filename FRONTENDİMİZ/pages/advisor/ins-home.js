@@ -108,7 +108,9 @@ async function loadAdvisorInfo(token, userId) {
     const lastName = advisor.lastName || "";
     const fullName = `${firstName} ${lastName}`.trim();
 
-    renderTopbar("topbarArea", fullName || "Advisor", "Advisor");
+  const displayName = fullName ? `Dr. ${fullName}` : "Dr. Advisor";
+
+   renderTopbar("topbarArea", displayName, "Advisor");
 
     const advisorTopName = document.getElementById("advisorTopName");
     const advisorWelcomeText = document.getElementById("advisorWelcomeText");
@@ -230,6 +232,7 @@ async function loadAdvisorStudents(token) {
 
     const result = JSON.parse(text);
     const students = result.data || result || [];
+   
 
     advisorProjectCount = students.length;
 

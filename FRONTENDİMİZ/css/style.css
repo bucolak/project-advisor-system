@@ -7182,3 +7182,42 @@ body {
   height: 34px;
   padding: 4px 8px;
 }
+
+.advisor-project-type-list {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.advisor-project-type-list li {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.no-notification-box {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  width: 100%;
+  max-width: 1150px;
+
+  padding: 28px;
+
+  border: 2px solid #7b7b7b;
+  border-radius: 24px;
+
+  background: #f7f7f7;
+
+  margin-top: 25px;
+}
+
+.no-notification-box i {
+  font-size: 52px;
+  color: #111;
+}
+
+.no-notification-box span {
+  font-size: 20px;
+  font-weight: 500;
+  color: #111;
+}

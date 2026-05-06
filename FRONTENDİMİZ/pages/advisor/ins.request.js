@@ -315,12 +315,21 @@ function openStudentModal(request) {
   document.getElementById("modalStudentDepartment").textContent =
     request.studentDepartment || request.department || "-";
 
-  document.getElementById("modalProjectTag").textContent =
-    request.projectType || "PROJECT";
+
 
 setList("modalStudentInterests", request.interests || request.researchInterests || []);
 setList("modalStudentSkills", request.studentSkills || request.skills || []);
-setOtherProjects([]);
+setOtherProjects(
+
+  request.otherProjects ||
+
+  request.studentOtherProjects ||
+
+  request.otherProjectList ||
+
+  []
+
+);
 
   document.getElementById("studentModal").classList.add("active");
 }
@@ -368,12 +377,28 @@ function setOtherProjects(projects) {
   if (!projects || !projects.length) {
     container.innerHTML = `
       <div class="other-project-card">
-        <h4>No other projects</h4>
+        <h4>No s</h4>
         <p><strong>Project:</strong> No data</p>
         <p><strong>Skills:</strong> -</p>
       </div>
     `;
+    return;
   }
+
+  container.innerHTML = "";
+
+  projects.slice(0, 2).forEach(project => {
+    const card = document.createElement("div");
+    card.className = "other-project-card";
+
+    card.innerHTML = `
+      <h4>${project.title || project.projectTitle || "Project"}</h4>
+      <p><strong>Project:</strong> ${project.projectType || project.categoryName || "-"}</p>
+      <p><strong>Skills:</strong> ${project.skills || project.requiredSkills || "-"}</p>
+    `;
+
+    container.appendChild(card);
+  });
 }
 
 function getProjectTagClass(projectType) {

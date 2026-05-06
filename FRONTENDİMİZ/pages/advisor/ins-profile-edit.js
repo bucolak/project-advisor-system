@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
+
   renderSidebar(role);
   await loadAdvisorProfile(token, userId);
 });
@@ -43,9 +44,8 @@ function setupSaveButton() {
 
   saveBtn.addEventListener("click", async function () {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
 
-    await updateAdvisorProfile(token, userId);
+    await updateAdvisorProfile(token);
   });
 }
 
@@ -81,40 +81,37 @@ async function loadAdvisorProfile(token, userId) {
 
     renderTopbar("topbarArea", fullName || "Advisor", "Advisor");
 
-    document.getElementById("advisorDisplayName").textContent = fullName || "Advisor";
+    document.getElementById("advisorDisplayName").textContent =
+      fullName || "Advisor";
 
     originalFirstName = firstName;
-originalLastName = lastName;
-originalTitle = advisor.title || "";
-originalEmail = advisor.email || "";
-originalDepartment = advisor.department || "";
+    originalLastName = lastName;
+    originalTitle = advisor.title || "";
+    originalEmail = advisor.email || "";
+    originalDepartment = advisor.department || "";
 
-const fullNameInput = document.getElementById("fullName");
-const titleInput = document.getElementById("title");
-const emailInput = document.getElementById("email");
-const departmentInput = document.getElementById("department");
+    const fullNameInput = document.getElementById("fullName");
+    const titleInput = document.getElementById("title");
+    const emailInput = document.getElementById("email");
+    const departmentInput = document.getElementById("department");
 
-emailInput.value = originalEmail;
-departmentInput.value = originalDepartment;
+    fullNameInput.value = fullNameWithoutTitle;
+    titleInput.value = originalTitle;
+    emailInput.value = originalEmail;
+    departmentInput.value = originalDepartment;
 
-emailInput.readOnly = true;
-departmentInput.readOnly = true;
+    fullNameInput.readOnly = true;
+    titleInput.readOnly = true;
+    emailInput.readOnly = true;
+    departmentInput.readOnly = true;
 
-emailInput.classList.add("readonly-field");
-departmentInput.classList.add("readonly-field");
+    fullNameInput.classList.add("readonly-field");
+    titleInput.classList.add("readonly-field");
+    emailInput.classList.add("readonly-field");
+    departmentInput.classList.add("readonly-field");
 
-fullNameInput.value = fullNameWithoutTitle;
-titleInput.value = originalTitle;
-
-fullNameInput.readOnly = true;
-titleInput.readOnly = true;
-
-fullNameInput.classList.add("readonly-field");
-titleInput.classList.add("readonly-field");
-
-document.getElementById("email").value = advisor.email || "";
-document.getElementById("department").value = advisor.department || "";
-document.getElementById("areasOfExpertise").value = advisor.areasOfExpertise || "";
+    document.getElementById("areasOfExpertise").value =
+      advisor.areasOfExpertise || "";
 
     renderResearchInterests(advisor.researchInterests);
 
@@ -124,21 +121,14 @@ document.getElementById("areasOfExpertise").value = advisor.areasOfExpertise || 
   }
 }
 
-async function updateAdvisorProfile(token, userId) {
-
-
-const payload = {
-  firstName: originalFirstName,
-  lastName: originalLastName,
-email: originalEmail,
-department: originalDepartment,
-  title: originalTitle,
-  areasOfExpertise: document.getElementById("areasOfExpertise").value.trim(),
-  researchInterests: getResearchInterestsText()
-};
+async function updateAdvisorProfile(token) {
+  const payload = {
+    areasOfExpertise: document.getElementById("areasOfExpertise").value.trim(),
+    researchInterests: getResearchInterestsText()
+  };
 
   try {
-    const response = await fetch(`${API_BASE}/api/advisors/${userId}/profile`, {
+    const response = await fetch(`${API_BASE}/api/advisors/profile`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -210,3 +200,4 @@ function escapeHtml(text) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
+
