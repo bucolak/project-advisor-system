@@ -304,6 +304,19 @@ public class ProjectService {
         if (advisor.getUser().getStatus() != UserStatus.ACTIVE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışman şu anda aktif değil.");
         }
+     List<AdvisorRequest> activeRequests = advisorRequestRepository.findByProjectAndStatusIn(
+        project,
+        List.of(RequestStatus.PENDING, RequestStatus.ACCEPTED)
+);
+
+if (!activeRequests.isEmpty()) {
+    throw new ResponseStatusException(
+            HttpStatus.CONFLICT,
+            "Bu proje için zaten pending veya accepted advisor request var."
+    );
+}
+
+
 
         advisorRequestRepository.findByProjectAndAdvisor(project, advisor).ifPresent(r -> {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu danışmana zaten istek gönderdiniz.");

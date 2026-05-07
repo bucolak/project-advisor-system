@@ -12,6 +12,11 @@ import com.example.demo.entity.Student;
 import com.example.demo.enums.RequestStatus;
 
 public interface AdvisorRequestRepository extends JpaRepository<AdvisorRequest, Long> {
+List<AdvisorRequest> findByAdvisorAndStatusOrderByResponseDateDesc(
+        Advisor advisor,
+        RequestStatus status
+);
+
 
     List<AdvisorRequest> findByAdvisorAndStatus(Advisor advisor, RequestStatus status);
 
@@ -24,4 +29,9 @@ public interface AdvisorRequestRepository extends JpaRepository<AdvisorRequest, 
     List<AdvisorRequest> findByAdvisorAndStatusIn(Advisor advisor, List<RequestStatus> statuses);
 
     List<AdvisorRequest> findByProjectStudent(Student student);
+
+    List<AdvisorRequest> findByProjectStudentOrderByRequestDateDesc(Student student);
+
+    List<AdvisorRequest> findByProjectAndStatusIn(Project project, List<RequestStatus> statuses);
+
 }

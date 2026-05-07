@@ -238,20 +238,44 @@ async function loadStudentProjectsForModal(token) {
   const projectSelect = document.getElementById("projectSelect");
 
   try {
-    const response = await fetch(`${API_BASE}/api/projects/my-projects`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    const [projectsResponse, requestsResponse] = await Promise.all([
+      fetch(`${API_BASE}/api/projects/my-projects`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }),
+      fetch(`${API_BASE}/api/advisor-requests/my-requests`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    ]);
 
-    if (!response.ok) {
+    if (!projectsResponse.ok) {
       projectSelect.innerHTML = `<option value="">Could not load projects</option>`;
       return;
     }
 
-    const result = await response.json();
-    const projects = result.data || result || [];
+    const projectsResult = await projectsResponse.json();
+    const projects = projectsResult.data || projectsResult || [];
+
+    let requests = [];
+
+    if (requestsResponse.ok) {
+      const requestsResult = await requestsResponse.json();
+      requests = requestsResult.data || requestsResult || [];
+    }
+
+    const blockedProjectIds = new Set(
+      requests
+        .filter(request => {
+          const status = String(request.status || "").toUpperCase();
+          return status === "PENDING" || status === "ACCEPTED";
+        })
+        .map(request => String(request.projectId))
+    );
 
     projectSelect.innerHTML = `<option value="">Select a project</option>`;
 
@@ -279,7 +303,15 @@ async function loadStudentProjectsForModal(token) {
     selectableProjects.forEach(project => {
       const option = document.createElement("option");
       option.value = project.id;
-      option.textContent = project.title;
+
+      const isBlocked = blockedProjectIds.has(String(project.id));
+
+      option.textContent = isBlocked
+        ? `${project.title} (request already pending/accepted)`
+        : project.title;
+
+      option.disabled = isBlocked;
+
       projectSelect.appendChild(option);
     });
 

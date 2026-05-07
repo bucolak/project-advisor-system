@@ -66,6 +66,12 @@ async function loadAdvisorRequests(token, userId) {
 
     const result = JSON.parse(text);
 
+    const requests = result.data || [];
+
+requests.sort((a, b) => {
+  return new Date(b.requestDate || 0) - new Date(a.requestDate || 0);
+});
+
     if (!result.success || !result.data || result.data.length === 0) {
       renderEmptyState("No advisor requests found.");
       return;
@@ -73,7 +79,7 @@ async function loadAdvisorRequests(token, userId) {
 
     tableBody.innerHTML = "";
 
-    result.data.forEach(request => {
+    requests.forEach(request => {
       const row = document.createElement("tr");
 
       const status = (request.status || "").toUpperCase();

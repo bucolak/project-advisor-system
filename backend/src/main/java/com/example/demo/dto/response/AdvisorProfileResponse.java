@@ -12,6 +12,7 @@ public class AdvisorProfileResponse {
     private Integer currentQuota;
     private Integer maxQuota;
     private String advisingStatus;
+    private String researchInterests;
 
     public AdvisorProfileResponse(
             Long userId,
@@ -23,6 +24,7 @@ public class AdvisorProfileResponse {
             String areasOfExpertise,
             Integer currentQuota,
             Integer maxQuota,
+            String researchInterests,
             String advisingStatus
     ) {
         this.userId = userId;
@@ -34,6 +36,7 @@ public class AdvisorProfileResponse {
         this.areasOfExpertise = areasOfExpertise;
         this.currentQuota = currentQuota;
         this.maxQuota = maxQuota;
+        this.researchInterests = researchInterests;
         this.advisingStatus = advisingStatus;
     }
 
@@ -72,6 +75,9 @@ public class AdvisorProfileResponse {
     public Integer getMaxQuota() {
         return maxQuota;
     }
+public String getResearchInterests() {
+    return researchInterests;
+}
 
     public String getAdvisingStatus() {
         return advisingStatus;

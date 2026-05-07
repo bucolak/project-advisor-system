@@ -96,6 +96,10 @@ public class AdvisorService {
             advisor.setAreasOfExpertise(body.get("areasOfExpertise").toString());
         }
 
+        if (body.get("researchInterests") != null) {
+             advisor.setResearchInterests(body.get("researchInterests").toString());
+        }
+
         if (body.get("maxQuota") != null && !body.get("maxQuota").toString().isBlank()) {
             advisor.setMaxQuota(Integer.parseInt(body.get("maxQuota").toString()));
         }
@@ -133,8 +137,11 @@ public class AdvisorService {
         Advisor advisor = advisorRepository.findById(advisorUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Advisor not found."));
 
-        List<AdvisorRequest> acceptedRequests =
-                advisorRequestRepository.findByAdvisorAndStatus(advisor, RequestStatus.ACCEPTED);
+           List<AdvisorRequest> acceptedRequests =
+        advisorRequestRepository.findByAdvisorAndStatusOrderByResponseDateDesc(
+                advisor,
+                RequestStatus.ACCEPTED
+        );
 
         return acceptedRequests.stream()
                 .map(this::toAdvisorStudentProjectResponse)
@@ -152,8 +159,10 @@ public class AdvisorService {
                 advisor.getTitle(),
                 advisor.getDepartment(),
                 advisor.getAreasOfExpertise(),
+                
                 advisor.getCurrentQuota(),
                 advisor.getMaxQuota(),
+                advisor.getResearchInterests(),
                 advisor.getAdvisingStatus().name()
         );
     }

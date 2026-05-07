@@ -68,10 +68,10 @@ public class AdvisorRequestService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found."));
 
         return advisorRequestRepository
-                .findByProjectStudent(student)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        .findByProjectStudentOrderByRequestDateDesc(student)
+        .stream()
+        .map(this::toResponse)
+        .toList();
     }
 
     @Transactional
