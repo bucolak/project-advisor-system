@@ -94,8 +94,23 @@ async function loadCategory(token, id) {
     document.getElementById("budget").placeholder =
       currentCategory.budget ?? "No budget";
 
-    advisorRequired = Boolean(currentCategory.advisorRequired);
-    updateAdvisorButtons();
+    const categoryName = String(currentCategory.name || "").toUpperCase();
+const advisorBox = document.getElementById("advisorRequiredBox");
+
+if (categoryName === "COURSE") {
+  advisorRequired = false;
+
+  if (advisorBox) {
+    advisorBox.style.display = "none";
+  }
+} else {
+  if (advisorBox) {
+    advisorBox.style.display = "block";
+  }
+
+  advisorRequired = Boolean(currentCategory.advisorRequired);
+  updateAdvisorButtons();
+}
 
   } catch (error) {
     console.error("Category load error:", error);
@@ -146,13 +161,16 @@ function setupFormSubmit(token) {
     const descriptionInput = document.getElementById("categoryDescription").value.trim();
     const teamSizeInput = document.getElementById("teamSize").value.trim();
     const budgetInput = document.getElementById("budget").value;
+    const finalCategoryName = nameInput || currentCategory.name;
 
     const payload = {
-      name: nameInput || currentCategory.name,
-      description: descriptionInput || currentCategory.description || "",
-      teamSize: teamSizeInput || currentCategory.teamSize || "",
-      budget: budgetInput !== "" ? Number(budgetInput) : (currentCategory.budget ?? 0),
-      advisorRequired: advisorRequired
+     name: finalCategoryName,
+     description: descriptionInput || currentCategory.description || "",
+     teamSize: teamSizeInput || currentCategory.teamSize || "",
+     budget: budgetInput !== "" ? Number(budgetInput) : (currentCategory.budget ?? 0),
+     advisorRequired: String(finalCategoryName || "").toUpperCase() === "COURSE"
+    ? false
+    : advisorRequired
     };
 
     if (!payload.name) {

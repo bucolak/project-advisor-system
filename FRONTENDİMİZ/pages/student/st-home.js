@@ -273,8 +273,10 @@ async function applyToProject(projectId, token, button) {
 async function loadAnnouncements(token) {
   const list = document.getElementById("announcementsList");
 
+  if (!list) return;
+
   try {
-    const response = await fetch(`${API_BASE}/api/admin/announcements`, {
+    const response = await fetch(`${API_BASE}/api/announcements/my`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`
@@ -299,29 +301,116 @@ async function loadAnnouncements(token) {
       return;
     }
 
+    announcements.sort((a, b) => {
+      const aId = Number(a.id || 0);
+      const bId = Number(b.id || 0);
+
+      return bId - aId;
+    });
+
     list.innerHTML = "";
 
     announcements.slice(0, 3).forEach(item => {
-      const li = document.createElement("li");
 
-      const deadline = item.deadline
-        ? ` - ${formatAnnouncementDate(item.deadline)}`
+      const parsed = parseAnnouncementContent(item.content || "");
+
+      const deadlineValue = item.deadline || parsed.deadline;
+
+      const deadline = deadlineValue
+        ? ` - ${formatAnnouncementDate(deadlineValue)}`
         : "";
 
-      li.innerHTML = `
-        <strong>${item.title || "Announcement"}</strong>
-        ${deadline}
-      `;
+      const li = document.createElement("li");
+li.className = "student-announcement-item";
 
-      list.appendChild(li);
+li.innerHTML = `
+  <strong>${item.title || "Announcement"}</strong>
+  ${deadline}
+`;
+
+li.addEventListener("click", function () {
+  openAnnouncementModal(item);
+});
+
+list.appendChild(li);
     });
 
   } catch (error) {
     console.error("Student announcements load error:", error);
+
     list.innerHTML = `<li>Server error while loading announcements.</li>`;
   }
 }
 
+function parseAnnouncementContent(text) {
+
+  const parsed = {
+    category: "",
+    type: "",
+    deadline: "",
+    description: ""
+  };
+
+  if (!text) return parsed;
+
+  const lines = String(text).split("\n");
+
+  lines.forEach(line => {
+
+    const clean = line.trim();
+
+    if (clean.toLowerCase().startsWith("category:")) {
+      parsed.category = clean.replace(/category:/i, "").trim();
+    }
+
+    if (clean.toLowerCase().startsWith("type:")) {
+      parsed.type = clean.replace(/type:/i, "").trim();
+    }
+
+    if (clean.toLowerCase().startsWith("deadline:")) {
+      parsed.deadline = clean.replace(/deadline:/i, "").trim();
+    }
+
+    if (clean.toLowerCase().startsWith("description:")) {
+      parsed.description = clean.replace(/description:/i, "").trim();
+    }
+  });
+
+  return parsed;
+}
+function openAnnouncementModal(item) {
+  const parsed = parseAnnouncementContent(item.content || item.description || "");
+
+  document.getElementById("modalAnnouncementTitle").textContent =
+    item.title || "Announcement";
+
+  document.getElementById("modalAnnouncementCategory").textContent =
+    item.category || parsed.category || "-";
+
+  document.getElementById("modalAnnouncementType").textContent =
+    item.type || parsed.type || "-";
+
+  const deadlineValue = item.deadline || parsed.deadline;
+
+  document.getElementById("modalAnnouncementDeadline").textContent =
+    deadlineValue ? formatAnnouncementDate(deadlineValue) : "-";
+
+  document.getElementById("modalAnnouncementDescription").textContent =
+    parsed.description || "-";
+
+  document.getElementById("announcementModal").classList.add("show");
+}
+
+document.addEventListener("click", function (e) {
+  const modal = document.getElementById("announcementModal");
+  const closeBtn = document.getElementById("closeAnnouncementModal");
+
+  if (!modal) return;
+
+  if (e.target === modal || e.target === closeBtn) {
+    modal.classList.remove("show");
+  }
+});
 function formatAnnouncementDate(dateValue) {
   const date = new Date(dateValue);
 

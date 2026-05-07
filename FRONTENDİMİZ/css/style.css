@@ -7447,3 +7447,68 @@ body {
   right: 45px !important;
 
 }
+.student-announcement-item {
+  cursor: pointer;
+}
+
+.student-announcement-item:hover {
+  text-decoration: underline;
+}
+
+.student-ann-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.student-ann-modal-overlay.show {
+  display: flex;
+}
+
+.student-ann-modal {
+  width: 480px;
+  max-width: 90%;
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px;
+  position: relative;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+.student-ann-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.student-ann-modal-desc {
+  margin-top: 18px;
+}
+/* Edit Category - advisor alanı sabit hizalama */
+.admin-editcat-advisor {
+  margin-top: 24px;
+  margin-left: 0;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.admin-editcat-advisor-title {
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.admin-editcat-toggle {
+  display: flex;
+  gap: 12px;
+}

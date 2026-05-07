@@ -87,6 +87,7 @@ async function loadProjectCategories(token) {
       option.textContent = category.name;
       option.dataset.name = category.name;
       option.dataset.advisorRequired = String(category.advisorRequired);
+      option.dataset.teamSize = category.teamSize;
 
       select.appendChild(option);
     });
@@ -101,7 +102,19 @@ async function loadProjectCategories(token) {
       }
 
       selectedAdvisorRequired = selectedOption.dataset.advisorRequired === "true";
-      applyAdvisorRule();
+      
+
+      const teamSizeInput = document.getElementById("otherTeamSize");
+
+const maxTeamSize = selectedOption.dataset.teamSize;
+
+if (teamSizeInput && maxTeamSize) {
+  teamSizeInput.placeholder = `Max ${maxTeamSize} students`;
+  teamSizeInput.max = maxTeamSize;
+  teamSizeInput.min = 1;
+}
+
+applyAdvisorRule();
     });
 
   } catch (error) {
@@ -221,15 +234,20 @@ async function createOtherProject(token, userId) {
 }
 
 async function submitProject(token, payload) {
-  if (!payload.title || !payload.description || !payload.teamSize || !payload.rolesNeeded) {
-    alert("Please fill all required fields.");
-    return;
-  }
+ if (!payload.title || !payload.description || !payload.rolesNeeded) {
+  alert("Please fill all required fields.");
+  return;
+}
 
-  if (!payload.requiredSkills) {
-    alert("Please select at least one skill.");
-    return;
-  }
+if (!payload.teamSize || payload.teamSize <= 0) {
+  alert("Team size must be greater than 0.");
+  return;
+}
+
+if (!payload.requiredSkills) {
+  alert("Please select at least one skill.");
+  return;
+}
 
   try {
     const response = await fetch(`${API_BASE}/api/projects`, {
