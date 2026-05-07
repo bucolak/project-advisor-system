@@ -59,9 +59,7 @@ async function loadStudentProfile(token, userId) {
     if (!response.ok || !result.success) return;
 
     const p = result.data;
-
-    const fullName =
-      `${p.firstName || ""} ${p.lastName || ""}`.trim() || "Student";
+    const fullName = `${p.firstName || ""} ${p.lastName || ""}`.trim() || "Student";
 
     renderTopbar("topbarArea", fullName, "Student");
 
@@ -71,14 +69,63 @@ async function loadStudentProfile(token, userId) {
 }
 
 async function loadNotifications(token) {
-  renderNoNotifications();
+  const list = document.getElementById("notificationsList");
+  const count = document.getElementById("notificationsNewCount");
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notifications/my`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const text = await response.text();
+
+    console.log("NOTIFICATION STATUS:", response.status);
+    console.log("NOTIFICATION RESPONSE:", text);
+
+    if (!response.ok) {
+      renderNoNotifications();
+      return;
+    }
+
+    const result = JSON.parse(text);
+    const notifications = result.data || [];
+
+    if (!notifications.length) {
+      renderNoNotifications();
+      return;
+    }
+
+    list.innerHTML = "";
+
+    const unreadCount = notifications.filter(
+      n => n.isRead === false || n.isRead === null
+    ).length;
+
+    count.textContent = `${unreadCount} New`;
+
+    notifications.forEach(notification => {
+      const item = document.createElement("div");
+      item.className = "notification-item";
+
+      item.innerHTML = `
+        <i class="fa-regular fa-circle-user"></i>
+        <span>${notification.message || "Notification"}</span>
+      `;
+
+      list.appendChild(item);
+    });
+
+  } catch (error) {
+    console.error("Notification load error:", error);
+    renderNoNotifications();
+  }
 }
 
 function renderNoNotifications() {
   const list = document.getElementById("notificationsList");
-  const count = document.getElementById("notificationsNewCount");
-
-  if (count) count.textContent = "0 New";
 
   if (list) {
     list.innerHTML = `
@@ -90,9 +137,20 @@ function renderNoNotifications() {
   }
 }
 
+function updateTotalNotificationCount(extraPendingCount = 0) {
+  const count = document.getElementById("notificationsNewCount");
+  const items = document.querySelectorAll("#notificationsList .notification-item:not(.no-notification-box)");
+
+  const normalCount = items.length;
+  const total = normalCount + extraPendingCount;
+
+  if (count) {
+    count.textContent = `${total} New`;
+  }
+}
+
 async function loadIncomingStudentRequest(token) {
   const card = document.getElementById("studentRequestCard");
-  const list = document.getElementById("notificationsList");
   const count = document.getElementById("notificationsNewCount");
 
   try {
@@ -104,7 +162,7 @@ async function loadIncomingStudentRequest(token) {
 
     if (!response.ok) {
       card.style.display = "none";
-      renderNoNotifications();
+      updateTotalNotificationCount(0);
       return;
     }
 
@@ -113,14 +171,11 @@ async function loadIncomingStudentRequest(token) {
 
     if (!requests.length) {
       card.style.display = "none";
-      renderNoNotifications();
+      updateTotalNotificationCount(0);
       return;
     }
 
     currentStudentRequest = requests[0];
-
-    list.innerHTML = "";
-    count.textContent = `${requests.length} New`;
 
     card.style.display = "flex";
 
@@ -143,10 +198,10 @@ async function loadIncomingStudentRequest(token) {
 
     if (status === "ACCEPTED") {
       actions.innerHTML = `<div class="student-request-final accepted">Accepted</div>`;
-      count.textContent = "0 New";
+      updateTotalNotificationCount(0);
     } else if (status === "REJECTED") {
       actions.innerHTML = `<div class="student-request-final rejected">Rejected</div>`;
-      count.textContent = "0 New";
+      updateTotalNotificationCount(0);
     } else {
       actions.innerHTML = `
         <button class="accept-btn" id="acceptStudentRequestBtn">Accept</button>
@@ -160,6 +215,8 @@ async function loadIncomingStudentRequest(token) {
       document.getElementById("rejectStudentRequestBtn").addEventListener("click", function () {
         respondToStudentRequest("REJECTED");
       });
+
+      updateTotalNotificationCount(requests.length);
     }
 
     fillStudentProfileModal(currentStudentRequest);
@@ -167,7 +224,7 @@ async function loadIncomingStudentRequest(token) {
   } catch (error) {
     console.error("Incoming student request load error:", error);
     card.style.display = "none";
-    renderNoNotifications();
+    updateTotalNotificationCount(0);
   }
 }
 
@@ -248,7 +305,6 @@ async function respondToStudentRequest(status) {
 
   const token = localStorage.getItem("token");
   const actions = document.getElementById("studentRequestActions");
-  const count = document.getElementById("notificationsNewCount");
 
   try {
     const response = await fetch(
@@ -266,13 +322,28 @@ async function respondToStudentRequest(status) {
       return;
     }
 
+    if (currentStudentRequest.notificationId) {
+      await fetch(
+        `${API_BASE}/api/notifications/${currentStudentRequest.notificationId}/read`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+    }
+
     if (status === "ACCEPTED") {
       actions.innerHTML = `<div class="student-request-final accepted">Accepted</div>`;
     } else {
       actions.innerHTML = `<div class="student-request-final rejected">Rejected</div>`;
     }
 
-    count.textContent = "0 New";
+    document.getElementById("studentRequestCard").style.display = "none";
+
+    await loadNotifications(token);
+    updateTotalNotificationCount(0);
 
   } catch (error) {
     console.error("Student request response error:", error);

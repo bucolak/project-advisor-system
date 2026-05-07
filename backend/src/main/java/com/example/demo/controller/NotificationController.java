@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,4 +46,19 @@ public class NotificationController {
                 )
         );
     }
+    @PutMapping("/{notificationId}/read")
+@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADVISOR', 'ROLE_ADMIN')")
+public ResponseEntity<ApiResponse> markAsRead(
+        Authentication auth,
+        @PathVariable Long notificationId
+) {
+    Long userId = (Long) auth.getPrincipal();
+
+    return ResponseEntity.ok(
+            ApiResponse.ok(
+                    "Notification marked as read.",
+                    notificationService.markAsRead(userId, notificationId)
+            )
+    );
+}
 }

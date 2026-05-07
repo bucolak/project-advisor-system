@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -188,6 +189,13 @@ public class ProjectService {
         return projectApplicationRepository.findByStudentAndStatus(student, ApplicationStatus.ACCEPTED);
     }
 
+    public List<ProjectApplication> getMyApplications(Long userId) {
+    Student student = studentRepository.findById(userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+
+    return projectApplicationRepository.findByStudent(student);
+}
+
     public List<Project> getOpenProjectsForStudent(Long userId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
@@ -207,9 +215,26 @@ public class ProjectService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kendi projenize başvuramazsınız.");
         }
 
-        projectApplicationRepository.findByProjectAndStudent(project, applicant).ifPresent(application -> {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu projeye zaten başvurdunuz.");
-        });
+        Optional<ProjectApplication> existingApplication =
+        projectApplicationRepository.findByProjectAndStudent(project, applicant);
+
+if (existingApplication.isPresent()) {
+
+    ApplicationStatus status = existingApplication.get().getStatus();
+
+    if (status == ApplicationStatus.PENDING ||
+        status == ApplicationStatus.ACCEPTED) {
+
+        throw new ResponseStatusException(
+                HttpStatus.CONFLICT,
+                "Bu projeye zaten başvurdunuz."
+        );
+    }
+
+    if (status == ApplicationStatus.REJECTED) {
+        projectApplicationRepository.delete(existingApplication.get());
+    }
+}
 
         ProjectApplication application = ProjectApplication.builder()
                 .project(project)
@@ -232,11 +257,12 @@ public class ProjectService {
     }
 
     public List<ProjectApplication> getIncomingApplications(Long ownerId) {
-        Student owner = studentRepository.findById(ownerId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+    Student owner = studentRepository.findById(ownerId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
 
-        return projectApplicationRepository.findByProjectStudent(owner);
-    }
+    return projectApplicationRepository
+            .findByProjectStudentAndStatusOrderByAppliedAtDesc(owner, ApplicationStatus.PENDING);
+}
 
     @Transactional
     public ProjectApplication respondApplication(Long ownerId, Long applicationId, String status) {

@@ -75,6 +75,16 @@ public class ProjectController {
         );
     }
 
+    @GetMapping("/my-applications")
+@PreAuthorize("hasAuthority('ROLE_STUDENT')")
+public ResponseEntity<ApiResponse> getMyApplications(Authentication auth) {
+    Long userId = (Long) auth.getPrincipal();
+
+    return ResponseEntity.ok(
+            ApiResponse.ok("My applications listed.", projectService.getMyApplications(userId))
+    );
+}
+
     @GetMapping("/open")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<ApiResponse> getOpenProjects(Authentication auth) {

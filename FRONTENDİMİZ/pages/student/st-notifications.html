@@ -13,53 +13,48 @@
 <body>
     <div id="sidebarArea"></div>
 
-<main class="page-content">
+    <main class="page-content">
 
-            <div id="topbarArea"></div>
+        <div id="topbarArea"></div>
 
-            <div class="notifications-header">
-                <h1 class="notifications-title">Notifications</h1>
-                <span class="notifications-new-count" id="notificationsNewCount">0 New</span>
-            </div>
+        <div class="notifications-header">
+            <h1 class="notifications-title">Notifications</h1>
+            <span class="notifications-new-count" id="notificationsNewCount">0 New</span>
+        </div>
 
-            <div id="notificationsList">
-            
-                <div class="notification-item no-notification-box">
+        <div id="studentRequestSection">
+            <div class="student-request-card" id="studentRequestCard" style="display: none;">
+                <div class="student-request-left">
                     <i class="fa-regular fa-circle-user"></i>
-            
-                    <span>
-                        No new notifications.
-                    </span>
                 </div>
-            
-            </div>
 
-            <div id="studentRequestSection">
-                <div class="student-request-card" id="studentRequestCard" style="display: none;">
-                    <div class="student-request-left">
-                        <i class="fa-regular fa-circle-user"></i>
-                    </div>
+                <div class="student-request-middle">
+                    <p id="studentRequestText">
+                        Student request will appear here.
+                    </p>
 
-                    <div class="student-request-middle">
-                        <p id="studentRequestText">
-                            Student request will appear here.
-                        </p>
-
-                        <div class="student-request-actions" id="studentRequestActions">
-                            <button class="accept-btn" id="acceptStudentRequestBtn">Accept</button>
-                            <button class="reject-btn" id="rejectStudentRequestBtn">Reject</button>
-                        </div>
-                    </div>
-
-                    <div class="student-request-right">
-                        <button class="view-profile-btn" id="viewStudentProfileBtn">
-                            view student profile
-                        </button>
+                    <div class="student-request-actions" id="studentRequestActions">
+                        <button class="accept-btn" id="acceptStudentRequestBtn">Accept</button>
+                        <button class="reject-btn" id="rejectStudentRequestBtn">Reject</button>
                     </div>
                 </div>
+
+                <div class="student-request-right">
+                    <button class="view-profile-btn" id="viewStudentProfileBtn">
+                        view student profile
+                    </button>
+                </div>
             </div>
-        </main>
-    
+        </div>
+
+        <div id="notificationsList">
+            <div class="notification-item no-notification-box">
+                <i class="fa-regular fa-circle-user"></i>
+                <span>No new notifications.</span>
+            </div>
+        </div>
+
+    </main>
 
     <div class="student-profile-overlay" id="studentProfileOverlay">
         <div class="student-profile-modal">
@@ -120,8 +115,9 @@
             </div>
         </div>
     </div>
+
     <script src="../../components/sidebar.js"></script>
-<script src="../../components/topbar.js"></script>
+    <script src="../../components/topbar.js"></script>
     <script src="st-notifications.js"></script>
 </body>
 

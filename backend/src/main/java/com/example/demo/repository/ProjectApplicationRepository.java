@@ -21,4 +21,9 @@ public interface ProjectApplicationRepository extends JpaRepository<ProjectAppli
     List<ProjectApplication> findByProjectStudent(Student projectOwner);
 
     List<ProjectApplication> findByProjectStudentAndStatus(Student projectOwner, ApplicationStatus status);
+
+    List<ProjectApplication> findByProjectStudentAndStatusOrderByAppliedAtDesc(
+        Student projectOwner,
+        ApplicationStatus status
+);
 }

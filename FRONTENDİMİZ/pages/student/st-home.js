@@ -1,6 +1,7 @@
 const API_BASE = "http://localhost:8080";
 
 let allOpenProjects = [];
+let myApplications = [];
 
 document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
@@ -15,11 +16,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   renderSidebar(role);
 
-  await loadStudentProfile(token, userId);
-  await loadProjectCategoryFilter(token);
-  await loadOpenProjects(token);
-  setupProjectCategoryFilter();
-  await loadAnnouncements(token);
+await loadStudentProfile(token, userId);
+await loadProjectCategoryFilter(token);
+await loadOpenProjects(token);
+setupProjectCategoryFilter();
+await loadAnnouncements(token);
 });
 
 async function loadStudentProfile(token, userId) {
@@ -135,16 +136,25 @@ async function loadOpenProjects(token) {
   const container = document.getElementById("openProjectsList");
 
   try {
-    const response = await fetch(`${API_BASE}/api/projects/open`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    const [projectsResponse, applicationsResponse] = await Promise.all([
+  fetch(`${API_BASE}/api/projects/open`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }),
 
-    const text = await response.text();
+  fetch(`${API_BASE}/api/projects/my-applications`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+]);
 
-    if (!response.ok) {
+const text = await projectsResponse.text();
+
+    if (!projectsResponse.ok) {
       container.innerHTML = `
         <div class="project-card">
           <h4>Could not load open projects</h4>
@@ -153,6 +163,12 @@ async function loadOpenProjects(token) {
       `;
       return;
     }
+
+    const applicationsResult = applicationsResponse.ok
+  ? await applicationsResponse.json()
+  : { data: [] };
+
+myApplications = applicationsResult.data || [];
 
   const result = JSON.parse(text);
 const projects = result.data || result || [];
@@ -209,6 +225,44 @@ function renderOpenProjects(projects) {
     const card = document.createElement("div");
     card.className = "project-card";
 
+    const application = myApplications.find(app =>
+  String(app.project?.id || app.projectId) === String(project.id)
+);
+
+const applicationStatus = String(application?.status || "").toUpperCase();
+
+let applyButtonHtml = `
+  <button type="button" class="open-project-apply-btn">
+    Apply
+  </button>
+`;
+
+if (applicationStatus === "PENDING") {
+  applyButtonHtml = `
+    <button
+      type="button"
+      class="open-project-apply-btn"
+      disabled
+      style="background:#999;"
+    >
+      Applied
+    </button>
+  `;
+}
+
+if (applicationStatus === "ACCEPTED") {
+  applyButtonHtml = `
+    <button
+      type="button"
+      class="open-project-apply-btn"
+      disabled
+      style="background:#20b14b;"
+    >
+      Applied
+    </button>
+  `;
+}
+
     card.innerHTML = `
       <h4>${project.title || "Untitled Project"}</h4>
       <p><strong>Owner:</strong> ${studentName}</p>
@@ -222,9 +276,7 @@ function renderOpenProjects(projects) {
           View Details
         </button>
 
-        <button type="button" class="open-project-apply-btn">
-          Apply
-        </button>
+        ${applyButtonHtml}
       </div>
     `;
 
@@ -232,9 +284,14 @@ function renderOpenProjects(projects) {
       window.location.href = `../student/project-details.html?projectId=${project.id}`;
     });
 
-    card.querySelector(".open-project-apply-btn").addEventListener("click", async function () {
-      await applyToProject(project.id, token, this);
-    });
+    const applyBtn = card.querySelector(".open-project-apply-btn");
+
+if (!applyBtn.disabled) {
+  applyBtn.addEventListener("click", async function () {
+    const token = localStorage.getItem("token");
+    await applyToProject(project.id, token, this);
+  });
+}
 
     container.appendChild(card);
   });
