@@ -150,8 +150,7 @@ function updateTotalNotificationCount(extraPendingCount = 0) {
 }
 
 async function loadIncomingStudentRequest(token) {
-  const card = document.getElementById("studentRequestCard");
-  const count = document.getElementById("notificationsNewCount");
+  const section = document.getElementById("studentRequestSection");
 
   try {
     const response = await fetch(`${API_BASE}/api/projects/incoming-applications`, {
@@ -161,7 +160,7 @@ async function loadIncomingStudentRequest(token) {
     });
 
     if (!response.ok) {
-      card.style.display = "none";
+      section.innerHTML = "";
       updateTotalNotificationCount(0);
       return;
     }
@@ -170,60 +169,90 @@ async function loadIncomingStudentRequest(token) {
     const requests = result.data || [];
 
     if (!requests.length) {
-      card.style.display = "none";
+      section.innerHTML = "";
       updateTotalNotificationCount(0);
       return;
     }
 
-    currentStudentRequest = requests[0];
+    section.innerHTML = "";
 
-    card.style.display = "flex";
+    requests.forEach(request => {
+      const status = String(request.status || "").toUpperCase();
 
-    const status = String(currentStudentRequest.status || "").toUpperCase();
+      const studentName =
+        request.student?.user
+          ? `${request.student.user.firstName || ""} ${request.student.user.lastName || ""}`.trim()
+          : "Student";
 
-    const studentName =
-      currentStudentRequest.student?.user
-        ? `${currentStudentRequest.student.user.firstName || ""} ${currentStudentRequest.student.user.lastName || ""}`.trim()
-        : "Student";
+      const projectTitle = request.project?.title || "-";
 
-    const projectTitle = currentStudentRequest.project?.title || "-";
+      const card = document.createElement("div");
+      card.className = "student-request-card";
+      card.style.display = "flex";
 
-    document.getElementById("studentRequestText").innerHTML = `
-      <strong>${studentName}</strong>
-      wants to join your project
-      <strong>${projectTitle}</strong>
-    `;
+      card.innerHTML = `
+        <div class="student-request-left">
+          <i class="fa-regular fa-circle-user"></i>
+        </div>
 
-    const actions = document.getElementById("studentRequestActions");
+        <div class="student-request-middle">
+          <p>
+            <strong>${studentName}</strong>
+            wants to join your project
+            <strong>${projectTitle}</strong>
+          </p>
 
-    if (status === "ACCEPTED") {
-      actions.innerHTML = `<div class="student-request-final accepted">Accepted</div>`;
-      updateTotalNotificationCount(0);
-    } else if (status === "REJECTED") {
-      actions.innerHTML = `<div class="student-request-final rejected">Rejected</div>`;
-      updateTotalNotificationCount(0);
-    } else {
-      actions.innerHTML = `
-        <button class="accept-btn" id="acceptStudentRequestBtn">Accept</button>
-        <button class="reject-btn" id="rejectStudentRequestBtn">Reject</button>
+          <div class="student-request-actions">
+            ${
+              status === "PENDING"
+                ? `
+                  <button class="accept-btn">Accept</button>
+                  <button class="reject-btn">Reject</button>
+                `
+                : `<div class="student-request-final ${status.toLowerCase()}">${status}</div>`
+            }
+          </div>
+        </div>
+
+        <div class="student-request-right">
+          <button class="view-profile-btn">
+            view student profile
+          </button>
+        </div>
       `;
 
-      document.getElementById("acceptStudentRequestBtn").addEventListener("click", function () {
-        respondToStudentRequest("ACCEPTED");
-      });
+      const acceptBtn = card.querySelector(".accept-btn");
+      const rejectBtn = card.querySelector(".reject-btn");
+      const viewBtn = card.querySelector(".view-profile-btn");
 
-      document.getElementById("rejectStudentRequestBtn").addEventListener("click", function () {
-        respondToStudentRequest("REJECTED");
-      });
+      if (acceptBtn) {
+        acceptBtn.addEventListener("click", function () {
+          respondToStudentRequest(request, "ACCEPTED", card);
+        });
+      }
 
-      updateTotalNotificationCount(requests.length);
-    }
+      if (rejectBtn) {
+        rejectBtn.addEventListener("click", function () {
+          respondToStudentRequest(request, "REJECTED", card);
+        });
+      }
 
-    fillStudentProfileModal(currentStudentRequest);
+      if (viewBtn) {
+        viewBtn.addEventListener("click", function () {
+          currentStudentRequest = request;
+          fillStudentProfileModal(request);
+          openStudentProfile();
+        });
+      }
+
+      section.appendChild(card);
+    });
+
+    updateTotalNotificationCount(requests.length);
 
   } catch (error) {
     console.error("Incoming student request load error:", error);
-    card.style.display = "none";
+    section.innerHTML = "";
     updateTotalNotificationCount(0);
   }
 }
@@ -300,15 +329,12 @@ function closeStudentProfile() {
   document.getElementById("studentProfileOverlay").classList.remove("show");
 }
 
-async function respondToStudentRequest(status) {
-  if (!currentStudentRequest) return;
-
+async function respondToStudentRequest(request, status, card) {
   const token = localStorage.getItem("token");
-  const actions = document.getElementById("studentRequestActions");
 
   try {
     const response = await fetch(
-      `${API_BASE}/api/projects/applications/${currentStudentRequest.id}/respond/${status}`,
+      `${API_BASE}/api/projects/applications/${request.id}/respond/${status}`,
       {
         method: "POST",
         headers: {
@@ -322,9 +348,9 @@ async function respondToStudentRequest(status) {
       return;
     }
 
-    if (currentStudentRequest.notificationId) {
+    if (request.notificationId) {
       await fetch(
-        `${API_BASE}/api/notifications/${currentStudentRequest.notificationId}/read`,
+        `${API_BASE}/api/notifications/${request.notificationId}/read`,
         {
           method: "PUT",
           headers: {
@@ -334,16 +360,10 @@ async function respondToStudentRequest(status) {
       );
     }
 
-    if (status === "ACCEPTED") {
-      actions.innerHTML = `<div class="student-request-final accepted">Accepted</div>`;
-    } else {
-      actions.innerHTML = `<div class="student-request-final rejected">Rejected</div>`;
-    }
-
-    document.getElementById("studentRequestCard").style.display = "none";
+    card.remove();
 
     await loadNotifications(token);
-    updateTotalNotificationCount(0);
+    await loadIncomingStudentRequest(token);
 
   } catch (error) {
     console.error("Student request response error:", error);

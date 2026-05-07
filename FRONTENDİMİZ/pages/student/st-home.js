@@ -318,8 +318,11 @@ async function applyToProject(projectId, token, button) {
 
     alert("Application sent successfully!");
 
-    button.textContent = "Applied";
-    button.disabled = true;
+button.textContent = "Applied";
+button.disabled = true;
+button.style.background = "#999";
+button.style.cursor = "not-allowed";
+button.style.opacity = "0.8";
 
   } catch (error) {
     console.error("Apply error:", error);
