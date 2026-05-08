@@ -180,6 +180,62 @@ public class DataInitializer {
                 );
             }
 
+            // ================= Mehmet Advisor (FULL QUOTA TEST) =================
+            User mehmetUser = userRepository.findByEmail("mehmet@uskudar.com")
+                    .orElseGet(() -> userRepository.save(
+                    User.builder()
+                            .email("mehmet@uskudar.com")
+                            .passwordHash(passwordEncoder.encode("1234"))
+                            .role(Role.ADVISOR)
+                            .firstName("Mehmet")
+                            .lastName("Kaya")
+                            .status(UserStatus.ACTIVE)
+                            .isDeleted(false)
+                            .build()
+            ));
+
+            if (!advisorRepository.existsById(mehmetUser.getId())) {
+                advisorRepository.save(
+                        Advisor.builder()
+                                .user(mehmetUser)
+                                .title("Professor")
+                                .department("Software Engineering")
+                                .areasOfExpertise("AI, Cyber Security, Distributed Systems")
+                                .researchInterests("Machine Learning, Deep Learning")
+                                .currentQuota(0)
+                                .maxQuota(5)
+                                .advisingStatus(AdvisingStatus.ACTIVE)
+                                .build()
+                );
+            }
+// ================= Ece Advisor =================
+            User eceUser = userRepository.findByEmail("ece@uskudar.com")
+                    .orElseGet(() -> userRepository.save(
+                    User.builder()
+                            .email("ece@uskudar.com")
+                            .passwordHash(passwordEncoder.encode("1234"))
+                            .role(Role.ADVISOR)
+                            .firstName("Ece")
+                            .lastName("Karaca")
+                            .status(UserStatus.ACTIVE)
+                            .isDeleted(false)
+                            .build()
+            ));
+
+            if (!advisorRepository.existsById(eceUser.getId())) {
+                advisorRepository.save(
+                        Advisor.builder()
+                                .user(eceUser)
+                                .title("Associate Professor")
+                                .department("Software Engineering")
+                                .areasOfExpertise("Cyber Security, Networks, Cloud Systems")
+                                .researchInterests("Cyber Security, Distributed Systems")
+                                .currentQuota(0)
+                                .maxQuota(5)
+                                .advisingStatus(AdvisingStatus.ACTIVE)
+                                .build()
+                );
+            }
             // ================= Admin =================
             userRepository.findByEmail("buket@uskudar.com")
                     .orElseGet(() -> userRepository.save(

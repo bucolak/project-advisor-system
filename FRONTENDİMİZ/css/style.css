@@ -7787,3 +7787,104 @@ body {
 .advisor-profile-status-dot.status-inactive {
   background-color: #e53935 !important;
 }
+
+/* STUDENT NOTIFICATIONS - CLEAN ALIGNMENT FIX */
+
+#notificationsList {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  margin-top: 30px !important;
+}
+
+.notification-item,
+.student-request-card {
+  width: 100% !important;
+  max-width: 1180px !important;
+  min-height: 86px !important;
+  margin: 0 !important;
+  padding: 22px 28px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+
+  border: 1.5px solid #222 !important;
+  border-radius: 8px !important;
+  background: #f7f7f7 !important;
+  box-sizing: border-box !important;
+}
+
+.notification-item {
+  font-size: 18px !important;
+}
+
+.notification-item i {
+  font-size: 22px !important;
+  width: 34px !important;
+  text-align: center !important;
+}
+
+.student-request-left {
+  width: 90px !important;
+  min-width: 90px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.student-request-left i {
+  font-size: 70px !important;
+}
+
+.student-request-middle {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 14px !important;
+}
+
+.student-request-middle p {
+  margin: 0 !important;
+  font-size: 18px !important;
+  line-height: 1.35 !important;
+}
+
+.student-request-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+.student-request-actions button,
+.student-request-final {
+  min-width: 120px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+
+.student-request-right {
+  min-width: 230px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.student-request-right .view-profile-btn {
+  width: 210px !important;
+  height: 38px !important;
+  border-radius: 18px !important;
+}
+
+.notifications-header {
+  max-width: 1180px !important;
+  margin-bottom: 20px !important;
+}

@@ -1,6 +1,7 @@
 const API_BASE = "http://localhost:8080";
 
 let currentAdvisorId = null;
+let advisorsById = {};
 
 document.addEventListener("DOMContentLoaded", async function () {
   setupSearch();
@@ -15,7 +16,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     window.location.href = "../../index.html";
     return;
   }
-renderSidebar(role);
+
+  renderSidebar(role);
   await loadStudentProfile(token, userId);
   await loadAdvisors(token);
   await loadStudentProjectsForModal(token);
@@ -91,18 +93,18 @@ async function loadAdvisors(token) {
     const advisors = result.data || result || [];
 
     advisors.sort((a, b) => {
-   const nameA = (
-    a.fullName ||
-    `${a.firstName || ""} ${a.lastName || ""}`
-  ).trim().toLocaleLowerCase("tr-TR");
+      const nameA = (
+        a.fullName ||
+        `${a.firstName || ""} ${a.lastName || ""}`
+      ).trim().toLocaleLowerCase("tr-TR");
 
-   const nameB = (
-    b.fullName ||
-    `${b.firstName || ""} ${b.lastName || ""}`
-  ).trim().toLocaleLowerCase("tr-TR");
+      const nameB = (
+        b.fullName ||
+        `${b.firstName || ""} ${b.lastName || ""}`
+      ).trim().toLocaleLowerCase("tr-TR");
 
-  return nameA.localeCompare(nameB, "tr-TR");
- });
+      return nameA.localeCompare(nameB, "tr-TR");
+    });
 
     if (!advisors.length) {
       renderEmptyAdvisors("No advisor found.");
@@ -121,27 +123,31 @@ function renderAdvisors(advisors) {
   const tableBody = document.getElementById("advisorsTableBody");
   tableBody.innerHTML = "";
 
+  advisorsById = {};
+
   advisors.forEach(advisor => {
     const advisorId = advisor.userId || advisor.id;
+    advisorsById[String(advisorId)] = advisor;
 
     const fullName =
       advisor.fullName ||
       `${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
 
     const advisingStatus = String(
-  advisor.advisingStatus ||
-  advisor.advisorStatus ||
-  "INACTIVE"
-).toUpperCase();
+      advisor.advisingStatus ||
+      advisor.advisorStatus ||
+      "INACTIVE"
+    ).toUpperCase();
 
-const userStatus = String(
-  advisor.userStatus ||
-  "INACTIVE"
-).toUpperCase();
+    const userStatus = String(
+      advisor.userStatus ||
+      "INACTIVE"
+    ).toUpperCase();
 
-const isActive =
-  advisingStatus === "ACTIVE" &&
-  userStatus === "ACTIVE";
+    const isActive =
+      advisingStatus === "ACTIVE" &&
+      userStatus === "ACTIVE";
+
     const expertiseHtml = String(advisor.areasOfExpertise || advisor.expertise || "")
       .split(",")
       .map(item => item.trim())
@@ -336,9 +342,11 @@ function closeRequestModal() {
   document.getElementById("requestModal").classList.remove("show");
   currentAdvisorId = null;
 }
+
 async function sendAdvisorRequest() {
   const token = localStorage.getItem("token");
-  const selectedProjectId = document.getElementById("projectSelect").value;
+  const projectSelect = document.getElementById("projectSelect");
+  const selectedProjectId = projectSelect.value;
 
   if (!selectedProjectId || !currentAdvisorId) {
     alert("Please select a project.");
@@ -346,6 +354,18 @@ async function sendAdvisorRequest() {
   }
 
   const advisorIdToRestore = currentAdvisorId;
+
+  const selectedAdvisor = advisorsById[String(currentAdvisorId)];
+
+  if (selectedAdvisor) {
+    const currentQuota = Number(selectedAdvisor.currentQuota ?? 0);
+    const maxQuota = Number(selectedAdvisor.maxQuota ?? 5);
+
+    if (currentQuota >= maxQuota) {
+      alert("Advisor has already 5 projects. You cannot send a request.");
+      return;
+    }
+  }
 
   try {
     const response = await fetch(
@@ -362,31 +382,37 @@ async function sendAdvisorRequest() {
 
     console.log("SEND REQUEST STATUS:", response.status);
     console.log("SEND REQUEST RESPONSE:", text);
-if (!response.ok) {
 
-  let message = "Advisor has already 5 projects. You cannot send a request.";
+    if (!response.ok) {
+      if (text.includes("Advisor has already 5 projects")) {
+        alert("Advisor has already 5 projects. You cannot send a request.");
+        return;
+      }
 
-  try {
-    const errorResult = JSON.parse(text);
+      if (text.includes("already pending or accepted")) {
+        alert("This project already has a pending or accepted advisor request.");
+        return;
+      }
 
-    if (errorResult.message) {
-      message = errorResult.message;
+      if (text.includes("already sent")) {
+        alert("You have already sent a request to this advisor.");
+        return;
+      }
+
+      alert("Failed to send advisor request.");
+      return;
     }
-  } catch (e) {
-    console.log("Error response parse failed.");
-  }
-
-  alert(message);
-  return;
-}
-    
 
     const actionCell = document.getElementById(`action-${advisorIdToRestore}`);
 
-    const projectSelect = document.getElementById("projectSelect");
-
     const selectedProjectText =
       projectSelect.options[projectSelect.selectedIndex].text;
+
+    const selectedOption = projectSelect.options[projectSelect.selectedIndex];
+
+    if (selectedOption) {
+      selectedOption.disabled = true;
+    }
 
     if (actionCell) {
       actionCell.innerHTML = `

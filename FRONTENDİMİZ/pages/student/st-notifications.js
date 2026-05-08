@@ -66,6 +66,7 @@ async function loadStudentProfile(token, userId) {
     console.error("Student profile load error:", error);
   }
 }
+
 async function loadAllNotificationItems(token) {
   const list = document.getElementById("notificationsList");
   const section = document.getElementById("studentRequestSection");
@@ -136,11 +137,23 @@ async function loadAllNotificationItems(token) {
       if (!notificationLastSeenDate) return true;
       if (!item.date) return false;
 
-      return new Date(item.date) > notificationLastSeenDate;
+      const isNewByDate = new Date(item.date) > notificationLastSeenDate;
+
+      if (!isNewByDate) return false;
+
+      if (item.type === "APPLICATION") {
+        const status = String(item.data.status || "").toUpperCase();
+        return status === "PENDING";
+      }
+
+      return item.data.isRead === false || item.data.isRead === null;
     }).length;
 
     notificationBaseNewCount = newCount;
-    if (count) count.textContent = `${newCount} New`;
+
+    if (count) {
+      count.textContent = `${newCount} New`;
+    }
 
     list.innerHTML = "";
 
@@ -152,13 +165,14 @@ async function loadAllNotificationItems(token) {
       }
     });
 
+    await markNormalNotificationsAsRead(token, allItems);
+
   } catch (error) {
     console.error("Notification list load error:", error);
     renderNoNotifications();
     if (count) count.textContent = "0 New";
   }
 }
-
 
 function renderNoNotifications() {
   const list = document.getElementById("notificationsList");
@@ -179,6 +193,7 @@ function updateTotalNotificationCount(extraNewCount = 0) {
 
   count.textContent = `${notificationBaseNewCount + extraNewCount} New`;
 }
+
 function createNormalNotificationCard(notification) {
   const item = document.createElement("div");
   item.className = "notification-item";
@@ -262,7 +277,6 @@ function createStudentRequestCard(request) {
 
   return card;
 }
-
 
 async function fillStudentProfileModal(data) {
   const token = localStorage.getItem("token");
@@ -444,10 +458,30 @@ async function respondToStudentRequest(request, status, card) {
 
     request.status = status;
 
-  await loadAllNotificationItems(token);
+    await loadAllNotificationItems(token);
 
   } catch (error) {
     console.error("Student request response error:", error);
     alert("Server error while updating request.");
+  }
+}
+
+async function markNormalNotificationsAsRead(token, allItems) {
+  const unreadNotifications = allItems
+    .filter(item => item.type === "NORMAL")
+    .map(item => item.data)
+    .filter(notification => notification && notification.isRead === false);
+
+  for (const notification of unreadNotifications) {
+    try {
+      await fetch(`${API_BASE}/api/notifications/${notification.id}/read`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    } catch (error) {
+      console.error("Mark notification as read error:", error);
+    }
   }
 }

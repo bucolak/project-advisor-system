@@ -251,14 +251,35 @@ async function updateRequestStatus(requestId, status) {
     console.log("UPDATE REQUEST STATUS:", response.status);
     console.log("UPDATE REQUEST RESPONSE:", text);
 
-    if (!response.ok) {
-      alert("Failed to update request status.");
-      return;
-    }
 
     const card = document.getElementById(`request-${requestId}`);
     const actions = card?.querySelector(".request-actions");
+if (!response.ok) {
 
+  if (text.includes("You have already 5 projects")) {
+    alert("You have already 5 projects. You cannot accept the project.");
+    return;
+  }
+
+  let message = "Failed to update request status.";
+
+  try {
+    const errorResult = JSON.parse(text);
+
+    if (errorResult.message) {
+      message = errorResult.message;
+    } else if (errorResult.error) {
+      message = errorResult.error;
+    }
+  } catch (e) {
+    if (text) {
+      message = text;
+    }
+  }
+
+  alert(message);
+  return;
+}
     if (actions) {
       actions.innerHTML = `
         <div class="request-final-status ${status === "ACCEPTED" ? "accepted-status" : "rejected-status"}">

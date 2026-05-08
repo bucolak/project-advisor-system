@@ -358,25 +358,10 @@ public class ProjectService {
         Advisor advisor = advisorRepository.findById(advisorId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Danışman bulunamadı."));
         if (isAdvisorQuotaFull(advisor)) {
-            advisor.setAdvisingStatus(AdvisingStatus.INACTIVE);
-            advisorRepository.save(advisor);
-
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "You cannot send a request to this advisor because they already have 5 projects."
-            );
-        }
-        if (isAdvisorQuotaFull(advisor)) {
-
-            advisor.setAdvisingStatus(AdvisingStatus.INACTIVE);
-
-            advisorRepository.save(advisor);
-
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Advisor has already 5 projects. You cannot send a request."
             );
-
         }
         if (advisor.getAdvisingStatus() != AdvisingStatus.ACTIVE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışman şu anda istek kabul etmiyor.");
