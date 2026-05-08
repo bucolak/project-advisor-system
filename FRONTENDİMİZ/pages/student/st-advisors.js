@@ -128,15 +128,20 @@ function renderAdvisors(advisors) {
       advisor.fullName ||
       `${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
 
-    const status = String(
-      advisor.advisingStatus ||
-      advisor.status ||
-      advisor.advisorStatus ||
-      "INACTIVE"
-    ).toUpperCase();
+    const advisingStatus = String(
+  advisor.advisingStatus ||
+  advisor.advisorStatus ||
+  "INACTIVE"
+).toUpperCase();
 
-    const isActive = status === "ACTIVE";
+const userStatus = String(
+  advisor.userStatus ||
+  "INACTIVE"
+).toUpperCase();
 
+const isActive =
+  advisingStatus === "ACTIVE" &&
+  userStatus === "ACTIVE";
     const expertiseHtml = String(advisor.areasOfExpertise || advisor.expertise || "")
       .split(",")
       .map(item => item.trim())
@@ -357,11 +362,24 @@ async function sendAdvisorRequest() {
 
     console.log("SEND REQUEST STATUS:", response.status);
     console.log("SEND REQUEST RESPONSE:", text);
+if (!response.ok) {
 
-    if (!response.ok) {
-      alert("Failed to send advisor request.");
-      return;
+  let message = "Advisor has already 5 projects. You cannot send a request.";
+
+  try {
+    const errorResult = JSON.parse(text);
+
+    if (errorResult.message) {
+      message = errorResult.message;
     }
+  } catch (e) {
+    console.log("Error response parse failed.");
+  }
+
+  alert(message);
+  return;
+}
+    
 
     const actionCell = document.getElementById(`action-${advisorIdToRestore}`);
 

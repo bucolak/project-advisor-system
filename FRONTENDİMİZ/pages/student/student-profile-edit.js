@@ -80,6 +80,10 @@ async function loadStudentProfile(token, userId) {
     yearInput.value = student.year ?? "";
     yearInput.readOnly = true;
     yearInput.classList.add("readonly-field");
+    const gpaInput = document.getElementById("studentGpa");
+gpaInput.value = student.gpa ?? "";
+gpaInput.readOnly = true;
+gpaInput.classList.add("readonly-field");
    const emailInput = document.getElementById("studentEmail");
 
   emailInput.value = student.email || "";

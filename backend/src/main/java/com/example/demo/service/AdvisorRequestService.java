@@ -15,12 +15,12 @@ import com.example.demo.entity.AdvisorRequest;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
+import com.example.demo.enums.AdvisingStatus;
 import com.example.demo.enums.RequestStatus;
 import com.example.demo.repository.AdvisorRepository;
 import com.example.demo.repository.AdvisorRequestRepository;
 import com.example.demo.repository.ProjectRepository;
 import com.example.demo.repository.StudentRepository;
-
 @Service
 public class AdvisorRequestService {
 
@@ -95,7 +95,16 @@ public class AdvisorRequestService {
 
         if (status == RequestStatus.ACCEPTED) {
             Integer currentQuota = advisor.getCurrentQuota() == null ? 0 : advisor.getCurrentQuota();
-            advisor.setCurrentQuota(currentQuota + 1);
+            Integer maxQuota = advisor.getMaxQuota() == null ? 5 : advisor.getMaxQuota();
+
+            int newQuota = currentQuota + 1;
+
+            advisor.setCurrentQuota(newQuota);
+
+            if (newQuota >= maxQuota) {
+                advisor.setAdvisingStatus(AdvisingStatus.INACTIVE);
+            }
+
             advisorRepository.save(advisor);
         }
 

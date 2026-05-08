@@ -56,8 +56,7 @@ async function loadAdvisorProfile(token, userId) {
 
     await loadPreviouslySupervisedProjectTypes(token);
 
-    const savedStatus = localStorage.getItem("advisorStatus");
-    renderStatus(savedStatus || advisor.advisingStatus || "ACTIVE");
+    renderStatus(advisor.advisingStatus);
 
   } catch (error) {
     console.error("Advisor profile load error:", error);
@@ -169,23 +168,8 @@ function renderProjectTypes(typesData) {
   `;
 }
 
-  container.innerHTML = "";
-
-  types.forEach(type => {
-    const row = document.createElement("div");
-    row.className = "project-type-row";
-
-    row.innerHTML = `
-      <span class="type-badge tubitak">${type}</span>
-      <span class="type-text">${type}</span>
-    `;
-
-    container.appendChild(row);
-  });
-
-
 function renderStatus(status) {
-  const normalizedStatus = String(status || "ACTIVE").toUpperCase();
+  const normalizedStatus = String(status || "").toUpperCase();
 
   const inlineText = document.getElementById("advisorStatusTextInline");
   const dot = document.getElementById("advisorStatusDot");
@@ -193,21 +177,41 @@ function renderStatus(status) {
   const button = document.getElementById("advisorStatusButton");
 
   if (inlineText) {
-    inlineText.textContent = normalizedStatus;
+    inlineText.textContent = normalizedStatus || "-";
   }
 
   if (cardText) {
-    cardText.textContent = normalizedStatus === "ACTIVE"
-      ? "You are currently active."
-      : "You are currently inactive.";
+    if (normalizedStatus === "ACTIVE") {
+      cardText.textContent = "You are currently active.";
+    } else if (normalizedStatus === "INACTIVE") {
+      cardText.textContent = "You are currently inactive.";
+    } else {
+      cardText.textContent = "Loading status...";
+    }
   }
 
   if (button) {
-    button.textContent = normalizedStatus === "ACTIVE" ? "Active" : "Inactive";
+    button.classList.remove("status-active", "status-inactive");
+
+    if (normalizedStatus === "ACTIVE") {
+      button.textContent = "Active";
+      button.classList.add("status-active");
+    } else if (normalizedStatus === "INACTIVE") {
+      button.textContent = "Inactive";
+      button.classList.add("status-inactive");
+    } else {
+      button.textContent = "-";
+    }
   }
 
   if (dot) {
-    dot.style.backgroundColor = normalizedStatus === "ACTIVE" ? "#20b14b" : "#e53935";
+    dot.classList.remove("status-active", "status-inactive");
+
+    if (normalizedStatus === "ACTIVE") {
+      dot.classList.add("status-active");
+    } else if (normalizedStatus === "INACTIVE") {
+      dot.classList.add("status-inactive");
+    }
   }
 }
 

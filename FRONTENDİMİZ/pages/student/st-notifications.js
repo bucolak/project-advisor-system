@@ -24,8 +24,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   renderSidebar(role);
   await loadStudentProfile(token, userId);
-  await loadNotifications(token);
-  await loadIncomingStudentRequest(token);
+  await loadAllNotificationItems(token);
 
   localStorage.setItem(notificationLastSeenKey, new Date().toISOString());
 });
@@ -67,80 +66,99 @@ async function loadStudentProfile(token, userId) {
     console.error("Student profile load error:", error);
   }
 }
-
-async function loadNotifications(token) {
+async function loadAllNotificationItems(token) {
   const list = document.getElementById("notificationsList");
+  const section = document.getElementById("studentRequestSection");
   const count = document.getElementById("notificationsNewCount");
 
+  if (section) section.innerHTML = "";
+
   try {
-    const response = await fetch(`${API_BASE}/api/notifications/my`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+    const [notifResponse, requestResponse] = await Promise.all([
+      fetch(`${API_BASE}/api/notifications/my`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+      fetch(`${API_BASE}/api/projects/incoming-applications`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+    ]);
+
+    let allItems = [];
+
+    if (notifResponse.ok) {
+      const notifResult = await notifResponse.json();
+      const notifications = notifResult.data || [];
+
+      const filteredNotifications = notifications.filter(n => {
+        const message = String(n.message || "").toLowerCase();
+
+        return !(
+          message.includes("yeni duyuru") ||
+          message.includes("new announcement") ||
+          message.includes("wants to join your project")
+        );
+      });
+
+      filteredNotifications.forEach(n => {
+        allItems.push({
+          type: "NORMAL",
+          date: n.createdAt,
+          data: n
+        });
+      });
+    }
+
+    if (requestResponse.ok) {
+      const requestResult = await requestResponse.json();
+      const requests = requestResult.data || [];
+
+      requests.forEach(r => {
+        allItems.push({
+          type: "APPLICATION",
+          date: r.appliedAt || r.createdAt || r.requestDate,
+          data: r
+        });
+      });
+    }
+
+    allItems.sort((a, b) => {
+      return new Date(b.date || 0) - new Date(a.date || 0);
     });
 
-    const text = await response.text();
-
-    if (!response.ok) {
+    if (!allItems.length) {
       renderNoNotifications();
       notificationBaseNewCount = 0;
       if (count) count.textContent = "0 New";
       return;
     }
 
-    const result = JSON.parse(text);
-    const notifications = result.data || [];
+    const newCount = allItems.filter(item => {
+      if (!notificationLastSeenDate) return true;
+      if (!item.date) return false;
 
-    const filteredNotifications = notifications.filter(n => {
-      const message = String(n.message || "").toLowerCase();
+      return new Date(item.date) > notificationLastSeenDate;
+    }).length;
 
-      return !(
-        message.includes("yeni duyuru") ||
-        message.includes("new announcement") ||
-        message.includes("wants to join your project")
-      );
-    });
-
-    if (!filteredNotifications.length) {
-      renderNoNotifications();
-      notificationBaseNewCount = 0;
-      if (count) count.textContent = "0 New";
-      return;
-    }
+    notificationBaseNewCount = newCount;
+    if (count) count.textContent = `${newCount} New`;
 
     list.innerHTML = "";
 
-    notificationBaseNewCount = filteredNotifications.filter(n => {
-      if (!notificationLastSeenDate) return true;
-      if (!n.createdAt) return false;
-
-      return new Date(n.createdAt) > notificationLastSeenDate;
-    }).length;
-
-    if (count) {
-      count.textContent = `${notificationBaseNewCount} New`;
-    }
-
-    filteredNotifications.forEach(notification => {
-      const item = document.createElement("div");
-      item.className = "notification-item";
-
-      item.innerHTML = `
-        <i class="fa-regular fa-circle-user"></i>
-        <span>${notification.message || "Notification"}</span>
-      `;
-
-      list.appendChild(item);
+    allItems.forEach(item => {
+      if (item.type === "APPLICATION") {
+        list.appendChild(createStudentRequestCard(item.data));
+      } else {
+        list.appendChild(createNormalNotificationCard(item.data));
+      }
     });
 
   } catch (error) {
-    console.error("Notification load error:", error);
+    console.error("Notification list load error:", error);
     renderNoNotifications();
-    notificationBaseNewCount = 0;
     if (count) count.textContent = "0 New";
   }
 }
+
 
 function renderNoNotifications() {
   const list = document.getElementById("notificationsList");
@@ -161,127 +179,90 @@ function updateTotalNotificationCount(extraNewCount = 0) {
 
   count.textContent = `${notificationBaseNewCount + extraNewCount} New`;
 }
+function createNormalNotificationCard(notification) {
+  const item = document.createElement("div");
+  item.className = "notification-item";
 
-async function loadIncomingStudentRequest(token) {
-  const section = document.getElementById("studentRequestSection");
+  item.innerHTML = `
+    <i class="fa-regular fa-circle-user"></i>
+    <span>${notification.message || "Notification"}</span>
+  `;
 
-  try {
-    const response = await fetch(`${API_BASE}/api/projects/incoming-applications`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    if (!response.ok) {
-      section.innerHTML = "";
-      updateTotalNotificationCount(0);
-      return;
-    }
-
-    const result = await response.json();
-    const requests = result.data || [];
-
-    if (!requests.length) {
-      section.innerHTML = "";
-      updateTotalNotificationCount(0);
-      return;
-    }
-
-    section.innerHTML = "";
-
-    const newIncomingCount = requests.filter(request => {
-      if (!notificationLastSeenDate) return true;
-
-      const dateValue =
-        request.appliedAt ||
-        request.createdAt ||
-        request.requestDate;
-
-      if (!dateValue) return false;
-
-      return new Date(dateValue) > notificationLastSeenDate;
-    }).length;
-
-    requests.forEach(request => {
-      const status = String(request.status || "").toUpperCase();
-
-      const studentName =
-        request.student?.user
-          ? `${request.student.user.firstName || ""} ${request.student.user.lastName || ""}`.trim()
-          : "Student";
-
-      const projectTitle = request.project?.title || "-";
-
-      const card = document.createElement("div");
-      card.className = "student-request-card";
-      card.style.display = "flex";
-
-      card.innerHTML = `
-        <div class="student-request-left">
-          <i class="fa-regular fa-circle-user"></i>
-        </div>
-
-        <div class="student-request-middle">
-          <p>
-            <strong>${studentName}</strong>
-            wants to join your project
-            <strong>${projectTitle}</strong>
-          </p>
-
-          <div class="student-request-actions">
-            ${
-              status === "PENDING"
-                ? `
-                  <button class="accept-btn">Accept</button>
-                  <button class="reject-btn">Reject</button>
-                `
-                : `<div class="student-request-final ${status.toLowerCase()}">${status}</div>`
-            }
-          </div>
-        </div>
-
-        <div class="student-request-right">
-          <button class="view-profile-btn">
-            view student profile
-          </button>
-        </div>
-      `;
-
-      const acceptBtn = card.querySelector(".accept-btn");
-      const rejectBtn = card.querySelector(".reject-btn");
-      const viewBtn = card.querySelector(".view-profile-btn");
-
-      if (acceptBtn) {
-        acceptBtn.addEventListener("click", function () {
-          respondToStudentRequest(request, "ACCEPTED", card);
-        });
-      }
-
-      if (rejectBtn) {
-        rejectBtn.addEventListener("click", function () {
-          respondToStudentRequest(request, "REJECTED", card);
-        });
-      }
-
-      if (viewBtn) {
-        viewBtn.addEventListener("click", async function () {
-          currentStudentRequest = request;
-          await fillStudentProfileModal(request);
-          openStudentProfile();
-        });
-      }
-
-      section.appendChild(card);
-    });
-
-    updateTotalNotificationCount(newIncomingCount);
-
-  } catch (error) {
-    console.error("Incoming student request load error:", error);
-    section.innerHTML = "";
-    updateTotalNotificationCount(0);
-  }
+  return item;
 }
+
+function createStudentRequestCard(request) {
+  const status = String(request.status || "").toUpperCase();
+
+  const studentName =
+    request.student?.user
+      ? `${request.student.user.firstName || ""} ${request.student.user.lastName || ""}`.trim()
+      : "Student";
+
+  const projectTitle = request.project?.title || "-";
+
+  const card = document.createElement("div");
+  card.className = "student-request-card";
+  card.style.display = "flex";
+
+  card.innerHTML = `
+    <div class="student-request-left">
+      <i class="fa-regular fa-circle-user"></i>
+    </div>
+
+    <div class="student-request-middle">
+      <p>
+        <strong>${studentName}</strong>
+        wants to join your project
+        <strong>${projectTitle}</strong>
+      </p>
+
+      <div class="student-request-actions">
+        ${
+          status === "PENDING"
+            ? `
+              <button class="accept-btn">Accept</button>
+              <button class="reject-btn">Reject</button>
+            `
+            : `<div class="student-request-final ${status.toLowerCase()}">${status}</div>`
+        }
+      </div>
+    </div>
+
+    <div class="student-request-right">
+      <button class="view-profile-btn">
+        view student profile
+      </button>
+    </div>
+  `;
+
+  const acceptBtn = card.querySelector(".accept-btn");
+  const rejectBtn = card.querySelector(".reject-btn");
+  const viewBtn = card.querySelector(".view-profile-btn");
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener("click", function () {
+      respondToStudentRequest(request, "ACCEPTED", card);
+    });
+  }
+
+  if (rejectBtn) {
+    rejectBtn.addEventListener("click", function () {
+      respondToStudentRequest(request, "REJECTED", card);
+    });
+  }
+
+  if (viewBtn) {
+    viewBtn.addEventListener("click", async function () {
+      currentStudentRequest = request;
+      await fillStudentProfileModal(request);
+      openStudentProfile();
+    });
+  }
+
+  return card;
+}
+
 
 async function fillStudentProfileModal(data) {
   const token = localStorage.getItem("token");
@@ -463,7 +444,7 @@ async function respondToStudentRequest(request, status, card) {
 
     request.status = status;
 
-    await loadNotifications(token);
+  await loadAllNotificationItems(token);
 
   } catch (error) {
     console.error("Student request response error:", error);

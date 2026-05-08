@@ -40,12 +40,12 @@ public class AdminController {
 
     @GetMapping("/stats")
     public ResponseEntity<ApiResponse> getStats() {
-        return ResponseEntity.ok(ApiResponse.ok("İstatistikler.", adminService.getStats()));
+        return ResponseEntity.ok(ApiResponse.ok("Statistics.", adminService.getStats()));
     }
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse> getAllUsers() {
-        return ResponseEntity.ok(ApiResponse.ok("Tüm kullanıcılar.", adminService.getAllUsers()));
+        return ResponseEntity.ok(ApiResponse.ok("All users.", adminService.getAllUsers()));
     }
 
     @PutMapping("/users/{userId}/status")
@@ -54,30 +54,30 @@ public class AdminController {
             @RequestBody UpdateStatusRequest req
     ) {
         return ResponseEntity.ok(
-                ApiResponse.ok("Güncellendi.", adminService.updateUserStatus(userId, req.getStatus()))
+                ApiResponse.ok("Updated.", adminService.updateUserStatus(userId, req.getStatus()))
         );
     }
 
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
         adminService.softDeleteUser(userId);
-        return ResponseEntity.ok(ApiResponse.ok("Silindi.", null));
+        return ResponseEntity.ok(ApiResponse.ok("Deleted.", null));
     }
 
     @GetMapping("/projects")
     public ResponseEntity<ApiResponse> getAllProjects() {
-        return ResponseEntity.ok(ApiResponse.ok("Tüm projeler.", projectService.getAllProjects()));
+        return ResponseEntity.ok(ApiResponse.ok("All projects.", projectService.getAllProjects()));
     }
 
     @GetMapping("/categories")
     public ResponseEntity<ApiResponse> getCategories() {
-        return ResponseEntity.ok(ApiResponse.ok("Kategoriler.", adminService.getAllCategories()));
+        return ResponseEntity.ok(ApiResponse.ok("Categories.", adminService.getAllCategories()));
     }
 
     @GetMapping("/announcement-types")
     public ResponseEntity<ApiResponse> getAnnouncementTypes() {
         return ResponseEntity.ok(
-                ApiResponse.ok("Duyuru türleri.", adminService.getAnnouncementTypes())
+                ApiResponse.ok("Announcement types.", adminService.getAnnouncementTypes())
         );
     }
 
@@ -86,7 +86,7 @@ public class AdminController {
         ProjectCategory category = projectCategoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found."));
 
-        return ResponseEntity.ok(ApiResponse.ok("Kategori bulundu.", category));
+        return ResponseEntity.ok(ApiResponse.ok("Category found.", category));
     }
 
     @PostMapping("/categories")
@@ -107,7 +107,7 @@ public class AdminController {
 
         return ResponseEntity.ok(
                 ApiResponse.ok(
-                        "Kategori oluşturuldu.",
+                        "Category created.",
                         adminService.createCategory(name, description, teamSize, budget, advisorRequired)
                 )
         );
@@ -145,36 +145,36 @@ public class AdminController {
 
         ProjectCategory updatedCategory = projectCategoryRepository.save(category);
 
-        return ResponseEntity.ok(ApiResponse.ok("Kategori güncellendi.", updatedCategory));
+        return ResponseEntity.ok(ApiResponse.ok("Category updated.", updatedCategory));
     }
 
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long id) {
         adminService.deleteCategory(id);
-        return ResponseEntity.ok(ApiResponse.ok("Kategori silindi.", null));
+        return ResponseEntity.ok(ApiResponse.ok("Category deleted.", null));
     }
 
     @GetMapping("/announcements")
     public ResponseEntity<ApiResponse> getAnnouncements() {
-        return ResponseEntity.ok(ApiResponse.ok("Duyurular.", adminService.getAllAnnouncements()));
+        return ResponseEntity.ok(ApiResponse.ok("Announcements.", adminService.getAllAnnouncements()));
     }
 
     @GetMapping("/announcements/{id}")
-public ResponseEntity<ApiResponse> getAnnouncementById(@PathVariable Long id) {
-    return ResponseEntity.ok(
-            ApiResponse.ok("Duyuru bulundu.", adminService.getAnnouncementById(id))
-    );
-}
+    public ResponseEntity<ApiResponse> getAnnouncementById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Announcement found.", adminService.getAnnouncementById(id))
+        );
+    }
 
-@PutMapping("/announcements/{id}")
-public ResponseEntity<ApiResponse> updateAnnouncement(
-        @PathVariable Long id,
-        @RequestBody Map<String, String> body
-) {
-    return ResponseEntity.ok(
-            ApiResponse.ok("Duyuru güncellendi.", adminService.updateAnnouncement(id, body))
-    );
-}
+    @PutMapping("/announcements/{id}")
+    public ResponseEntity<ApiResponse> updateAnnouncement(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body
+    ) {
+        return ResponseEntity.ok(
+                ApiResponse.ok("Announcement updated.", adminService.updateAnnouncement(id, body))
+        );
+    }
 
     @PostMapping("/announcements")
     public ResponseEntity<ApiResponse> createAnnouncement(
@@ -197,7 +197,7 @@ public ResponseEntity<ApiResponse> updateAnnouncement(
 
         return ResponseEntity.ok(
                 ApiResponse.ok(
-                        "Duyuru oluşturuldu.",
+                        "Announcement created.",
                         adminService.createAnnouncement(
                                 title,
                                 content,
@@ -211,6 +211,6 @@ public ResponseEntity<ApiResponse> updateAnnouncement(
     @DeleteMapping("/announcements/{id}")
     public ResponseEntity<ApiResponse> deleteAnnouncement(@PathVariable Long id) {
         adminService.deleteAnnouncement(id);
-        return ResponseEntity.ok(ApiResponse.ok("Duyuru silindi.", null));
+        return ResponseEntity.ok(ApiResponse.ok("Announcement deleted.", null));
     }
 }

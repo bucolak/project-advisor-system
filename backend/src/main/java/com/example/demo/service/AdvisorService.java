@@ -47,15 +47,15 @@ public class AdvisorService {
     }
 
     public List<AdvisorProfileResponse> getActiveAdvisors() {
-    return advisorRepository.findByAdvisingStatus(AdvisingStatus.ACTIVE)
-            .stream()
-            .filter(advisor -> advisor.getUser().getStatus() == UserStatus.ACTIVE)
-            .map(this::toProfileResponse)
-            .toList();
-}
+        return advisorRepository.findByAdvisingStatus(AdvisingStatus.ACTIVE)
+                .stream()
+                .filter(advisor -> advisor.getUser().getStatus() == UserStatus.ACTIVE)
+                .map(this::toProfileResponse)
+                .toList();
+    }
 
     public AdvisorProfileResponse getAdvisorProfile(Long userId) {
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
 
         Advisor advisor = advisorRepository.findById(userId)
@@ -97,7 +97,7 @@ public class AdvisorService {
         }
 
         if (body.get("researchInterests") != null) {
-             advisor.setResearchInterests(body.get("researchInterests").toString());
+            advisor.setResearchInterests(body.get("researchInterests").toString());
         }
 
         if (body.get("maxQuota") != null && !body.get("maxQuota").toString().isBlank()) {
@@ -113,7 +113,7 @@ public class AdvisorService {
     @Transactional
     public AdvisorProfileResponse updateAdvisingStatus(Long advisorUserId, String status) {
         if (status == null || status.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status boş olamaz.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status cannot be empty.");
         }
 
         Advisor advisor = advisorRepository.findById(advisorUserId)
@@ -124,7 +124,7 @@ public class AdvisorService {
         try {
             newStatus = AdvisingStatus.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Geçersiz status. ACTIVE veya INACTIVE gönder.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status. Send ACTIVE or INACTIVE.");
         }
 
         advisor.setAdvisingStatus(newStatus);
@@ -137,11 +137,11 @@ public class AdvisorService {
         Advisor advisor = advisorRepository.findById(advisorUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Advisor not found."));
 
-           List<AdvisorRequest> acceptedRequests =
-        advisorRequestRepository.findByAdvisorAndStatusOrderByResponseDateDesc(
-                advisor,
-                RequestStatus.ACCEPTED
-        );
+        List<AdvisorRequest> acceptedRequests
+                = advisorRequestRepository.findByAdvisorAndStatusOrderByResponseDateDesc(
+                        advisor,
+                        RequestStatus.ACCEPTED
+                );
 
         return acceptedRequests.stream()
                 .map(this::toAdvisorStudentProjectResponse)
@@ -159,11 +159,11 @@ public class AdvisorService {
                 advisor.getTitle(),
                 advisor.getDepartment(),
                 advisor.getAreasOfExpertise(),
-                
                 advisor.getCurrentQuota(),
                 advisor.getMaxQuota(),
                 advisor.getResearchInterests(),
-                advisor.getAdvisingStatus().name()
+                advisor.getAdvisingStatus().name(),
+                user.getStatus().name()
         );
     }
 

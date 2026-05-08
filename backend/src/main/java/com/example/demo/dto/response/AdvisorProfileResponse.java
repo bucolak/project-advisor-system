@@ -12,6 +12,7 @@ public class AdvisorProfileResponse {
     private Integer currentQuota;
     private Integer maxQuota;
     private String advisingStatus;
+    private String userStatus;
     private String researchInterests;
 
     public AdvisorProfileResponse(
@@ -25,7 +26,8 @@ public class AdvisorProfileResponse {
             Integer currentQuota,
             Integer maxQuota,
             String researchInterests,
-            String advisingStatus
+            String advisingStatus,
+            String userStatus
     ) {
         this.userId = userId;
         this.firstName = firstName;
@@ -38,6 +40,7 @@ public class AdvisorProfileResponse {
         this.maxQuota = maxQuota;
         this.researchInterests = researchInterests;
         this.advisingStatus = advisingStatus;
+        this.userStatus = userStatus;
     }
 
     public Long getUserId() {
@@ -75,11 +78,16 @@ public class AdvisorProfileResponse {
     public Integer getMaxQuota() {
         return maxQuota;
     }
-public String getResearchInterests() {
-    return researchInterests;
-}
+
+    public String getResearchInterests() {
+        return researchInterests;
+    }
 
     public String getAdvisingStatus() {
         return advisingStatus;
+    }
+
+    public String getUserStatus() {
+        return userStatus;
     }
 }

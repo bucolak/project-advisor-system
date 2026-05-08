@@ -7761,3 +7761,29 @@ body {
 
 }
 
+.advisor-profile-active-btn {
+  background: #d9d9d9 !important;
+  color: #000 !important;
+}
+
+.advisor-profile-active-btn.status-active {
+  background: #43a047 !important;
+  color: white !important;
+}
+
+.advisor-profile-active-btn.status-inactive {
+  background: #e53935 !important;
+  color: white !important;
+}
+
+.advisor-profile-status-dot {
+  background-color: transparent !important;
+}
+
+.advisor-profile-status-dot.status-active {
+  background-color: #20b14b !important;
+}
+
+.advisor-profile-status-dot.status-inactive {
+  background-color: #e53935 !important;
+}
