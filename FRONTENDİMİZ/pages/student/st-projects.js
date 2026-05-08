@@ -199,12 +199,34 @@ function renderEmptyProjects(containerId, message) {
   `;
 }
 
-function getBadgeClass(type) {
-  const value = String(type).toUpperCase();
+function getBadgeClass(name) {
+  const value = String(name || "").toUpperCase();
 
-  if (value.includes("TÜBİTAK") || value.includes("TUBITAK")) return "red";
-  if (value.includes("TEKNOFEST")) return "orange";
-  if (value.includes("COURSE")) return "yellow";
+  if (value.includes("TUBITAK") || value.includes("TÜBİTAK")) {
+    return "tubitak";
+  }
 
-  return "pink";
+  if (value.includes("TEKNOFEST")) {
+    return "teknofest";
+  }
+
+  if (value.includes("COURSE")) {
+    return "course";
+  }
+
+  const customClasses = [
+    "custom-1",
+    "custom-2",
+    "custom-3",
+    "custom-4",
+    "custom-5"
+  ];
+
+  let total = 0;
+
+  for (let i = 0; i < value.length; i++) {
+    total += value.charCodeAt(i);
+  }
+
+  return customClasses[total % customClasses.length];
 }

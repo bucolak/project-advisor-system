@@ -216,6 +216,7 @@ function renderOpenProjects(projects) {
       project.categoryName ||
       project.projectType ||
       "PROJECT";
+      const badgeClass = getBadgeClass(categoryName);
 
     const studentName =
       project.student?.user
@@ -266,7 +267,10 @@ if (applicationStatus === "ACCEPTED") {
     card.innerHTML = `
       <h4>${project.title || "Untitled Project"}</h4>
       <p><strong>Owner:</strong> ${studentName}</p>
-      <p><strong>Category:</strong> ${categoryName}</p>
+      <p>
+  <strong>Category:</strong>
+  ${categoryName}
+</p>
       <p>${project.description || "No description available."}</p>
       <p><strong>Skills:</strong> ${project.requiredSkills || "-"}</p>
       <p><strong>Team Size:</strong> ${project.teamSize || "-"}</p>
@@ -483,4 +487,35 @@ function formatAnnouncementDate(dateValue) {
     day: "numeric",
     year: "numeric"
   });
+}
+function getBadgeClass(name) {
+  const value = String(name || "").toUpperCase();
+
+  if (value.includes("TUBITAK") || value.includes("TÜBİTAK")) {
+    return "tubitak";
+  }
+
+  if (value.includes("TEKNOFEST")) {
+    return "teknofest";
+  }
+
+  if (value.includes("COURSE")) {
+    return "course";
+  }
+
+  const customClasses = [
+    "custom-1",
+    "custom-2",
+    "custom-3",
+    "custom-4",
+    "custom-5"
+  ];
+
+  let total = 0;
+
+  for (let i = 0; i < value.length; i++) {
+    total += value.charCodeAt(i);
+  }
+
+  return customClasses[total % customClasses.length];
 }

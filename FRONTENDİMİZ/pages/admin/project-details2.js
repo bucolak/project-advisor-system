@@ -64,7 +64,7 @@ function renderProjectDetails(project) {
     ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
     : "Student Name";
 
-  document.getElementById("projectCategoryBadge").textContent = categoryName;
+  
 
   document.getElementById("detailsPageTitle").textContent =
     `${project.title || "Project"} Details`;
