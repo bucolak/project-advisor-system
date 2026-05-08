@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/projects/**").hasAuthority("ROLE_STUDENT")
                 .requestMatchers("/api/categories/**").authenticated()
                 .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/students/*/profile-with-projects").hasAnyAuthority("ROLE_STUDENT", "ROLE_ADVISOR", "ROLE_ADMIN")
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -83,4 +84,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
 }
+

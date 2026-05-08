@@ -130,8 +130,9 @@ function renderJoinedProjects(containerId, applications) {
       <p><strong>Team:</strong> ${project.teamSize ?? "-"}</p>
 
       <div class="st-projects-card-footer">
-        <span class="assigned">Joined</span>
-      </div>
+  <span class="assigned">Joined</span>
+  <span class="st-projects-footer-category ${badgeClass}">${categoryName}</span>
+</div>
     `;
 
     container.appendChild(card);
@@ -177,8 +178,9 @@ function renderProjects(containerId, projects, isCreatedSection) {
       <p><strong>Team:</strong> ${project.teamSize ?? "-"}</p>
 
       <div class="st-projects-card-footer">
-        <span class="assigned">Created</span>
-      </div>
+  <span class="assigned">Created</span>
+  <span class="st-projects-footer-category ${badgeClass}">${badgeText}</span>
+</div>
     `;
 
     container.appendChild(card);

@@ -1,6 +1,9 @@
 const API_BASE = "http://localhost:8080";
 
 let currentStudentRequest = null;
+let notificationBaseNewCount = 0;
+let notificationLastSeenDate = null;
+let notificationLastSeenKey = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
   setupModal();
@@ -15,26 +18,23 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
+  notificationLastSeenKey = `studentNotificationsLastSeenAt_${userId}`;
+  const lastSeenValue = localStorage.getItem(notificationLastSeenKey);
+  notificationLastSeenDate = lastSeenValue ? new Date(lastSeenValue) : null;
+
   renderSidebar(role);
   await loadStudentProfile(token, userId);
   await loadNotifications(token);
   await loadIncomingStudentRequest(token);
+
+  localStorage.setItem(notificationLastSeenKey, new Date().toISOString());
 });
 
 function setupModal() {
   const closeBtn = document.getElementById("closeStudentProfileBtn");
-  const viewBtn = document.getElementById("viewStudentProfileBtn");
 
   if (closeBtn) {
     closeBtn.addEventListener("click", closeStudentProfile);
-  }
-
-  if (viewBtn) {
-    viewBtn.addEventListener("click", function () {
-      if (currentStudentRequest) {
-        openStudentProfile();
-      }
-    });
   }
 
   const modal = document.getElementById("studentProfileOverlay");
@@ -82,31 +82,47 @@ async function loadNotifications(token) {
 
     const text = await response.text();
 
-    console.log("NOTIFICATION STATUS:", response.status);
-    console.log("NOTIFICATION RESPONSE:", text);
-
     if (!response.ok) {
       renderNoNotifications();
+      notificationBaseNewCount = 0;
+      if (count) count.textContent = "0 New";
       return;
     }
 
     const result = JSON.parse(text);
     const notifications = result.data || [];
 
-    if (!notifications.length) {
+    const filteredNotifications = notifications.filter(n => {
+      const message = String(n.message || "").toLowerCase();
+
+      return !(
+        message.includes("yeni duyuru") ||
+        message.includes("new announcement") ||
+        message.includes("wants to join your project")
+      );
+    });
+
+    if (!filteredNotifications.length) {
       renderNoNotifications();
+      notificationBaseNewCount = 0;
+      if (count) count.textContent = "0 New";
       return;
     }
 
     list.innerHTML = "";
 
-    const unreadCount = notifications.filter(
-      n => n.isRead === false || n.isRead === null
-    ).length;
+    notificationBaseNewCount = filteredNotifications.filter(n => {
+      if (!notificationLastSeenDate) return true;
+      if (!n.createdAt) return false;
 
-    count.textContent = `${unreadCount} New`;
+      return new Date(n.createdAt) > notificationLastSeenDate;
+    }).length;
 
-    notifications.forEach(notification => {
+    if (count) {
+      count.textContent = `${notificationBaseNewCount} New`;
+    }
+
+    filteredNotifications.forEach(notification => {
       const item = document.createElement("div");
       item.className = "notification-item";
 
@@ -121,6 +137,8 @@ async function loadNotifications(token) {
   } catch (error) {
     console.error("Notification load error:", error);
     renderNoNotifications();
+    notificationBaseNewCount = 0;
+    if (count) count.textContent = "0 New";
   }
 }
 
@@ -137,16 +155,11 @@ function renderNoNotifications() {
   }
 }
 
-function updateTotalNotificationCount(extraPendingCount = 0) {
+function updateTotalNotificationCount(extraNewCount = 0) {
   const count = document.getElementById("notificationsNewCount");
-  const items = document.querySelectorAll("#notificationsList .notification-item:not(.no-notification-box)");
+  if (!count) return;
 
-  const normalCount = items.length;
-  const total = normalCount + extraPendingCount;
-
-  if (count) {
-    count.textContent = `${total} New`;
-  }
+  count.textContent = `${notificationBaseNewCount + extraNewCount} New`;
 }
 
 async function loadIncomingStudentRequest(token) {
@@ -175,6 +188,19 @@ async function loadIncomingStudentRequest(token) {
     }
 
     section.innerHTML = "";
+
+    const newIncomingCount = requests.filter(request => {
+      if (!notificationLastSeenDate) return true;
+
+      const dateValue =
+        request.appliedAt ||
+        request.createdAt ||
+        request.requestDate;
+
+      if (!dateValue) return false;
+
+      return new Date(dateValue) > notificationLastSeenDate;
+    }).length;
 
     requests.forEach(request => {
       const status = String(request.status || "").toUpperCase();
@@ -238,9 +264,9 @@ async function loadIncomingStudentRequest(token) {
       }
 
       if (viewBtn) {
-        viewBtn.addEventListener("click", function () {
+        viewBtn.addEventListener("click", async function () {
           currentStudentRequest = request;
-          fillStudentProfileModal(request);
+          await fillStudentProfileModal(request);
           openStudentProfile();
         });
       }
@@ -248,7 +274,7 @@ async function loadIncomingStudentRequest(token) {
       section.appendChild(card);
     });
 
-    updateTotalNotificationCount(requests.length);
+    updateTotalNotificationCount(newIncomingCount);
 
   } catch (error) {
     console.error("Incoming student request load error:", error);
@@ -257,48 +283,134 @@ async function loadIncomingStudentRequest(token) {
   }
 }
 
-function fillStudentProfileModal(data) {
+async function fillStudentProfileModal(data) {
+  const token = localStorage.getItem("token");
+
   const student = data.student;
   const project = data.project;
 
-  const studentName =
-    student?.user
+  const studentUserId =
+    student?.userId ||
+    student?.user?.id ||
+    student?.id;
+
+  let profile = null;
+  let studentProjects = [];
+
+  if (studentUserId) {
+    try {
+      const response = await fetch(`${API_BASE}/api/students/${studentUserId}/profile-with-projects`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        profile = result.data.profile;
+        studentProjects = result.data.projects || [];
+      }
+    } catch (error) {
+      console.error("Modal student profile load error:", error);
+    }
+  }
+
+  const studentName = profile
+    ? `${profile.firstName || ""} ${profile.lastName || ""}`.trim()
+    : student?.user
       ? `${student.user.firstName || ""} ${student.user.lastName || ""}`.trim()
       : "Student";
 
-  const type = project?.category?.name || "PROJECT";
+  document.getElementById("modalStudentName").textContent = studentName || "Student";
+  document.getElementById("modalStudentDepartment").textContent =
+    profile?.department || student?.department || "-";
 
-  document.getElementById("studentProfileTag").textContent = type;
-  document.getElementById("modalStudentName").textContent = studentName;
-  document.getElementById("modalStudentDepartment").textContent = student?.department || "-";
+  const tag = document.getElementById("studentProfileTag");
+  if (tag) tag.style.display = "none";
 
-  setListItems("modalRelevantCourses", []);
-  setListItems("modalResearchInterests", []);
+  setListItems(
+    "modalRelevantCourses",
+    splitToList(profile?.researchInterests || student?.researchInterests)
+  );
 
-  document.getElementById("modalStudentProjects").innerHTML = `
-    <div class="student-project-card">
+  setListItems(
+    "modalResearchInterests",
+    splitToList(profile?.skills || student?.skills)
+  );
+
+  renderModalStudentProjects(studentProjects);
+}
+
+function renderModalStudentProjects(projects) {
+  const container = document.getElementById("modalStudentProjects");
+
+  const cleanProjects = (projects || [])
+    .filter(Boolean)
+    .slice(0, 2);
+
+  if (!cleanProjects.length) {
+    container.innerHTML = `
+      <div class="student-project-card">
+        <div class="student-project-header">
+          <h4>No project</h4>
+        </div>
+        <div class="student-project-body">
+          <p><strong>Project:</strong> No data</p>
+        </div>
+        <div class="student-project-footer">
+          <p><strong>Skills:</strong> -</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = "";
+
+  cleanProjects.forEach(project => {
+    const categoryName =
+      project.category?.name ||
+      project.categoryName ||
+      project.projectType ||
+      "PROJECT";
+
+    const card = document.createElement("div");
+    card.className = "student-project-card";
+
+    card.innerHTML = `
       <div class="student-project-header">
-        <h4>${project?.title || "-"}</h4>
-        <span class="student-project-badge ${getProjectBadgeClass(type)}">
-          ${type}
-        </span>
+        <h4>${project.title || "-"}</h4>
       </div>
 
       <div class="student-project-body">
-        <p><strong>Project:</strong> ${project?.description || "-"}</p>
+        <p><strong>Project:</strong> ${categoryName}</p>
       </div>
 
       <div class="student-project-footer">
-        <p><strong>Skills:</strong> ${student?.skills || "-"}</p>
+        <p><strong>Skills:</strong> ${project.requiredSkills || project.skills || "-"}</p>
       </div>
-    </div>
-  `;
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function splitToList(value) {
+  if (!value) return [];
+
+  return String(value)
+    .split(",")
+    .map(x => x.trim())
+    .filter(Boolean);
 }
 
 function setListItems(id, items) {
   const list = document.getElementById(id);
 
-  if (!items.length) {
+  if (!list) return;
+
+  if (!items || !items.length) {
     list.innerHTML = "<li>No data</li>";
     return;
   }
@@ -310,15 +422,6 @@ function setListItems(id, items) {
     li.textContent = x;
     list.appendChild(li);
   });
-}
-
-function getProjectBadgeClass(type) {
-  const v = String(type).toUpperCase();
-
-  if (v.includes("TUBITAK") || v.includes("TÜBİTAK")) return "tubitak";
-  if (v.includes("TEKNOFEST")) return "teknofest";
-
-  return "tubitak";
 }
 
 function openStudentProfile() {
@@ -348,22 +451,19 @@ async function respondToStudentRequest(request, status, card) {
       return;
     }
 
-    if (request.notificationId) {
-      await fetch(
-        `${API_BASE}/api/notifications/${request.notificationId}/read`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+    const actionsArea = card.querySelector(".student-request-actions");
+
+    if (actionsArea) {
+      actionsArea.innerHTML = `
+        <div class="student-request-final ${status.toLowerCase()}">
+          ${status}
+        </div>
+      `;
     }
 
-    card.remove();
+    request.status = status;
 
     await loadNotifications(token);
-    await loadIncomingStudentRequest(token);
 
   } catch (error) {
     console.error("Student request response error:", error);

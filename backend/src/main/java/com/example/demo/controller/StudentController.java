@@ -5,7 +5,12 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.response.ApiResponse;
 import com.example.demo.dto.response.StudentProfileResponse;
@@ -45,7 +50,18 @@ public class StudentController {
                 )
         );
     }
+    @GetMapping("/{userId}/profile-with-projects")
 
+    public ResponseEntity<ApiResponse> getStudentProfileWithProjects(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Student profile with projects fetched.",
+                        studentService.getStudentProfileWithProjects(userId)
+                )
+        );
+
+    }
     @PutMapping("/{userId}/profile")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<ApiResponse> updateStudentProfileById(

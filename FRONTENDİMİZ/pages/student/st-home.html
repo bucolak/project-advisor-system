@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Home</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/style.css" />
 </head>
@@ -19,77 +20,127 @@
 
             <div id="topbarArea"></div>
 
-            <div class="row">
-                <div class="card">
-                    <h2 id="welcomeText">Welcome 👋</h2>
-                    <p>Department: <span id="studentDepartment"></span></p>
-                    <p>Year: <span id="studentYear"></span></p>
+            <div class="student-home-top-layout">
+
+                <div class="student-home-left-area">
+
+                    <div class="card">
+                        <h2 id="welcomeText">Welcome 👋</h2>
+
+                        <p>
+                            Department:
+                            <span id="studentDepartment"></span>
+                        </p>
+
+                        <p>
+                            Year:
+                            <span id="studentYear"></span>
+                        </p>
+                    </div>
+
+                    <div class="card student-home-announcements-card">
+
+                        <h3>Announcements</h3>
+
+                        <ul id="announcementsList">
+                            <li>No announcements yet.</li>
+                        </ul>
+
+                    </div>
+
                 </div>
 
-                <div class="card">
+                <div class="card student-home-my-advisors-card">
+
                     <h3>My Advisors</h3>
+
                     <div id="myAdvisorsList">
                         <p>No advisor data yet.</p>
                     </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="card">
-                    <h3>Announcements</h3>
-                    <ul id="announcementsList">
-                        <li>No announcements yet.</li>
-                    </ul>
                 </div>
 
-                <div class="card">
-                    <h3>Advisor Requests</h3>
-                    <div id="advisorRequestsList">
-                        <p>No advisor requests yet.</p>
-                    </div>
-                </div>
             </div>
 
             <div class="card">
+
                 <div class="open-projects-header">
+
                     <h3>Open Projects</h3>
 
                     <div class="open-projects-filter">
-                        <label for="projectCategoryFilter">Project Type:</label>
+
+                        <label for="projectCategoryFilter">
+                            Project Type:
+                        </label>
 
                         <select id="projectCategoryFilter">
                             <option value="ALL">All</option>
                         </select>
+
                     </div>
+
                 </div>
 
                 <div class="project-grid" id="openProjectsList">
+
                     <div class="project-card">
+
                         <h4>No open projects yet</h4>
-                        <p>Projects will appear here when connected to backend.</p>
+
+                        <p>
+                            Projects will appear here when connected to backend.
+                        </p>
+
                     </div>
+
                 </div>
+
             </div>
+
             <div class="student-ann-modal-overlay" id="announcementModal">
-  <div class="student-ann-modal">
-    <button class="student-ann-modal-close" id="closeAnnouncementModal">&times;</button>
 
-    <h2 id="modalAnnouncementTitle">Announcement</h2>
+                <div class="student-ann-modal">
 
-    <p><strong>Category:</strong> <span id="modalAnnouncementCategory">-</span></p>
-    <p><strong>Type:</strong> <span id="modalAnnouncementType">-</span></p>
-    <p><strong>Deadline:</strong> <span id="modalAnnouncementDeadline">-</span></p>
+                    <button class="student-ann-modal-close" id="closeAnnouncementModal">
+                        &times;
+                    </button>
 
-    <div class="student-ann-modal-desc">
-      <h3>Description</h3>
-      <p id="modalAnnouncementDescription">-</p>
-    </div>
-  </div>
-</div>
+                    <h2 id="modalAnnouncementTitle">
+                        Announcement
+                    </h2>
+
+                    <p>
+                        <strong>Category:</strong>
+                        <span id="modalAnnouncementCategory">-</span>
+                    </p>
+
+                    <p>
+                        <strong>Type:</strong>
+                        <span id="modalAnnouncementType">-</span>
+                    </p>
+
+                    <p>
+                        <strong>Deadline:</strong>
+                        <span id="modalAnnouncementDeadline">-</span>
+                    </p>
+
+                    <div class="student-ann-modal-desc">
+
+                        <h3>Description</h3>
+
+                        <p id="modalAnnouncementDescription">-</p>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </main>
 
     </div>
+
     <script src="../../components/sidebar.js"></script>
     <script src="../../components/topbar.js"></script>
     <script src="st-home.js"></script>

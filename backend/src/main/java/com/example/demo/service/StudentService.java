@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -7,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.response.StudentProfileResponse;
+import com.example.demo.entity.Project;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
+import com.example.demo.repository.ProjectRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.UserRepository;
 
@@ -17,10 +21,16 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
-    public StudentService(StudentRepository studentRepository, UserRepository userRepository) {
+    public StudentService(
+            StudentRepository studentRepository,
+            UserRepository userRepository,
+            ProjectRepository projectRepository
+    ) {
         this.studentRepository = studentRepository;
         this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
     }
 
     public StudentProfileResponse getStudentProfile(Long userId) {
@@ -44,6 +54,26 @@ public class StudentService {
                 student.getResearchInterests(),
                 student.getRelevantCourses()
         );
+    }
+
+    public Map<String, Object> getStudentProfileWithProjects(Long userId) {
+
+        StudentProfileResponse profile = getStudentProfile(userId);
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student profile not found."));
+
+        List<Project> projects = projectRepository
+                .findTop2ByStudentAndIsDeletedFalseOrderByCreatedAtDesc(student);
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("profile", profile);
+
+        map.put("projects", projects);
+
+        return map;
+
     }
 
     public StudentProfileResponse updateStudentProfile(Long userId, Map<String, Object> body) {

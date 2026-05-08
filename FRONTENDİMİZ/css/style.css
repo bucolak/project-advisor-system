@@ -7512,3 +7512,252 @@ body {
   display: flex;
   gap: 12px;
 }
+
+.open-project-apply-btn,
+
+.open-project-apply-btn.applied,
+
+.open-project-apply-btn:disabled {
+
+  min-width: 110px !important;
+
+  height: 44px !important;
+
+  padding: 0 18px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  border-radius: 16px !important;
+
+  font-size: 15px !important;
+
+  font-weight: 700 !important;
+
+  box-sizing: border-box !important;
+
+}
+
+/* STUDENT NOTIFICATIONS - CARD SPACING FIX */
+
+#studentRequestSection {
+  margin-bottom: 26px !important;
+}
+
+.student-request-card {
+  margin-bottom: 26px !important;
+  border-radius: 8px !important;
+}
+
+#notificationsList {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 26px !important;
+}
+
+#notificationsList .notification-item {
+  margin: 0 !important;
+  border-radius: 8px !important;
+}
+
+/* ACCEPTED / REJECTED BOX SIZE FIX */
+
+.student-request-final {
+  width: 120px !important;
+  height: 35px !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  font-size: 14px !important;
+  font-weight: 500 !important;
+
+  border-radius: 10px !important;
+  padding: 0 !important;
+}
+
+.student-request-card {
+
+  margin-bottom: 0 !important;
+
+}
+
+#studentRequestSection {
+
+  gap: 12px !important;
+
+}
+
+#studentRequestSection .student-request-card {
+
+  margin-top: 0 !important;
+
+  margin-bottom: 18px !important;
+
+}
+
+#studentRequestSection .student-request-card+.student-request-card {
+
+  margin-top: 0 !important;
+
+}
+
+#studentRequestSection {
+
+  display: block !important;
+
+}
+
+.advisor-loading-card {
+  display: flex !important;
+  align-items: center !important;
+  gap: 22px !important;
+}
+
+.advisor-notif-loading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 52px;
+}
+
+.advisor-notif-loading-icon i {
+  font-size: 42px !important;
+}
+
+.student-home-announcements-card {
+
+  width: 100% !important;
+
+}
+.student-home-my-advisors-card {
+
+  height: 400px !important;
+
+  overflow-y: auto !important;
+
+}
+
+.student-home-my-advisors-card::-webkit-scrollbar {
+
+  width: 6px;
+
+}
+
+.student-home-my-advisors-card::-webkit-scrollbar-thumb {
+
+  background: #c7c7c7;
+
+  border-radius: 20px;
+
+}
+
+.student-home-top-layout {
+
+  display: grid !important;
+
+  grid-template-columns: 2fr 1fr !important;
+
+  gap: 24px !important;
+
+  align-items: start !important;
+
+}
+
+.student-home-left-area {
+
+  display: flex !important;
+
+  flex-direction: column !important;
+
+  gap: 24px !important;
+
+}
+
+.student-home-my-advisors-card {
+
+  height: 280px !important;
+
+  overflow: hidden !important;
+
+}
+
+#myAdvisorsList {
+
+  height: 320px !important;
+
+  overflow-y: auto !important;
+
+  padding-right: 6px !important;
+
+}
+
+.student-home-top-layout {
+
+  margin-bottom: 28px !important;
+
+}
+
+.student-home-advisor-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+  margin-bottom: 18px !important;
+}
+
+.student-home-advisor-icon i {
+  font-size: 28px !important;
+}
+
+.student-home-advisor-info h4 {
+  margin: 0 0 6px 0 !important;
+  font-size: 18px !important;
+}
+
+.student-home-advisor-info ul {
+  margin: 0 !important;
+  padding-left: 18px !important;
+}
+
+.student-home-advisor-info li {
+  font-size: 15px !important;
+  margin-bottom: 4px !important;
+}
+
+.student-home-my-advisors-card {
+
+  height: 280px !important;
+
+  overflow: hidden !important;
+
+  display: flex !important;
+
+  flex-direction: column !important;
+
+}
+
+.student-home-my-advisors-card h3 {
+
+  flex: 0 0 auto !important;
+
+}
+
+.student-home-my-advisors-card #myAdvisorsList {
+
+  flex: 1 1 auto !important;
+
+  min-height: 0 !important;
+
+  overflow-y: auto !important;
+
+  overflow-x: hidden !important;
+
+  padding-right: 8px !important;
+
+}
+

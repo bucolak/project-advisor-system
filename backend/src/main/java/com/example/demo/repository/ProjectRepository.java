@@ -23,6 +23,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findByCategoryAndStatusAndIsDeletedFalse(ProjectCategory category, ProjectStatus status);
 
+    List<Project> findTop2ByStudentAndIsDeletedFalseOrderByCreatedAtDesc(Student student);
+
+    boolean existsByTitleIgnoreCaseAndIsDeletedFalse(String title);
+
     @Query("""
            SELECT p
            FROM Project p

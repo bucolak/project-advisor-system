@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   setupAdvisorToggle();
   setupForms(token, userId);
 
-
   await loadStudentInfo(token, userId);
   await loadProjectCategories(token);
 });
@@ -102,19 +101,17 @@ async function loadProjectCategories(token) {
       }
 
       selectedAdvisorRequired = selectedOption.dataset.advisorRequired === "true";
-      
 
       const teamSizeInput = document.getElementById("otherTeamSize");
+      const maxTeamSize = selectedOption.dataset.teamSize;
 
-const maxTeamSize = selectedOption.dataset.teamSize;
+      if (teamSizeInput && maxTeamSize) {
+        teamSizeInput.placeholder = `Max ${maxTeamSize} students`;
+        teamSizeInput.max = maxTeamSize;
+        teamSizeInput.min = 1;
+      }
 
-if (teamSizeInput && maxTeamSize) {
-  teamSizeInput.placeholder = `Max ${maxTeamSize} students`;
-  teamSizeInput.max = maxTeamSize;
-  teamSizeInput.min = 1;
-}
-
-applyAdvisorRule();
+      applyAdvisorRule();
     });
 
   } catch (error) {
@@ -234,20 +231,20 @@ async function createOtherProject(token, userId) {
 }
 
 async function submitProject(token, payload) {
- if (!payload.title || !payload.description || !payload.rolesNeeded) {
-  alert("Please fill all required fields.");
-  return;
-}
+  if (!payload.title || !payload.description || !payload.rolesNeeded) {
+    alert("Please fill all required fields.");
+    return;
+  }
 
-if (!payload.teamSize || payload.teamSize <= 0) {
-  alert("Team size must be greater than 0.");
-  return;
-}
+  if (!payload.teamSize || payload.teamSize <= 0) {
+    alert("Team size must be greater than 0.");
+    return;
+  }
 
-if (!payload.requiredSkills) {
-  alert("Please select at least one skill.");
-  return;
-}
+  if (!payload.requiredSkills) {
+    alert("Please select at least one skill.");
+    return;
+  }
 
   try {
     const response = await fetch(`${API_BASE}/api/projects`, {
@@ -266,7 +263,22 @@ if (!payload.requiredSkills) {
     console.log("CREATE PROJECT RESPONSE:", text);
 
     if (!response.ok) {
-      alert("Project could not be created.");
+      let message = "Project could not be created.";
+
+      try {
+        const errorResult = JSON.parse(text);
+
+        message =
+          errorResult.message ||
+          errorResult.error ||
+          message;
+      } catch (e) {
+        if (text) {
+          message = text;
+        }
+      }
+
+      alert(message);
       return;
     }
 

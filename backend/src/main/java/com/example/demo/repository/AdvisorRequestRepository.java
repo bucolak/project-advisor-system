@@ -33,5 +33,9 @@ List<AdvisorRequest> findByAdvisorAndStatusOrderByResponseDateDesc(
     List<AdvisorRequest> findByProjectStudentOrderByRequestDateDesc(Student student);
 
     List<AdvisorRequest> findByProjectAndStatusIn(Project project, List<RequestStatus> statuses);
+    List<AdvisorRequest> findByProjectStudentAndStatusOrderByResponseDateDesc(
+            Student student,
+            RequestStatus status
+    );
 
 }

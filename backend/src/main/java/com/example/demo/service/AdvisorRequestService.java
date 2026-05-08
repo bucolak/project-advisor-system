@@ -181,4 +181,44 @@ public Map<String, Object> withdrawRequest(Long studentUserId, Long requestId) {
 
         return map;
     }
+    public List<Map<String, Object>> getAcceptedAdvisorsForStudent(Long studentUserId) {
+        Student student = studentRepository.findById(studentUserId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found."));
+
+        List<AdvisorRequest> acceptedRequests
+                = advisorRequestRepository.findByProjectStudentAndStatusOrderByResponseDateDesc(
+                        student,
+                        RequestStatus.ACCEPTED
+                );
+
+        Map<Long, Map<String, Object>> grouped = new HashMap<>();
+
+        for (AdvisorRequest request : acceptedRequests) {
+            Advisor advisor = request.getAdvisor();
+            User advisorUser = advisor.getUser();
+            Project project = request.getProject();
+
+            Long advisorId = advisorUser.getId();
+
+            grouped.putIfAbsent(advisorId, new HashMap<>());
+
+            Map<String, Object> advisorMap = grouped.get(advisorId);
+
+            advisorMap.put("advisorId", advisorId);
+            advisorMap.put("advisorName", advisorUser.getFirstName() + " " + advisorUser.getLastName());
+            advisorMap.put("advisorTitle", advisor.getTitle());
+
+            @SuppressWarnings("unchecked")
+            List<String> projects = (List<String>) advisorMap.get("projects");
+
+            if (projects == null) {
+                projects = new java.util.ArrayList<>();
+                advisorMap.put("projects", projects);
+            }
+
+            projects.add(project.getTitle());
+        }
+
+        return grouped.values().stream().toList();
+    }
 }

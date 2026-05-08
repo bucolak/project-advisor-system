@@ -94,7 +94,36 @@ public class DataInitializer {
                                 .build()
                 );
             }
+            User melisUser = userRepository.findByEmail("melis@uskudar.com")
+                    .orElseGet(() -> userRepository.save(
+                    User.builder()
+                            .email("melis@uskudar.com")
+                            .passwordHash(passwordEncoder.encode("1234"))
+                            .role(Role.STUDENT)
+                            .firstName("Melis")
+                            .lastName("Yıldırım")
+                            .status(UserStatus.ACTIVE)
+                            .isDeleted(false)
+                            .build()
+            ));
 
+            if (!studentRepository.existsById(melisUser.getId())) {
+
+                studentRepository.save(
+                        Student.builder()
+                                .user(melisUser)
+                                .department("Software Engineering")
+                                .year(3)
+                                .gpa(3.58)
+                                .skills("Spring Boot, React, PostgreSQL")
+                                .relevantCourses("Software Architecture, Web Programming, Database Systems")
+                                .researchInterests("Full Stack Development, Cloud Systems, UI Design")
+                                .githubLink("")
+                                .linkedinLink("")
+                                .build()
+                );
+
+            }
             // ================= Zeynep Advisor =================
             User zeynepUser = userRepository.findByEmail("zeynep@uskudar.com")
                     .orElseGet(() -> userRepository.save(

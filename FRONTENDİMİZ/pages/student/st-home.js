@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   renderSidebar(role);
 
-await loadStudentProfile(token, userId);
+  await loadStudentProfile(token, userId);
+  await loadMyAdvisors(token);
+  
 await loadProjectCategoryFilter(token);
 await loadOpenProjects(token);
 setupProjectCategoryFilter();
@@ -518,4 +520,67 @@ function getBadgeClass(name) {
   }
 
   return customClasses[total % customClasses.length];
+}
+
+async function loadMyAdvisors(token) {
+  const container = document.getElementById("myAdvisorsList");
+
+  if (!container) return;
+
+  container.innerHTML = `<p>Loading advisors...</p>`;
+
+  try {
+    const response = await fetch(`${API_BASE}/api/advisor-requests/my-advisors`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      container.innerHTML = `<p>Advisor data could not be loaded.</p>`;
+      return;
+    }
+
+    const result = await response.json();
+    const advisors = result.data || [];
+
+    if (!advisors.length) {
+      container.innerHTML = `<p>No advisor data yet.</p>`;
+      return;
+    }
+
+    container.innerHTML = "";
+
+    advisors.forEach(item => {
+      const advisorBox = document.createElement("div");
+      advisorBox.className = "student-home-advisor-item";
+
+      const projects = item.projects || [];
+
+      advisorBox.innerHTML = `
+        <div class="student-home-advisor-icon">
+          <i class="fa-regular fa-circle-user"></i>
+        </div>
+
+        <div class="student-home-advisor-info">
+          <h4>${item.advisorName || "Advisor"}</h4>
+
+          <ul>
+            ${
+              projects.length
+                ? projects.map(p => `<li>${p}</li>`).join("")
+                : `<li>No project data</li>`
+            }
+          </ul>
+        </div>
+      `;
+
+      container.appendChild(advisorBox);
+    });
+
+  } catch (error) {
+    console.error("My advisors load error:", error);
+    container.innerHTML = `<p>Server error while loading advisors.</p>`;
+  }
 }

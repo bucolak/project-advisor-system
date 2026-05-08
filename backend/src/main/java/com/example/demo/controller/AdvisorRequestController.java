@@ -106,4 +106,16 @@ public ResponseEntity<ApiResponse> withdrawRequest(
             )
     );
 }
+    @GetMapping("/my-advisors")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<ApiResponse> getMyAcceptedAdvisors(Authentication auth) {
+        Long studentUserId = (Long) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                ApiResponse.ok(
+                        "Accepted advisors fetched.",
+                        advisorRequestService.getAcceptedAdvisorsForStudent(studentUserId)
+                )
+        );
+    }
 }

@@ -64,6 +64,15 @@ public class ProjectService {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
 
+        String cleanedTitle = req.getTitle().trim();
+
+        if (projectRepository.existsByTitleIgnoreCaseAndIsDeletedFalse(cleanedTitle)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Bu proje adıyla kayıtlı sistemde proje bulunuyor."
+            );
+        }
+
         ProjectCategory category = null;
 
         if (req.getCategoryId() != null) {
@@ -71,12 +80,12 @@ public class ProjectService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı."));
         }
 
-        Boolean advisorRequired =
-                req.getAdvisorRequired() != null ? req.getAdvisorRequired() : true;
+        Boolean advisorRequired
+                = req.getAdvisorRequired() != null ? req.getAdvisorRequired() : true;
 
         Project project = Project.builder()
                 .student(student)
-                .title(req.getTitle())
+                .title(cleanedTitle)
                 .description(req.getDescription())
                 .requiredSkills(req.getRequiredSkills())
                 .teamSize(req.getTeamSize())
@@ -169,7 +178,6 @@ public class ProjectService {
         userMap.put("email", user.getEmail());
 
         studentMap.put("user", userMap);
-
         map.put("student", studentMap);
 
         return map;
@@ -190,17 +198,33 @@ public class ProjectService {
     }
 
     public List<ProjectApplication> getMyApplications(Long userId) {
-    Student student = studentRepository.findById(userId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
 
-    return projectApplicationRepository.findByStudent(student);
-}
+        return projectApplicationRepository.findByStudent(student);
+    }
 
     public List<Project> getOpenProjectsForStudent(Long userId) {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
 
-        return projectRepository.findOpenProjectsExceptCurrentStudent(ProjectStatus.OPEN, student);
+        return projectRepository.findOpenProjectsExceptCurrentStudent(ProjectStatus.OPEN, student)
+                .stream()
+                .filter(project -> !isProjectTeamFull(project))
+                .toList();
+    }
+
+    private boolean isProjectTeamFull(Project project) {
+        if (project.getTeamSize() == null) {
+            return false;
+        }
+
+        long acceptedCount = projectApplicationRepository
+                .countByProjectAndStatus(project, ApplicationStatus.ACCEPTED);
+
+        long currentTeamSize = 1 + acceptedCount;
+
+        return currentTeamSize >= project.getTeamSize();
     }
 
     @Transactional
@@ -215,26 +239,30 @@ public class ProjectService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kendi projenize başvuramazsınız.");
         }
 
-        Optional<ProjectApplication> existingApplication =
-        projectApplicationRepository.findByProjectAndStudent(project, applicant);
+        if (isProjectTeamFull(project)) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "This project team is already full."
+            );
+        }
 
-if (existingApplication.isPresent()) {
+        Optional<ProjectApplication> existingApplication
+                = projectApplicationRepository.findByProjectAndStudent(project, applicant);
 
-    ApplicationStatus status = existingApplication.get().getStatus();
+        if (existingApplication.isPresent()) {
+            ApplicationStatus status = existingApplication.get().getStatus();
 
-    if (status == ApplicationStatus.PENDING ||
-        status == ApplicationStatus.ACCEPTED) {
+            if (status == ApplicationStatus.PENDING || status == ApplicationStatus.ACCEPTED) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Bu projeye zaten başvurdunuz."
+                );
+            }
 
-        throw new ResponseStatusException(
-                HttpStatus.CONFLICT,
-                "Bu projeye zaten başvurdunuz."
-        );
-    }
-
-    if (status == ApplicationStatus.REJECTED) {
-        projectApplicationRepository.delete(existingApplication.get());
-    }
-}
+            if (status == ApplicationStatus.REJECTED) {
+                projectApplicationRepository.delete(existingApplication.get());
+            }
+        }
 
         ProjectApplication application = ProjectApplication.builder()
                 .project(project)
@@ -247,22 +275,21 @@ if (existingApplication.isPresent()) {
         notificationService.createNotification(
                 project.getStudent().getUser(),
                 applicant.getUser().getFirstName()
-                        + " "
-                        + applicant.getUser().getLastName()
-                        + " wants to join your project "
-                        + project.getTitle()
+                + " "
+                + applicant.getUser().getLastName()
+                + " wants to join your project "
+                + project.getTitle()
         );
 
         return savedApplication;
     }
 
     public List<ProjectApplication> getIncomingApplications(Long ownerId) {
-    Student owner = studentRepository.findById(ownerId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+        Student owner = studentRepository.findById(ownerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
 
-    return projectApplicationRepository
-            .findByProjectStudentAndStatusOrderByAppliedAtDesc(owner, ApplicationStatus.PENDING);
-}
+        return projectApplicationRepository.findByProjectStudentOrderByAppliedAtDesc(owner);
+    }
 
     @Transactional
     public ProjectApplication respondApplication(Long ownerId, Long applicationId, String status) {
@@ -295,10 +322,10 @@ if (existingApplication.isPresent()) {
         notificationService.createNotification(
                 application.getStudent().getUser(),
                 "Your application for "
-                        + application.getProject().getTitle()
-                        + " has been "
-                        + resultText
-                        + "."
+                + application.getProject().getTitle()
+                + " has been "
+                + resultText
+                + "."
         );
 
         return savedApplication;
@@ -330,19 +357,18 @@ if (existingApplication.isPresent()) {
         if (advisor.getUser().getStatus() != UserStatus.ACTIVE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bu danışman şu anda aktif değil.");
         }
-     List<AdvisorRequest> activeRequests = advisorRequestRepository.findByProjectAndStatusIn(
-        project,
-        List.of(RequestStatus.PENDING, RequestStatus.ACCEPTED)
-);
 
-if (!activeRequests.isEmpty()) {
-    throw new ResponseStatusException(
-            HttpStatus.CONFLICT,
-            "Bu proje için zaten pending veya accepted advisor request var."
-    );
-}
+        List<AdvisorRequest> activeRequests = advisorRequestRepository.findByProjectAndStatusIn(
+                project,
+                List.of(RequestStatus.PENDING, RequestStatus.ACCEPTED)
+        );
 
-
+        if (!activeRequests.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Bu proje için zaten pending veya accepted advisor request var."
+            );
+        }
 
         advisorRequestRepository.findByProjectAndAdvisor(project, advisor).ifPresent(r -> {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Bu danışmana zaten istek gönderdiniz.");
@@ -362,12 +388,12 @@ if (!activeRequests.isEmpty()) {
     }
 
     public List<Project> getProjectsByCategory(Long categoryId) {
-    ProjectCategory category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı."));
+        ProjectCategory category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı."));
 
-    return projectRepository.findByCategoryAndStatusAndIsDeletedFalse(
-            category,
-            ProjectStatus.OPEN
-    );
-}
+        return projectRepository.findByCategoryAndStatusAndIsDeletedFalse(
+                category,
+                ProjectStatus.OPEN
+        );
+    }
 }
