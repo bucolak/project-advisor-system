@@ -36,10 +36,10 @@ public class DataInitializer {
         return args -> transactionTemplate.executeWithoutResult(status -> {
 
             // ================= Sude =================
-            User sudeUser = userRepository.findByEmail("sude@uskudar.com")
+            User sudeUser = userRepository.findByEmail("sude@student.com")
                     .orElseGet(() -> userRepository.save(
                             User.builder()
-                                    .email("sude@uskudar.com")
+                                    .email("sude@student.com")
                                     .passwordHash(passwordEncoder.encode("1234"))
                                     .role(Role.STUDENT)
                                     .firstName("Sude")
@@ -66,10 +66,10 @@ public class DataInitializer {
             }
 
             // ================= Nida =================
-            User nidaUser = userRepository.findByEmail("nida@uskudar.com")
+            User nidaUser = userRepository.findByEmail("nida@student.com")
                     .orElseGet(() -> userRepository.save(
                             User.builder()
-                                    .email("nida@uskudar.com")
+                                    .email("nida@student.com")
                                     .passwordHash(passwordEncoder.encode("1234"))
                                     .role(Role.STUDENT)
                                     .firstName("Nida")
@@ -94,10 +94,10 @@ public class DataInitializer {
                                 .build()
                 );
             }
-            User melisUser = userRepository.findByEmail("melis@uskudar.com")
+            User melisUser = userRepository.findByEmail("melis@student.com")
                     .orElseGet(() -> userRepository.save(
                     User.builder()
-                            .email("melis@uskudar.com")
+                            .email("melis@student.com")
                             .passwordHash(passwordEncoder.encode("1234"))
                             .role(Role.STUDENT)
                             .firstName("Melis")
@@ -125,10 +125,10 @@ public class DataInitializer {
 
             }
             // ================= Zeynep Advisor =================
-            User zeynepUser = userRepository.findByEmail("zeynep@uskudar.com")
+            User zeynepUser = userRepository.findByEmail("zeynep@advisor.com")
                     .orElseGet(() -> userRepository.save(
                             User.builder()
-                                    .email("zeynep@uskudar.com")
+                                    .email("zeynep@advisor.com")
                                     .passwordHash(passwordEncoder.encode("1234"))
                                     .role(Role.ADVISOR)
                                     .firstName("Zeynep")
@@ -153,10 +153,10 @@ public class DataInitializer {
             }
 
             // ================= Ayşe Advisor =================
-            User ayseUser = userRepository.findByEmail("ayse@uskudar.com")
+            User ayseUser = userRepository.findByEmail("ayse@advisor.com")
                     .orElseGet(() -> userRepository.save(
                             User.builder()
-                                    .email("ayse@uskudar.com")
+                                    .email("ayse@advisor.com")
                                     .passwordHash(passwordEncoder.encode("1234"))
                                     .role(Role.ADVISOR)
                                     .firstName("Ayşe")
@@ -181,10 +181,10 @@ public class DataInitializer {
             }
 
             // ================= Mehmet Advisor (FULL QUOTA TEST) =================
-            User mehmetUser = userRepository.findByEmail("mehmet@uskudar.com")
+            User mehmetUser = userRepository.findByEmail("mehmet@advisor.com")
                     .orElseGet(() -> userRepository.save(
                     User.builder()
-                            .email("mehmet@uskudar.com")
+                            .email("mehmet@advisor.com")
                             .passwordHash(passwordEncoder.encode("1234"))
                             .role(Role.ADVISOR)
                             .firstName("Mehmet")
@@ -209,10 +209,10 @@ public class DataInitializer {
                 );
             }
 // ================= Ece Advisor =================
-            User eceUser = userRepository.findByEmail("ece@uskudar.com")
+            User eceUser = userRepository.findByEmail("ece@advisor.com")
                     .orElseGet(() -> userRepository.save(
                     User.builder()
-                            .email("ece@uskudar.com")
+                            .email("ece@advisor.com")
                             .passwordHash(passwordEncoder.encode("1234"))
                             .role(Role.ADVISOR)
                             .firstName("Ece")
@@ -237,10 +237,10 @@ public class DataInitializer {
                 );
             }
             // ================= Admin =================
-            userRepository.findByEmail("buket@uskudar.com")
+            userRepository.findByEmail("buket@admin.com")
                     .orElseGet(() -> userRepository.save(
                             User.builder()
-                                    .email("buket@uskudar.com")
+                                    .email("buket@admin.com")
                                     .passwordHash(passwordEncoder.encode("1234"))
                                     .role(Role.ADMIN)
                                     .firstName("Buket")

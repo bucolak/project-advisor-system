@@ -23,13 +23,22 @@ async function loginUser() {
       })
     });
 
-    const result = await response.json();
-    console.log("LOGIN RESPONSE:", result);
+    const text = await response.text();
 
-    if (!response.ok || !result.success) {
-      alert(result.message || "Invalid e-mail or password.");
-      return;
-    }
+let result = null;
+
+try {
+  result = text ? JSON.parse(text) : null;
+} catch (e) {
+  console.log("Login response parse failed:", text);
+}
+
+console.log("LOGIN RESPONSE:", result || text);
+
+if (!response.ok || !result || !result.success) {
+  alert(result?.message || "Invalid e-mail or password.");
+  return;
+}
 
     const authData = result.data;
 

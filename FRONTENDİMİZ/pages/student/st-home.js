@@ -266,6 +266,19 @@ if (applicationStatus === "ACCEPTED") {
   `;
 }
 
+if (applicationStatus === "REJECTED") {
+  applyButtonHtml = `
+    <button
+      type="button"
+      class="open-project-apply-btn"
+      disabled
+      style="background:#e53935;"
+    >
+      Applied
+    </button>
+  `;
+}
+
     card.innerHTML = `
       <h4>${project.title || "Untitled Project"}</h4>
       <p><strong>Owner:</strong> ${studentName}</p>

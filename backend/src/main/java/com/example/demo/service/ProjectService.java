@@ -258,19 +258,19 @@ public class ProjectService {
                 = projectApplicationRepository.findByProjectAndStudent(project, applicant);
 
         if (existingApplication.isPresent()) {
-            ApplicationStatus status = existingApplication.get().getStatus();
+    ApplicationStatus status = existingApplication.get().getStatus();
 
-            if (status == ApplicationStatus.PENDING || status == ApplicationStatus.ACCEPTED) {
-                throw new ResponseStatusException(
-                        HttpStatus.CONFLICT,
-                        "Bu projeye zaten başvurdunuz."
-                );
-            }
-
-            if (status == ApplicationStatus.REJECTED) {
-                projectApplicationRepository.delete(existingApplication.get());
-            }
-        }
+    if (
+        status == ApplicationStatus.PENDING ||
+        status == ApplicationStatus.ACCEPTED ||
+        status == ApplicationStatus.REJECTED
+    ) {
+        throw new ResponseStatusException(
+                HttpStatus.CONFLICT,
+                "You have already applied to this project."
+        );
+    }
+}
 
         ProjectApplication application = ProjectApplication.builder()
                 .project(project)
