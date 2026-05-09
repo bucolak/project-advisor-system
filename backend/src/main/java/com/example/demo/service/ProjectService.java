@@ -241,25 +241,26 @@ public class ProjectService {
 
         return projectApplicationRepository.findByStudent(student);
     }
-
     public List<Project> getOpenProjectsForStudent(Long userId) {
-    Student student = studentRepository.findById(userId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
 
-    return projectRepository.findOpenProjectsExceptCurrentStudent(ProjectStatus.OPEN, student)
-            .stream()
-            .filter(project -> {
-                Optional<ProjectApplication> myApplication =
-                        projectApplicationRepository.findByProjectAndStudent(project, student);
+        return projectRepository.findOpenProjectsExceptCurrentStudent(ProjectStatus.OPEN, student)
+                .stream()
+                .filter(project -> {
+                    Optional<ProjectApplication> myApplication
+                            = projectApplicationRepository.findByProjectAndStudent(project, student);
 
-                if (myApplication.isPresent()) {
-                    return true;
-                }
+                    if (myApplication.isPresent()) {
+                        ApplicationStatus status = myApplication.get().getStatus();
 
-                return !isProjectTeamFull(project);
-            })
-            .toList();
-}
+                        return status == ApplicationStatus.PENDING;
+                    }
+
+                    return !isProjectTeamFull(project);
+                })
+                .toList();
+    }
 
     private boolean isProjectTeamFull(Project project) {
         if (project.getTeamSize() == null) {

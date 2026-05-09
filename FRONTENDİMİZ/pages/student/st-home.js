@@ -253,31 +253,7 @@ if (applicationStatus === "PENDING") {
   `;
 }
 
-if (applicationStatus === "ACCEPTED") {
-  applyButtonHtml = `
-    <button
-      type="button"
-      class="open-project-apply-btn"
-      disabled
-      style="background:#20b14b;"
-    >
-      Applied
-    </button>
-  `;
-}
 
-if (applicationStatus === "REJECTED") {
-  applyButtonHtml = `
-    <button
-      type="button"
-      class="open-project-apply-btn"
-      disabled
-      style="background:#e53935;"
-    >
-      Applied
-    </button>
-  `;
-}
 
     card.innerHTML = `
       <h4>${project.title || "Untitled Project"}</h4>
