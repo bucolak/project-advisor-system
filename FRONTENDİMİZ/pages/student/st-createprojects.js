@@ -80,7 +80,7 @@ async function loadProjectCategories(token) {
     if (courseTeamSizeInput && courseMaxTeamSize) {
       courseTeamSizeInput.placeholder = `Max ${courseMaxTeamSize} students`;
       courseTeamSizeInput.max = courseMaxTeamSize;
-      courseTeamSizeInput.min = 1;
+      courseTeamSizeInput.min = 2;
     }
 
     const otherCategories = categories.filter(category => {
@@ -130,7 +130,7 @@ async function loadProjectCategories(token) {
       if (teamSizeInput && otherMaxTeamSize) {
         teamSizeInput.placeholder = `Max ${otherMaxTeamSize} students`;
         teamSizeInput.max = otherMaxTeamSize;
-        teamSizeInput.min = 1;
+        teamSizeInput.min = 2;
         teamSizeInput.value = "";
       }
 
