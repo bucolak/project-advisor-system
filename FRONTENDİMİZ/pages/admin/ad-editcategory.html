@@ -13,68 +13,69 @@
 <body>
   <div id="sidebarArea"></div>
 
-<main class="page-content">
-      <div id="topbarArea"></div>
+  <main class="page-content">
+    <div id="topbarArea"></div>
 
-      <h1 class="admin-editcat-title">Edit Category</h1>
+    <h1 class="admin-editcat-title">Edit Category</h1>
 
-      <form class="admin-editcat-card" id="editCategoryForm">
-        <div class="admin-editcat-field">
+    <form class="admin-editcat-card" id="editCategoryForm">
+      <div class="admin-editcat-field">
+        <label>
+          <i class="fa-regular fa-folder-open"></i>
+          Category Name
+        </label>
+
+        <input type="text" id="categoryName" placeholder="Loading category name..." />
+      </div>
+
+      <div class="admin-editcat-field">
+        <label>
+          <i class="fa-regular fa-folder"></i>
+          Description
+        </label>
+
+        <textarea id="categoryDescription" placeholder="Loading description..."></textarea>
+      </div>
+
+      <div class="admin-editcat-row">
+        <div class="admin-editcat-half">
           <label>
-            <i class="fa-regular fa-folder-open"></i>
-            Category Name
+            <i class="fa-solid fa-users"></i>
+            Team Size(max)
           </label>
 
-          <input type="text" id="categoryName" placeholder="Loading category name..." />
+          <input type="text" id="teamSize" placeholder="Loading team size..." />
         </div>
 
-        <div class="admin-editcat-field">
+        <div class="admin-editcat-half small" id="budgetFieldBox">
           <label>
-            <i class="fa-regular fa-folder"></i>
-            Description
+            <i class="fa-solid fa-wallet"></i>
+            Budget
           </label>
 
-          <textarea id="categoryDescription" placeholder="Loading description..."></textarea>
+          <input type="number" id="budget" placeholder="Loading budget..." />
+        </div>
+      </div>
+
+      <div class="admin-editcat-advisor" id="advisorRequiredBox">
+        <div class="admin-editcat-advisor-title">
+          <i class="fa-regular fa-address-card"></i>
+          Need Advisor / Not
         </div>
 
-        <div class="admin-editcat-row">
-          <div class="admin-editcat-half">
-            <label>
-              <i class="fa-solid fa-users"></i>
-              Team Size(max)
-            </label>
-
-            <input type="text" id="teamSize" placeholder="Loading team size..." />
-          </div>
-
-          <div class="admin-editcat-half small">
-            <label>
-              <i class="fa-solid fa-wallet"></i>
-              Budget
-            </label>
-
-            <input type="number" id="budget" placeholder="Loading budget..." />
-          </div>
+        <div class="admin-editcat-toggle">
+          <button type="button" id="advisorYes">Yes</button>
+          <button type="button" id="advisorNo">No</button>
         </div>
+      </div>
 
-        <div class="admin-editcat-advisor" id="advisorRequiredBox">
-          <div class="admin-editcat-advisor-title">
-            <i class="fa-regular fa-address-card"></i>
-            Need Advisor / Not
-          </div>
+      <div class="admin-editcat-actions">
+        <a href="ad-projectcat.html" class="admin-editcat-cancel">Cancel</a>
+        <button type="submit" class="admin-editcat-save">Save Changes</button>
+      </div>
+    </form>
+  </main>
 
-          <div class="admin-editcat-toggle">
-            <button type="button" id="advisorYes">Yes</button>
-            <button type="button" id="advisorNo">No</button>
-          </div>
-        </div>
-
-        <div class="admin-editcat-actions">
-          <a href="ad-projectcat.html" class="admin-editcat-cancel">Cancel</a>
-          <button type="submit" class="admin-editcat-save">Save Changes</button>
-        </div>
-      </form>
-    </main>
   <script src="../../components/sidebar.js"></script>
   <script src="../../components/topbar.js"></script>
   <script src="ad-editcategory.js"></script>

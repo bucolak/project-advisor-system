@@ -7888,3 +7888,52 @@ body {
   max-width: 1180px !important;
   margin-bottom: 20px !important;
 }
+/* EDIT CATEGORY - MATCH ADD CATEGORY BUDGET STYLE */
+/* EDIT CATEGORY - SMALLER CLEAN VERSION */
+#editCategoryForm .admin-editcat-row {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 36px !important;
+}
+
+#editCategoryForm .admin-editcat-half {
+  width: 250px !important;
+  max-width: 250px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#editCategoryForm #budgetFieldBox {
+  width: 180px !important;
+  max-width: 180px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#editCategoryForm .admin-editcat-half label,
+#editCategoryForm #budgetFieldBox label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 10px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+
+#editCategoryForm .admin-editcat-half input,
+#editCategoryForm #budgetFieldBox input {
+  width: 100% !important;
+  height: 42px !important;
+  padding: 0 14px !important;
+  background: #fff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  font-size: 16px !important;
+}
+
+/* COURSE category edit page: remove budget completely */
+#editCategoryForm.course-edit-mode #budgetFieldBox {
+  display: none !important;
+}

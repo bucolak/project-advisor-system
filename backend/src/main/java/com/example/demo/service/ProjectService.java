@@ -79,6 +79,44 @@ public class ProjectService {
             category = categoryRepository.findById(req.getCategoryId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Kategori bulunamadı."));
         }
+        
+        if (category != null && category.getTeamSize() != null && !category.getTeamSize().isBlank()) {
+            try {
+                int maxTeamSize = Integer.parseInt(category.getTeamSize());
+
+                if (req.getTeamSize() != null && req.getTeamSize() > maxTeamSize) {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Team size cannot be greater than " + maxTeamSize + "."
+                    );
+                }
+            } catch (NumberFormatException e) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Category team size value is invalid."
+                );
+            }
+        }
+
+
+        if (category != null && category.getTeamSize() != null && !category.getTeamSize().isBlank()) {
+    try {
+        int maxTeamSize = Integer.parseInt(category.getTeamSize());
+
+        if (req.getTeamSize() != null && req.getTeamSize() > maxTeamSize) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Team size cannot be greater than " + maxTeamSize + "."
+            );
+        }
+    } catch (NumberFormatException e) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Category team size value is invalid."
+        );
+    }
+}
+
 
         Boolean advisorRequired
                 = req.getAdvisorRequired() != null ? req.getAdvisorRequired() : true;

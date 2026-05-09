@@ -2,6 +2,8 @@ const API_BASE = "http://localhost:8080";
 
 let selectedAdvisorRequired = true;
 let courseCategoryId = null;
+let courseMaxTeamSize = null;
+let otherMaxTeamSize = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
   const token = localStorage.getItem("token");
@@ -71,6 +73,15 @@ async function loadProjectCategories(token) {
     });
 
     courseCategoryId = courseCategory ? courseCategory.id : null;
+    courseMaxTeamSize = courseCategory ? Number(courseCategory.teamSize) : null;
+
+    const courseTeamSizeInput = document.getElementById("courseTeamSize");
+
+    if (courseTeamSizeInput && courseMaxTeamSize) {
+      courseTeamSizeInput.placeholder = `Max ${courseMaxTeamSize} students`;
+      courseTeamSizeInput.max = courseMaxTeamSize;
+      courseTeamSizeInput.min = 1;
+    }
 
     const otherCategories = categories.filter(category => {
       const name = String(category.name || "").toUpperCase();
@@ -96,6 +107,15 @@ async function loadProjectCategories(token) {
 
       if (!selectedOption || !selectedOption.value) {
         selectedAdvisorRequired = true;
+        otherMaxTeamSize = null;
+
+        const teamSizeInput = document.getElementById("otherTeamSize");
+        if (teamSizeInput) {
+          teamSizeInput.placeholder = "Enter team size";
+          teamSizeInput.removeAttribute("max");
+          teamSizeInput.value = "";
+        }
+
         applyAdvisorRule();
         return;
       }
@@ -103,12 +123,15 @@ async function loadProjectCategories(token) {
       selectedAdvisorRequired = selectedOption.dataset.advisorRequired === "true";
 
       const teamSizeInput = document.getElementById("otherTeamSize");
-      const maxTeamSize = selectedOption.dataset.teamSize;
+      const maxTeamSize = Number(selectedOption.dataset.teamSize);
 
-      if (teamSizeInput && maxTeamSize) {
-        teamSizeInput.placeholder = `Max ${maxTeamSize} students`;
-        teamSizeInput.max = maxTeamSize;
+      otherMaxTeamSize = maxTeamSize || null;
+
+      if (teamSizeInput && otherMaxTeamSize) {
+        teamSizeInput.placeholder = `Max ${otherMaxTeamSize} students`;
+        teamSizeInput.max = otherMaxTeamSize;
         teamSizeInput.min = 1;
+        teamSizeInput.value = "";
       }
 
       applyAdvisorRule();
@@ -186,12 +209,19 @@ async function createCourseProject(token, userId) {
     return;
   }
 
+  const teamSize = Number(document.getElementById("courseTeamSize").value);
+
+  if (courseMaxTeamSize && teamSize > courseMaxTeamSize) {
+    alert(`Team size cannot be greater than ${courseMaxTeamSize}.`);
+    return;
+  }
+
   const payload = {
     title: document.getElementById("courseTitle").value.trim(),
     categoryId: Number(courseCategoryId),
     studentId: Number(userId),
     requiredSkills: selectedSkills.join(", "),
-    teamSize: Number(document.getElementById("courseTeamSize").value),
+    teamSize: teamSize,
     rolesNeeded: document.getElementById("courseRoles").value.trim(),
     description: document.getElementById("courseDescription").value.trim(),
     advisorRequired: false
@@ -210,6 +240,13 @@ async function createOtherProject(token, userId) {
     return;
   }
 
+  const teamSize = Number(document.getElementById("otherTeamSize").value);
+
+  if (otherMaxTeamSize && teamSize > otherMaxTeamSize) {
+    alert(`Team size cannot be greater than ${otherMaxTeamSize}.`);
+    return;
+  }
+
   const selectedAdvisorButton = document.querySelector("#advisorChoiceBox .toggle-btn.active");
 
   const advisorRequired = selectedAdvisorRequired
@@ -221,7 +258,7 @@ async function createOtherProject(token, userId) {
     categoryId: Number(projectTypeSelect.value),
     studentId: Number(userId),
     requiredSkills: selectedSkills.join(", "),
-    teamSize: Number(document.getElementById("otherTeamSize").value),
+    teamSize: teamSize,
     rolesNeeded: document.getElementById("otherRoles").value.trim(),
     description: document.getElementById("otherDescription").value.trim(),
     advisorRequired: advisorRequired
