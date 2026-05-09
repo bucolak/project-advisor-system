@@ -124,6 +124,35 @@ public class DataInitializer {
                 );
 
             }
+            // ================= Eylül Student =================
+            User eylulUser = userRepository.findByEmail("eylul@student.com")
+                    .orElseGet(() -> userRepository.save(
+                    User.builder()
+                            .email("eylul@student.com")
+                            .passwordHash(passwordEncoder.encode("1234"))
+                            .role(Role.STUDENT)
+                            .firstName("Eylül")
+                            .lastName("Aksoy")
+                            .status(UserStatus.ACTIVE)
+                            .isDeleted(false)
+                            .build()
+            ));
+
+            if (!studentRepository.existsById(eylulUser.getId())) {
+                studentRepository.save(
+                        Student.builder()
+                                .user(eylulUser)
+                                .department("Software Engineering")
+                                .year(2)
+                                .gpa(3.41)
+                                .skills("JavaScript, React, UI Design")
+                                .relevantCourses("Web Programming, Human Computer Interaction")
+                                .researchInterests("Frontend Development, UI/UX")
+                                .githubLink("")
+                                .linkedinLink("")
+                                .build()
+                );
+            }
             // ================= Zeynep Advisor =================
             User zeynepUser = userRepository.findByEmail("zeynep@advisor.com")
                     .orElseGet(() -> userRepository.save(
@@ -179,7 +208,34 @@ public class DataInitializer {
                                 .build()
                 );
             }
+// ================= Selin Advisor =================
+            User selinUser = userRepository.findByEmail("selin@advisor.com")
+                    .orElseGet(() -> userRepository.save(
+                    User.builder()
+                            .email("selin@advisor.com")
+                            .passwordHash(passwordEncoder.encode("1234"))
+                            .role(Role.ADVISOR)
+                            .firstName("Selin")
+                            .lastName("Aydın")
+                            .status(UserStatus.ACTIVE)
+                            .isDeleted(false)
+                            .build()
+            ));
 
+            if (!advisorRepository.existsById(selinUser.getId())) {
+                advisorRepository.save(
+                        Advisor.builder()
+                                .user(selinUser)
+                                .title("Associate Professor")
+                                .department("Software Engineering")
+                                .areasOfExpertise("Mobile Development, UI/UX Design, Artificial Intelligence")
+                                .researchInterests("Human Computer Interaction, AI Systems")
+                                .currentQuota(0)
+                                .maxQuota(5)
+                                .advisingStatus(AdvisingStatus.ACTIVE)
+                                .build()
+                );
+            }
             // ================= Mehmet Advisor (FULL QUOTA TEST) =================
             User mehmetUser = userRepository.findByEmail("mehmet@advisor.com")
                     .orElseGet(() -> userRepository.save(
