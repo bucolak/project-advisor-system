@@ -15,6 +15,7 @@ import com.example.demo.entity.AdvisorRequest;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.User;
+import com.example.demo.enums.AdvisingStatus;
 import com.example.demo.enums.RequestStatus;
 import com.example.demo.repository.AdvisorRepository;
 import com.example.demo.repository.AdvisorRequestRepository;
@@ -88,22 +89,31 @@ public class AdvisorRequestService {
         if (request.getStatus() != RequestStatus.PENDING) {
             return toResponse(request);
         }
-
         if (status == RequestStatus.ACCEPTED) {
-            Integer currentQuota = advisor.getCurrentQuota() == null ? 0 : advisor.getCurrentQuota();
-            Integer maxQuota = advisor.getMaxQuota() == null ? 5 : advisor.getMaxQuota();
+
+            if (advisor.getAdvisingStatus() != AdvisingStatus.ACTIVE) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Your advising status is inactive, you cannot accept the project."
+                );
+            }
+
+            Integer currentQuota
+                    = advisor.getCurrentQuota() == null ? 0 : advisor.getCurrentQuota();
+
+            Integer maxQuota
+                    = advisor.getMaxQuota() == null ? 5 : advisor.getMaxQuota();
+
             if (currentQuota >= maxQuota) {
                 throw new ResponseStatusException(
                         HttpStatus.CONFLICT,
-                        "You have already 5 projects. You cannot accept the project."
+                        "You have already 5 projects, you cannot accept the project."
                 );
             }
 
             int newQuota = currentQuota + 1;
 
             advisor.setCurrentQuota(newQuota);
-
-            
 
             advisorRepository.save(advisor);
         }

@@ -1,6 +1,7 @@
 const API_BASE = "http://localhost:8080";
 
 let currentRequest = null;
+let currentAdvisorProfile = null;
 
 document.addEventListener("DOMContentLoaded", async function () {
   setupModal();
@@ -65,7 +66,8 @@ async function loadAdvisorProfile(token, userId) {
 
     const result = await response.json();
     const advisor = result.data || result;
-
+    currentAdvisorProfile = advisor;
+    
     const fullName =
       `Dr. ${advisor.firstName || ""} ${advisor.lastName || ""}`.trim();
 
@@ -255,12 +257,6 @@ async function updateRequestStatus(requestId, status) {
     const card = document.getElementById(`request-${requestId}`);
     const actions = card?.querySelector(".request-actions");
 if (!response.ok) {
-
-  if (text.includes("You have already 5 projects")) {
-    alert("You have already 5 projects. You cannot accept the project.");
-    return;
-  }
-
   let message = "Failed to update request status.";
 
   try {
@@ -275,6 +271,41 @@ if (!response.ok) {
     if (text) {
       message = text;
     }
+  }
+
+  const advisorStatus = String(
+    currentAdvisorProfile?.advisingStatus ||
+    currentAdvisorProfile?.advisorStatus ||
+    ""
+  ).toUpperCase();
+
+  const currentQuota = Number(currentAdvisorProfile?.currentQuota ?? 0);
+  const maxQuota = Number(currentAdvisorProfile?.maxQuota ?? 5);
+
+  if (status === "ACCEPTED" && advisorStatus === "INACTIVE") {
+    alert("Your advising status is inactive, you cannot accept the project.");
+    return;
+  }
+
+  if (status === "ACCEPTED" && currentQuota >= maxQuota) {
+    alert("You have already 5 projects, you cannot accept the project.");
+    return;
+  }
+
+  if (
+    message.includes("advising status is inactive") ||
+    message.includes("inactive, you cannot accept")
+  ) {
+    alert("Your advising status is inactive, you cannot accept the project.");
+    return;
+  }
+
+  if (
+    message.includes("already 5 projects") ||
+    message.includes("cannot accept the project")
+  ) {
+    alert("You have already 5 projects, you cannot accept the project.");
+    return;
   }
 
   alert(message);

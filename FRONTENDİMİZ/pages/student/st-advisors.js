@@ -362,7 +362,7 @@ async function sendAdvisorRequest() {
     const maxQuota = Number(selectedAdvisor.maxQuota ?? 5);
 
     if (currentQuota >= maxQuota) {
-      alert("Advisor has already 5 projects. You cannot send a request.");
+      alert(" The advisor has already 5 projects. You cannot send a request.");
       return;
     }
   }
@@ -384,8 +384,8 @@ async function sendAdvisorRequest() {
     console.log("SEND REQUEST RESPONSE:", text);
 
     if (!response.ok) {
-      if (text.includes("Advisor has already 5 projects")) {
-        alert("Advisor has already 5 projects. You cannot send a request.");
+      if (text.includes(" The advisor has already 5 projects")) {
+        alert("The advisor has already 5 projects. You cannot send a request.");
         return;
       }
 
@@ -411,8 +411,18 @@ async function sendAdvisorRequest() {
     const selectedOption = projectSelect.options[projectSelect.selectedIndex];
 
     if (selectedOption) {
-      selectedOption.disabled = true;
-    }
+
+  selectedOption.disabled = true;
+
+  const cleanProjectText = selectedProjectText
+
+    .replace(" (request already pending/accepted)", "")
+
+    .trim();
+
+  selectedOption.textContent = `${cleanProjectText} (request already pending/accepted)`;
+
+}
 
     if (actionCell) {
       actionCell.innerHTML = `

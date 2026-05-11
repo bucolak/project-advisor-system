@@ -232,7 +232,10 @@ public class ProjectService {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Öğrenci bulunamadı."));
 
-        return projectApplicationRepository.findByStudentAndStatus(student, ApplicationStatus.ACCEPTED);
+        return projectApplicationRepository.findByStudentAndStatusOrderByAppliedAtDesc(
+                student,
+                ApplicationStatus.ACCEPTED
+        );
     }
 
     public List<ProjectApplication> getMyApplications(Long userId) {
@@ -408,7 +411,7 @@ public class ProjectService {
         if (isAdvisorQuotaFull(advisor)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Advisor has already 5 projects. You cannot send a request."
+                    "The advisor has already 5 projects. You cannot send a request."
             );
         }
         if (advisor.getAdvisingStatus() != AdvisingStatus.ACTIVE) {
