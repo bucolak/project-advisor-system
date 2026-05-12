@@ -171,14 +171,11 @@ function renderProjectTypes(typesData) {
 function renderStatus(status) {
   const normalizedStatus = String(status || "").toUpperCase();
 
-  const inlineText = document.getElementById("advisorStatusTextInline");
-  const dot = document.getElementById("advisorStatusDot");
+
   const cardText = document.getElementById("advisorStatusCardText");
   const button = document.getElementById("advisorStatusButton");
 
-  if (inlineText) {
-    inlineText.textContent = normalizedStatus || "-";
-  }
+ 
 
   if (cardText) {
     if (normalizedStatus === "ACTIVE") {
@@ -204,15 +201,6 @@ function renderStatus(status) {
     }
   }
 
-  if (dot) {
-    dot.classList.remove("status-active", "status-inactive");
-
-    if (normalizedStatus === "ACTIVE") {
-      dot.classList.add("status-active");
-    } else if (normalizedStatus === "INACTIVE") {
-      dot.classList.add("status-inactive");
-    }
-  }
 }
 
 function normalizeToArray(data) {
