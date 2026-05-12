@@ -36,7 +36,28 @@ try {
 console.log("LOGIN RESPONSE:", result || text);
 
 if (!response.ok || !result || !result.success) {
-  alert(result?.message || "Invalid e-mail or password.");
+  const message = String(
+    result?.message ||
+    result?.error ||
+    result?.detail ||
+    text ||
+    ""
+  ).toLowerCase();
+
+  console.log("LOGIN ERROR STATUS:", response.status);
+  console.log("LOGIN ERROR MESSAGE:", message);
+  console.log("LOGIN RAW ERROR:", text);
+
+  if (
+    message.includes("inactive") ||
+    message.includes("pasif") ||
+    message.includes("your account is inactive")
+  ) {
+    alert("Your account is inactive!");
+  } else {
+    alert("Invalid e-mail or password!");
+  }
+
   return;
 }
 

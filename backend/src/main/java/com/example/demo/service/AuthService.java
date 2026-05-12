@@ -1,19 +1,24 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.LoginRequest;
-import com.example.demo.dto.request.RegisterAdvisorRequest;
-import com.example.demo.dto.request.RegisterStudentRequest;
-import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.entity.*;
-import com.example.demo.enums.Role;
-import com.example.demo.enums.UserStatus;
-import com.example.demo.repository.*;
-import com.example.demo.security.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.request.RegisterAdvisorRequest;
+import com.example.demo.dto.request.RegisterStudentRequest;
+import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.entity.Advisor;
+import com.example.demo.entity.Student;
+import com.example.demo.entity.User;
+import com.example.demo.enums.Role;
+import com.example.demo.enums.UserStatus;
+import com.example.demo.repository.AdvisorRepository;
+import com.example.demo.repository.StudentRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtUtil;
 
 @Service
 public class AuthService {
@@ -71,13 +76,13 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest req) {
         User user = userRepository.findByEmail(req.getEmail())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email veya şifre hatalı."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid e-mail or password!"));
         if (!passwordEncoder.matches(req.getPassword(), user.getPasswordHash()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email veya şifre hatalı.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid e-mail or password!");
         if (user.getIsDeleted())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu hesap silinmiştir.");
         if (user.getStatus() == UserStatus.INACTIVE)
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bu hesap pasif durumdadır.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Your account is inactive!");
         String token = jwtUtil.generateToken(user.getId(), user.getRole().name());
         return new AuthResponse(token, user.getRole().name(), user.getId());
     }

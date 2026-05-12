@@ -429,7 +429,7 @@ function setOtherProjects(projects) {
   if (!projects || !projects.length) {
     container.innerHTML = `
       <div class="other-project-card">
-        <h4>No s</h4>
+        <h4>No project</h4>
         <p><strong>Project:</strong> No data</p>
         <p><strong>Skills:</strong> -</p>
       </div>
