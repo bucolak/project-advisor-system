@@ -68,7 +68,8 @@ public CorsConfigurationSource corsConfigurationSource() {
             "http://localhost:5500",
             "http://127.0.0.1",
             "http://localhost",
-            "https://sincere-caring-production.up.railway.app"
+            "https://sincere-caring-production.up.railway.app",
+            "https://timely-kleicha-ab6e0c.netlify.app"
     ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
