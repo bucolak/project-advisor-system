@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8080";
+const API_BASE = "https://project-advisor-system-production.up.railway.app";
 
 document.addEventListener("DOMContentLoaded", async function () {
   setupSaveButton();
