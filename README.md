@@ -24,17 +24,6 @@ The application was developed as part of the Software Engineering course project
 
 Software Engineering
 
-### Project Team
-
-* Buket Çolak
-* Nida Nur Çamlıca
-* Sude Torun
-* Zeynep Pınarlı
-
-### Advisor
-
-Dr. Kristin Surpuhi BENLİ
-
 ### Project Date
 
 May 2026
