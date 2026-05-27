@@ -1,5 +1,8 @@
 # Project Advisor Management System
 
+## Live Demo
+🚀 https://project-advisor-system.netlify.app/
+
 ## Overview
 
 The **Project Advisor Management System** is a full-stack role-based academic management platform developed for university project workflows. The system centralizes project creation, advisor assignment, student applications, announcements, and administrative operations into a single secure digital environment.
