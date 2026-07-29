@@ -1,4 +1,4 @@
-const loginBtn = document.getElementById("loginBtn");
+﻿const loginBtn = document.getElementById("loginBtn");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 
@@ -12,7 +12,7 @@ async function loginUser() {
   }
 
   try {
-    const response = await fetch("https://project-advisor-system-production.up.railway.app/api/auth/login", {
+    const response = await fetch("https://project-advisor-system.onrender.com/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
